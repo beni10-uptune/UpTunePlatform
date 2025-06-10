@@ -167,8 +167,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { spotifyService } = await import("./spotify");
       
       // Use Replit domain if available, otherwise fall back to request host
-      const host = process.env.REPL_SLUG ? `${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.replit.app` : req.get('host');
-      const protocol = process.env.REPL_SLUG ? 'https' : req.protocol;
+      const host = process.env.REPLIT_DOMAINS ? process.env.REPLIT_DOMAINS.split(',')[0] : req.get('host');
+      const protocol = process.env.REPLIT_DOMAINS ? 'https' : req.protocol;
       const redirectUri = `${protocol}://${host}/api/spotify/callback`;
       
       const state = Math.random().toString(36).substring(7);
@@ -195,8 +195,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const { spotifyService } = await import("./spotify");
       
       // Use same domain logic as auth endpoint
-      const host = process.env.REPL_SLUG ? `${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.replit.app` : req.get('host');
-      const protocol = process.env.REPL_SLUG ? 'https' : req.protocol;
+      const host = process.env.REPLIT_DOMAINS ? process.env.REPLIT_DOMAINS.split(',')[0] : req.get('host');
+      const protocol = process.env.REPLIT_DOMAINS ? 'https' : req.protocol;
       const redirectUri = `${protocol}://${host}/api/spotify/callback`;
       
       const tokens = await spotifyService.exchangeCodeForToken(code as string, redirectUri);
