@@ -541,37 +541,176 @@ export default function GameRoom() {
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
-          {/* Players Panel */}
-          <Card className="lg:order-1 order-2">
-            <CardHeader>
-              <CardTitle className="flex items-center text-lg">
-                <Users className="w-5 h-5 mr-2" />
-                Players ({(players as Player[]).length})
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                {(players as Player[]).map((player, index) => (
-                  <div
-                    key={player.id}
-                    className={`flex items-center justify-between p-2 rounded-lg ${
-                      player.id === currentPlayer?.id ? 'bg-blue-50' : 'bg-gray-50'
-                    }`}
-                  >
+          {/* Players & Achievements Panel */}
+          <div className="lg:order-1 order-2 space-y-6">
+            {/* Players */}
+            <Card className="bg-white/95 backdrop-blur-sm">
+              <CardHeader>
+                <CardTitle className="flex items-center text-lg">
+                  <Users className="w-5 h-5 mr-2" />
+                  Players ({(players as Player[]).length})
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  {(players as Player[]).map((player, index) => {
+                    const playerSongs = (songs as Song[]).filter(s => s.playerId === player.id);
+                    return (
+                      <motion.div
+                        key={player.id}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        className={`flex items-center justify-between p-3 rounded-lg transition-all ${
+                          player.id === currentPlayer?.id 
+                            ? 'bg-gradient-to-r from-purple-100 to-pink-100 border border-purple-200' 
+                            : 'bg-gray-50 hover:bg-gray-100'
+                        }`}
+                      >
+                        <div className="flex items-center space-x-3">
+                          <motion.span 
+                            className="text-2xl"
+                            animate={{ scale: [1, 1.1, 1] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                          >
+                            {getPlayerEmoji(index)}
+                          </motion.span>
+                          <div>
+                            <div className="flex items-center space-x-2">
+                              <span className="font-medium">{player.nickname}</span>
+                              {player.isHost && (
+                                <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs">
+                                  <Crown className="w-3 h-3 mr-1" />
+                                  Host
+                                </Badge>
+                              )}
+                              {player.id === currentPlayer?.id && (
+                                <Badge className="bg-blue-500 text-white text-xs">You</Badge>
+                              )}
+                            </div>
+                            <div className="flex items-center space-x-1 mt-1">
+                              <Music className="w-3 h-3 text-gray-400" />
+                              <span className="text-xs text-gray-500">
+                                {playerSongs.length} song{playerSongs.length !== 1 ? 's' : ''}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        {playerSongs.length > 0 && (
+                          <motion.div
+                            initial={{ scale: 0 }}
+                            animate={{ scale: 1 }}
+                            className="w-8 h-8 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center"
+                          >
+                            <Trophy className="w-4 h-4 text-white" />
+                          </motion.div>
+                        )}
+                      </motion.div>
+                    );
+                  })}
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Achievements */}
+            {achievements.length > 0 && (
+              <Card className="bg-gradient-to-br from-yellow-50 to-orange-50 border border-yellow-200">
+                <CardHeader>
+                  <CardTitle className="flex items-center text-lg text-orange-700">
+                    <Trophy className="w-5 h-5 mr-2" />
+                    Your Achievements
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-2">
+                    <AnimatePresence>
+                      {achievements.map((achievement, index) => (
+                        <motion.div
+                          key={achievement}
+                          initial={{ opacity: 0, x: -20, scale: 0.9 }}
+                          animate={{ opacity: 1, x: 0, scale: 1 }}
+                          transition={{ delay: index * 0.2 }}
+                          className="flex items-center space-x-3 p-2 bg-white/70 rounded-lg"
+                        >
+                          <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                            <Trophy className="w-4 h-4 text-white" />
+                          </div>
+                          <div>
+                            <p className="font-medium text-orange-800">
+                              {achievement === 'first-song' && 'First Note'}
+                              {achievement === 'storyteller' && 'Storyteller'}
+                              {achievement === 'desert-master' && 'Desert Island Master'}
+                              {achievement === 'pioneer' && 'Playlist Pioneer'}
+                              {achievement === 'harmony' && 'Group Harmony'}
+                            </p>
+                            <p className="text-xs text-orange-600">
+                              {achievement === 'first-song' && 'Added your first song'}
+                              {achievement === 'storyteller' && 'Shared meaningful stories'}
+                              {achievement === 'desert-master' && 'Completed your 5 essential songs'}
+                              {achievement === 'pioneer' && 'Leading the musical journey'}
+                              {achievement === 'harmony' && 'Created beautiful collaboration'}
+                            </p>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </AnimatePresence>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Playlist Stats */}
+            <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200">
+              <CardHeader>
+                <CardTitle className="flex items-center text-lg text-purple-700">
+                  <Zap className="w-5 h-5 mr-2" />
+                  Playlist Magic
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">Total Songs</span>
+                    <Badge className="bg-purple-100 text-purple-700">{(songs as Song[]).length}</Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">Contributors</span>
+                    <Badge className="bg-pink-100 text-pink-700">
+                      {new Set((songs as Song[]).map(s => s.playerId)).size}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600">Your Progress</span>
                     <div className="flex items-center space-x-2">
-                      <span className="text-lg">{getPlayerEmoji(index)}</span>
-                      <span className="font-medium">{player.nickname}</span>
-                      {player.isHost && (
-                        <Badge variant="secondary" className="text-xs">
-                          Host
-                        </Badge>
-                      )}
+                      <Progress 
+                        value={gameRoom?.gameType === 'desert-island' 
+                          ? ((songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length / 5) * 100
+                          : Math.min(((songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length / 3) * 100, 100)
+                        } 
+                        className="w-16 h-2" 
+                      />
+                      <span className="text-xs text-gray-500">
+                        {gameRoom?.gameType === 'desert-island' 
+                          ? `${(songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length}/5`
+                          : `${(songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length}`
+                        }
+                      </span>
                     </div>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                  {(songs as Song[]).length > 0 && (
+                    <Button
+                      onClick={sharePlaylist}
+                      className="w-full mt-3 viral-button text-white"
+                      size="sm"
+                    >
+                      <Share2 className="w-4 h-4 mr-2" />
+                      Share Your Creation
+                    </Button>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-6 lg:order-2 order-1">
@@ -694,12 +833,12 @@ export default function GameRoom() {
                                     <Headphones className="w-4 h-4" />
                                   </Button>
                                 )}
-                                {song.spotifyUrl && (
+                                {song.spotifyId && (
                                   <Button
                                     size="sm"
                                     variant="ghost"
                                     className="hover:bg-green-100 text-green-600"
-                                    onClick={() => window.open(song.spotifyUrl, '_blank')}
+                                    onClick={() => window.open(`https://open.spotify.com/track/${song.spotifyId}`, '_blank')}
                                   >
                                     <ExternalLink className="w-4 h-4" />
                                   </Button>
