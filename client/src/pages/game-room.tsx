@@ -352,18 +352,17 @@ export default function GameRoom() {
               <p className="text-white/70">Theme: {gameRoom.theme}</p>
             </div>
           </div>
-          <div className="flex items-center space-x-2">
-            <Badge variant="secondary" className="text-lg px-3 py-1">
+          <div className="flex items-center space-x-3">
+            <Badge variant="secondary" className="text-lg px-4 py-2 font-mono">
               {gameRoom.code}
             </Badge>
             <Button
-              variant="outline"
-              size="sm"
               onClick={handleShare}
-              className="text-white border-white/20 hover:bg-white/10"
+              className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm px-4 py-2"
+              size="sm"
             >
               <Share2 className="w-4 h-4 mr-2" />
-              Share
+              Share Room
             </Button>
           </div>
         </div>
@@ -505,19 +504,34 @@ export default function GameRoom() {
               />
               
               {selectedSong && (
-                <div className="p-4 bg-gray-50 rounded-lg">
-                  <div className="flex items-center space-x-4">
-                    {selectedSong.imageUrl && (
-                      <img
-                        src={selectedSong.imageUrl}
-                        alt={`${selectedSong.title} cover`}
-                        className="w-16 h-16 rounded-lg object-cover"
-                      />
-                    )}
-                    <div>
-                      <h4 className="font-semibold">{selectedSong.title}</h4>
-                      <p className="text-gray-600">{selectedSong.artist}</p>
-                      <p className="text-gray-500 text-sm">{selectedSong.album}</p>
+                <div className="p-4 bg-green-50 border-2 border-green-200 rounded-lg">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      {selectedSong.imageUrl && (
+                        <img
+                          src={selectedSong.imageUrl}
+                          alt={`${selectedSong.title} cover`}
+                          className="w-16 h-16 rounded-lg object-cover"
+                        />
+                      )}
+                      <div>
+                        <h4 className="font-semibold text-green-800">{selectedSong.title}</h4>
+                        <p className="text-green-700">{selectedSong.artist}</p>
+                        <p className="text-green-600 text-sm">{selectedSong.album}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <div className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                        ✓ Selected
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setSelectedSong(null)}
+                        className="text-green-700 hover:text-green-900"
+                      >
+                        Change
+                      </Button>
                     </div>
                   </div>
                 </div>

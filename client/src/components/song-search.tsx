@@ -27,6 +27,7 @@ interface SongSearchProps {
 export function SongSearch({ onSongSelect, placeholder = "Search for a song...", className }: SongSearchProps) {
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
+  const [showResults, setShowResults] = useState(true);
 
   // Debounce search query
   useEffect(() => {
@@ -56,7 +57,10 @@ export function SongSearch({ onSongSelect, placeholder = "Search for a song...",
           type="text"
           placeholder={placeholder}
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e) => {
+            setQuery(e.target.value);
+            setShowResults(true);
+          }}
           className="pl-10"
         />
       </div>
@@ -87,7 +91,7 @@ export function SongSearch({ onSongSelect, placeholder = "Search for a song...",
         </div>
       )}
 
-      {tracks.length > 0 && (
+      {tracks.length > 0 && showResults && (
         <div className="space-y-3 max-h-96 overflow-y-auto">
           {tracks.map((track: SpotifyTrack) => (
             <Card key={track.id} className="transition-colors hover:bg-gray-50 cursor-pointer">
@@ -130,7 +134,12 @@ export function SongSearch({ onSongSelect, placeholder = "Search for a song...",
                     )}
                     
                     <Button
-                      onClick={() => onSongSelect(track)}
+                      onClick={() => {
+                        onSongSelect(track);
+                        setQuery('');
+                        setDebouncedQuery('');
+                        setShowResults(false);
+                      }}
                       size="sm"
                       className="gradient-bg text-white hover:opacity-90"
                     >
