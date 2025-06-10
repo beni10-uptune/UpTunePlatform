@@ -58,17 +58,26 @@ const WeeklyChallenge = () => {
 
   // Submit challenge entry
   const submitMutation = useMutation({
-    mutationFn: async (data) => {
+    mutationFn: async (data: { nickname: string; story: string }) => {
+      if (!selectedSong || !challenge) return;
+      
       const response = await apiRequest('POST', '/api/challenge-submissions', {
         ...data,
-        challengeId: challenge.id,
+        challengeId: (challenge as any).id,
+        songTitle: selectedSong.title,
+        songArtist: selectedSong.artist,
+        album: selectedSong.album,
+        spotifyId: selectedSong.id,
+        imageUrl: selectedSong.imageUrl || '',
+        previewUrl: selectedSong.previewUrl || ''
       });
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`/api/weekly-challenge/${challenge?.id}/submissions`] });
+      queryClient.invalidateQueries({ queryKey: [`/api/weekly-challenge/${(challenge as any)?.id}/submissions`] });
       setShowSubmissionForm(false);
-      setFormData({ nickname: '', songTitle: '', songArtist: '', story: '' });
+      setSelectedSong(null);
+      setFormData({ nickname: '', story: '' });
       toast({
         title: "Submission Successful!",
         description: "Your song has been added to this week's challenge.",
