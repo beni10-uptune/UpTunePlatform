@@ -368,11 +368,11 @@ export default function GameRoom() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Players Panel */}
-          <Card>
+          <Card className="lg:order-1 order-2">
             <CardHeader>
-              <CardTitle className="flex items-center">
+              <CardTitle className="flex items-center text-lg">
                 <Users className="w-5 h-5 mr-2" />
                 Players ({(players as Player[]).length})
               </CardTitle>
@@ -402,19 +402,20 @@ export default function GameRoom() {
           </Card>
 
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="lg:col-span-2 space-y-6 lg:order-2 order-1">
             {/* Add Song Section */}
             <Card>
               <CardHeader>
-                <div className="flex items-center justify-between">
-                  <CardTitle className="flex items-center">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <CardTitle className="flex items-center text-lg">
                     <Music className="w-5 h-5 mr-2" />
                     Playlist ({(songs as Song[]).length} songs)
                   </CardTitle>
-                  <div className="flex space-x-2">
+                  <div className="flex flex-col sm:flex-row gap-2">
                     <Button
                       onClick={() => setShowAddSong(true)}
                       size="sm"
+                      className="gradient-bg text-white w-full sm:w-auto"
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       Add Song
@@ -425,9 +426,11 @@ export default function GameRoom() {
                         disabled={createPlaylistMutation.isPending}
                         size="sm"
                         variant="outline"
+                        className="w-full sm:w-auto"
                       >
                         <ExternalLink className="w-4 h-4 mr-2" />
-                        Export to Spotify
+                        <span className="hidden sm:inline">Export to Spotify</span>
+                        <span className="sm:hidden">Export</span>
                       </Button>
                     )}
                   </div>
