@@ -86,4 +86,35 @@ app.use((req, res, next) => {
   }, () => {
     log(`serving on port ${port}`);
   });
-})();
+
+  // Handle server startup errors
+  server.on('error', (error: any) => {
+    if (error.code === 'EADDRINUSE') {
+      log(`Port ${port} is already in use`);
+      process.exit(1);
+    } else {
+      log(`Server error: ${error.message}`);
+      process.exit(1);
+    }
+  });
+
+  // Handle process termination gracefully
+  process.on('SIGTERM', () => {
+    log('SIGTERM received, shutting down gracefully');
+    server.close(() => {
+      log('Process terminated');
+      process.exit(0);
+    });
+  });
+
+  process.on('SIGINT', () => {
+    log('SIGINT received, shutting down gracefully');
+    server.close(() => {
+      log('Process terminated');
+      process.exit(0);
+    });
+  });
+})().catch((error) => {
+  console.error('Failed to start server:', error);
+  process.exit(1);
+});

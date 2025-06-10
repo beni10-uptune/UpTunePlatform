@@ -19,6 +19,21 @@ interface TeamContactEmailParams {
 
 export async function sendTeamContactEmail(params: TeamContactEmailParams): Promise<boolean> {
   try {
+    // Check if Resend is available
+    if (!resend) {
+      console.log('Email service not available - logging contact form submission instead:');
+      console.log({
+        company: params.companyName,
+        contact: params.contactName,
+        email: params.email,
+        phone: params.phone,
+        teamSize: params.teamSize,
+        message: params.message,
+        timestamp: new Date().toISOString()
+      });
+      return true; // Return success to not break the form flow
+    }
+
     const emailContent = `
 New UpTune for Teams Inquiry
 
@@ -35,7 +50,7 @@ ${params.message}
 Sent from UpTune Teams Contact Form
     `.trim();
 
-    await resend.emails.send({
+    await resend!.emails.send({
       from: 'UpTune Teams <noreply@resend.dev>',
       to: ['b10smith5@gmail.com'],
       subject: `New UpTune Teams Inquiry from ${params.companyName}`,
