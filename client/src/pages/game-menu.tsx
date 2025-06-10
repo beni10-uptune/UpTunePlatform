@@ -39,10 +39,10 @@ const GameMenu = () => {
     {
       id: 'desert-island',
       title: 'Desert Island Discs',
-      description: 'Share the songs that define your story',
+      description: 'Share the 8 songs that tell your life story - inspired by the legendary BBC show',
       icon: Radio,
       color: 'indigo',
-      exampleThemes: ['Life Soundtrack', 'Childhood Memories', 'Songs That Changed Me', 'Musical Identity', 'Comfort Classics']
+      exampleThemes: ['My Musical DNA', 'Songs That Shaped Me', 'Life Through Music', 'Musical Autobiography', 'Desert Island Journey']
     }
   ];
 

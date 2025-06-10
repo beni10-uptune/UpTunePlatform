@@ -18,7 +18,8 @@ import {
   Clock, 
   Plus,
   ExternalLink,
-  Headphones
+  Headphones,
+  Radio
 } from 'lucide-react';
 import { getPlayerEmoji } from '@/lib/utils';
 import type { GameRoom, Player, Song } from '@shared/schema';
@@ -39,21 +40,37 @@ const GAME_TYPES = {
     description: 'Create a collaborative mixtape with your friends',
     icon: Music,
     color: 'from-purple-500 to-pink-500',
-    themes: ['Road Trip', 'Summer Vibes', 'Workout', 'Chill Night', 'Throwback']
+    themes: ['Road Trip', 'Summer Vibes', 'Workout', 'Chill Night', 'Throwback'],
+    isGuided: false,
+    prompts: undefined
   },
   soundtrack: {
     title: 'Soundtrack Session',
     description: 'Build the perfect soundtrack for any occasion',
     icon: Headphones,
     color: 'from-blue-500 to-cyan-500',
-    themes: ['Movie Night', 'Study Session', 'Party Playlist', 'Morning Motivation', 'Rain Day']
+    themes: ['Movie Night', 'Study Session', 'Party Playlist', 'Morning Motivation', 'Rain Day'],
+    isGuided: false,
+    prompts: undefined
   },
   'desert-island': {
     title: 'Desert Island Discs',
-    description: 'Choose your essential songs for a desert island',
-    icon: Music,
+    description: 'Share 8 songs that tell your life story, inspired by the legendary BBC Radio 4 show',
+    icon: Radio,
     color: 'from-green-500 to-teal-500',
-    themes: ['Essential Classics', 'Guilty Pleasures', 'Life Soundtrack', 'Comfort Songs', 'Energy Boosters']
+    themes: ['Musical DNA', 'Life Through Music', 'Songs That Shaped Me', 'Musical Autobiography', 'Personal Soundtrack'],
+    isGuided: true,
+    maxSongs: 8,
+    prompts: [
+      'A song from your childhood that brings back vivid memories',
+      'A piece of music that represents your teenage years',
+      'Something that reminds you of home or family',
+      'A song that got you through a difficult time',
+      'Music that makes you feel most like yourself',
+      'A track that represents love or a significant relationship',
+      'Something that energizes or motivates you',
+      'A song you\'d want to hear one last time'
+    ]
   }
 } as const;
 
@@ -73,6 +90,7 @@ export default function GameRoom() {
   const [showAddSong, setShowAddSong] = useState(false);
   const [isHost, setIsHost] = useState(false);
   const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null);
+  const [currentPromptIndex, setCurrentPromptIndex] = useState(0);
 
   // Queries
   const { data: gameRoom, isLoading: roomLoading } = useQuery<GameRoom>({
@@ -222,6 +240,14 @@ export default function GameRoom() {
   const handleAddSong = () => {
     if (!selectedSong || !currentPlayer || !gameRoom) return;
 
+    const isDesertIsland = gameRoom.gameType === 'desert-island';
+    const desertIslandConfig = gameConfig as typeof GAME_TYPES['desert-island'];
+    const currentPrompt = isDesertIsland && desertIslandConfig.prompts ? 
+      desertIslandConfig.prompts[currentPromptIndex] : '';
+
+    const storyText = isDesertIsland ? 
+      `${currentPrompt}: ${songStory}` : songStory;
+
     addSongMutation.mutate({
       gameRoomId: gameRoom.id,
       playerId: currentPlayer.id,
@@ -231,8 +257,13 @@ export default function GameRoom() {
       spotifyId: selectedSong.id,
       imageUrl: selectedSong.imageUrl || undefined,
       previewUrl: selectedSong.previewUrl || undefined,
-      story: songStory
+      story: storyText
     });
+
+    // For Desert Island Discs, advance to next prompt
+    if (isDesertIsland && gameConfig.prompts && currentPromptIndex < gameConfig.prompts.length - 1) {
+      setCurrentPromptIndex(prev => prev + 1);
+    }
   };
 
   const handleShare = async () => {
@@ -496,10 +527,31 @@ export default function GameRoom() {
         <Dialog open={showAddSong} onOpenChange={setShowAddSong}>
           <DialogContent className="max-w-2xl w-[95vw] max-h-[90vh] overflow-y-auto mx-4">
             <DialogHeader>
-              <DialogTitle>Add a Song</DialogTitle>
-              <DialogDescription>
-                Search for a song and tell us why you chose it for this {gameConfig.title.toLowerCase()}.
-              </DialogDescription>
+              {gameRoom?.gameType === 'desert-island' ? (
+                <>
+                  <DialogTitle className="flex items-center gap-2">
+                    <Radio className="w-5 h-5 text-green-600" />
+                    Desert Island Disc #{currentPromptIndex + 1}/8
+                  </DialogTitle>
+                  <DialogDescription className="text-left">
+                    <div className="space-y-2">
+                      <p className="font-medium text-green-700">
+                        {gameConfig.prompts?.[currentPromptIndex]}
+                      </p>
+                      <p className="text-sm text-gray-600">
+                        Share the story behind this song and why it's essential to your musical DNA.
+                      </p>
+                    </div>
+                  </DialogDescription>
+                </>
+              ) : (
+                <>
+                  <DialogTitle>Add a Song</DialogTitle>
+                  <DialogDescription>
+                    Search for a song and tell us why you chose it for this {gameConfig.title.toLowerCase()}.
+                  </DialogDescription>
+                </>
+              )}
             </DialogHeader>
             <div className="space-y-4">
               <SongSearch
