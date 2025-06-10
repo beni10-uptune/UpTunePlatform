@@ -1,7 +1,15 @@
-import type { Express } from "express";
+import type { Express, Request } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertGameRoomSchema, insertPlayerSchema, insertSongSchema, insertChallengeSubmissionSchema, insertTeamsWaitlistSchema } from "@shared/schema";
+
+interface AuthenticatedRequest extends Request {
+  session: {
+    spotifyState?: string;
+    spotifyAccessToken?: string;
+    spotifyRefreshToken?: string;
+  };
+}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Game Rooms
@@ -156,6 +164,110 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Spotify track error:", error);
       res.status(500).json({ error: "Failed to get track" });
+    }
+  });
+
+  // Spotify OAuth endpoints
+  app.get("/api/spotify/auth", async (req, res) => {
+    try {
+      const { spotifyService } = await import("./spotify");
+      const redirectUri = `${req.protocol}://${req.get('host')}/api/spotify/callback`;
+      const state = Math.random().toString(36).substring(7);
+      
+      // Store state in session for verification
+      req.session.spotifyState = state;
+      
+      const authUrl = spotifyService.generateAuthUrl(redirectUri, state);
+      res.json({ authUrl });
+    } catch (error) {
+      console.error("Spotify auth error:", error);
+      res.status(500).json({ error: "Failed to generate auth URL" });
+    }
+  });
+
+  app.get("/api/spotify/callback", async (req, res) => {
+    try {
+      const { code, state } = req.query;
+      
+      if (!code || !state || state !== req.session.spotifyState) {
+        return res.status(400).send("Invalid callback parameters");
+      }
+      
+      const { spotifyService } = await import("./spotify");
+      const redirectUri = `${req.protocol}://${req.get('host')}/api/spotify/callback`;
+      const tokens = await spotifyService.exchangeCodeForToken(code as string, redirectUri);
+      
+      // Store tokens in session
+      req.session.spotifyAccessToken = tokens.access_token;
+      req.session.spotifyRefreshToken = tokens.refresh_token;
+      
+      // Redirect to success page
+      res.redirect('/?spotify=connected');
+    } catch (error) {
+      console.error("Spotify callback error:", error);
+      res.redirect('/?spotify=error');
+    }
+  });
+
+  app.post("/api/spotify/create-playlist", async (req, res) => {
+    try {
+      const { name, description, trackIds } = req.body;
+      const accessToken = req.session.spotifyAccessToken;
+      
+      if (!accessToken) {
+        return res.status(401).json({ error: "Not authenticated with Spotify" });
+      }
+      
+      if (!trackIds || !Array.isArray(trackIds) || trackIds.length === 0) {
+        return res.status(400).json({ error: "No tracks provided" });
+      }
+      
+      const { spotifyService } = await import("./spotify");
+      const playlistUrl = await spotifyService.createPlaylistFromTracks(
+        accessToken,
+        name || "Uptune Playlist",
+        trackIds,
+        description
+      );
+      
+      res.json({
+        success: true,
+        playlistUrl,
+        message: `Playlist "${name}" created successfully!`
+      });
+    } catch (error) {
+      console.error("Create playlist error:", error);
+      res.status(500).json({ error: "Failed to create playlist" });
+    }
+  });
+
+  // Get playlist data for room
+  app.get("/api/game-rooms/:gameRoomId/playlist", async (req, res) => {
+    try {
+      const gameRoomId = parseInt(req.params.gameRoomId);
+      const songs = await storage.getSongsByGameRoom(gameRoomId);
+      const room = await storage.getGameRoom(gameRoomId);
+      
+      if (!room) {
+        return res.status(404).json({ error: "Game room not found" });
+      }
+      
+      const playlist = {
+        name: `${room.theme} - ${room.gameType}`,
+        description: `Collaborative playlist created in Uptune`,
+        tracks: songs.filter(song => song.spotifyId).map(song => ({
+          id: song.spotifyId,
+          title: song.title,
+          artist: song.artist,
+          album: song.album,
+          imageUrl: song.imageUrl
+        }))
+      };
+      
+      res.json(playlist);
+    } catch (error) {
+      console.error("Get playlist error:", error);
+      res.status(500).json({ error: "Failed to get playlist data" });
     }
   });
 

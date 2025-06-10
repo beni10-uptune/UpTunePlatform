@@ -120,6 +120,98 @@ export class SpotifyService {
       previewUrl: track.preview_url
     };
   }
+
+  async createPlaylistFromTracks(userAccessToken: string, playlistName: string, trackIds: string[], description?: string): Promise<string> {
+    const response = await fetch('https://api.spotify.com/v1/me', {
+      headers: {
+        'Authorization': `Bearer ${userAccessToken}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to get user info');
+    }
+
+    const user = await response.json();
+
+    // Create playlist
+    const createPlaylistResponse = await fetch(`https://api.spotify.com/v1/users/${user.id}/playlists`, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${userAccessToken}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        name: playlistName,
+        description: description || `Created with Uptune - ${new Date().toLocaleDateString()}`,
+        public: false
+      })
+    });
+
+    if (!createPlaylistResponse.ok) {
+      throw new Error('Failed to create playlist');
+    }
+
+    const playlist = await createPlaylistResponse.json();
+
+    // Add tracks to playlist
+    if (trackIds.length > 0) {
+      const trackUris = trackIds.map(id => `spotify:track:${id}`);
+      
+      await fetch(`https://api.spotify.com/v1/playlists/${playlist.id}/tracks`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${userAccessToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          uris: trackUris
+        })
+      });
+    }
+
+    return playlist.external_urls.spotify;
+  }
+
+  generateAuthUrl(redirectUri: string, state?: string): string {
+    const scopes = [
+      'playlist-modify-private',
+      'playlist-modify-public',
+      'user-read-private',
+      'user-read-email'
+    ].join(' ');
+
+    const params = new URLSearchParams({
+      response_type: 'code',
+      client_id: this.clientId,
+      scope: scopes,
+      redirect_uri: redirectUri,
+      ...(state && { state })
+    });
+
+    return `https://accounts.spotify.com/authorize?${params}`;
+  }
+
+  async exchangeCodeForToken(code: string, redirectUri: string): Promise<{ access_token: string; refresh_token: string }> {
+    const response = await fetch('https://accounts.spotify.com/api/token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': `Basic ${Buffer.from(`${this.clientId}:${this.clientSecret}`).toString('base64')}`
+      },
+      body: new URLSearchParams({
+        grant_type: 'authorization_code',
+        code,
+        redirect_uri: redirectUri
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to exchange code for token');
+    }
+
+    return await response.json();
+  }
 }
 
 export const spotifyService = new SpotifyService();
