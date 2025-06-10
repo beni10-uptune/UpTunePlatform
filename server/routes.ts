@@ -124,34 +124,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Mock Spotify API endpoints
+  // Spotify API endpoints
   app.get("/api/spotify/search", async (req, res) => {
-    const query = req.query.q as string;
-    if (!query) {
-      return res.status(400).json({ error: "Query parameter required" });
+    try {
+      const query = req.query.q as string;
+      if (!query) {
+        return res.status(400).json({ error: "Query parameter required" });
+      }
+
+      const { spotifyService } = await import("./spotify");
+      const tracks = await spotifyService.searchTracks(query);
+      const formattedTracks = tracks.map(track => spotifyService.formatTrackForClient(track));
+      
+      res.json(formattedTracks);
+    } catch (error) {
+      console.error("Spotify search error:", error);
+      res.status(500).json({ error: "Failed to search tracks" });
     }
-
-    // Mock search results
-    const mockResults = [
-      { id: "1", title: `${query} - Result 1`, artist: "Artist 1" },
-      { id: "2", title: `${query} - Result 2`, artist: "Artist 2" },
-      { id: "3", title: `${query} - Result 3`, artist: "Artist 3" },
-    ];
-
-    res.json(mockResults);
   });
 
-  app.post("/api/spotify/create-playlist", async (req, res) => {
+  app.get("/api/spotify/track/:id", async (req, res) => {
     try {
-      const { name, songs } = req.body;
-      // Mock playlist creation
-      res.json({
-        success: true,
-        playlistUrl: `https://open.spotify.com/playlist/mock-${Math.random().toString(36).substring(7)}`,
-        message: `Playlist "${name}" created successfully with ${songs.length} songs!`
-      });
+      const { spotifyService } = await import("./spotify");
+      const track = await spotifyService.getTrack(req.params.id);
+      
+      if (!track) {
+        return res.status(404).json({ error: "Track not found" });
+      }
+      
+      res.json(spotifyService.formatTrackForClient(track));
     } catch (error) {
-      res.status(500).json({ error: "Failed to create playlist" });
+      console.error("Spotify track error:", error);
+      res.status(500).json({ error: "Failed to get track" });
     }
   });
 

@@ -9,8 +9,16 @@ import {
   type ChallengeSubmission,
   type InsertChallengeSubmission,
   type TeamsWaitlist,
-  type InsertTeamsWaitlist
+  type InsertTeamsWaitlist,
+  gameRooms,
+  players,
+  songs,
+  challengeSubmissions,
+  teamsWaitlist,
+  weeklyChallenge
 } from "@shared/schema";
+import { db } from "./db";
+import { eq, desc } from "drizzle-orm";
 
 export interface IStorage {
   // Game Rooms
@@ -38,153 +46,131 @@ export interface IStorage {
   addToTeamsWaitlist(entry: InsertTeamsWaitlist): Promise<TeamsWaitlist>;
 }
 
-export class MemStorage implements IStorage {
-  private gameRooms: Map<number, GameRoom>;
-  private players: Map<number, Player>;
-  private songs: Map<number, Song>;
-  private challengeSubmissions: Map<number, ChallengeSubmission>;
-  private teamsWaitlist: Map<number, TeamsWaitlist>;
-  private currentId: number;
-
-  constructor() {
-    this.gameRooms = new Map();
-    this.players = new Map();
-    this.songs = new Map();
-    this.challengeSubmissions = new Map();
-    this.teamsWaitlist = new Map();
-    this.currentId = 1;
-
-    // Seed current weekly challenge and some sample submissions
-    this.seedInitialData();
-  }
-
+export class DatabaseStorage implements IStorage {
   private generateGameCode(): string {
     return Math.random().toString(36).substring(2, 8).toUpperCase();
   }
 
-  private seedInitialData() {
-    // Add some sample challenge submissions for the trending list
-    const submissions = [
-      { nickname: "MusicLover23", songTitle: "Mr. Brightside", songArtist: "The Killers", votes: 89 },
-      { nickname: "RetroVibes", songTitle: "Hey Ya!", songArtist: "OutKast", votes: 76 },
-      { nickname: "PopPrincess", songTitle: "Since U Been Gone", songArtist: "Kelly Clarkson", votes: 64 },
-      { nickname: "DanceMachine", songTitle: "Hips Don't Lie", songArtist: "Shakira", votes: 58 },
-      { nickname: "SoulSearcher", songTitle: "Crazy", songArtist: "Gnarls Barkley", votes: 52 },
-    ];
-
-    submissions.forEach(sub => {
-      const submission: ChallengeSubmission = {
-        id: this.currentId++,
-        challengeId: 1,
-        nickname: sub.nickname,
-        songTitle: sub.songTitle,
-        songArtist: sub.songArtist,
-        story: null,
-        votes: sub.votes,
-        submittedAt: new Date(),
-      };
-      this.challengeSubmissions.set(submission.id, submission);
-    });
-  }
-
   async createGameRoom(gameRoom: InsertGameRoom): Promise<GameRoom> {
-    const id = this.currentId++;
     const code = this.generateGameCode();
-    const room: GameRoom = {
-      ...gameRoom,
-      id,
-      code,
-      createdAt: new Date(),
-    };
-    this.gameRooms.set(id, room);
+    const [room] = await db
+      .insert(gameRooms)
+      .values({
+        ...gameRoom,
+        code,
+        isActive: gameRoom.isActive ?? true
+      })
+      .returning();
     return room;
   }
 
   async getGameRoomByCode(code: string): Promise<GameRoom | undefined> {
-    return Array.from(this.gameRooms.values()).find(room => room.code === code);
+    const [room] = await db
+      .select()
+      .from(gameRooms)
+      .where(eq(gameRooms.code, code));
+    return room || undefined;
   }
 
   async getGameRoom(id: number): Promise<GameRoom | undefined> {
-    return this.gameRooms.get(id);
+    const [room] = await db
+      .select()
+      .from(gameRooms)
+      .where(eq(gameRooms.id, id));
+    return room || undefined;
   }
 
   async addPlayer(player: InsertPlayer): Promise<Player> {
-    const id = this.currentId++;
-    const newPlayer: Player = {
-      ...player,
-      id,
-      joinedAt: new Date(),
-    };
-    this.players.set(id, newPlayer);
+    const [newPlayer] = await db
+      .insert(players)
+      .values({
+        ...player,
+        isHost: player.isHost ?? false
+      })
+      .returning();
     return newPlayer;
   }
 
   async getPlayersByGameRoom(gameRoomId: number): Promise<Player[]> {
-    return Array.from(this.players.values()).filter(player => player.gameRoomId === gameRoomId);
+    return await db
+      .select()
+      .from(players)
+      .where(eq(players.gameRoomId, gameRoomId));
   }
 
   async addSong(song: InsertSong): Promise<Song> {
-    const id = this.currentId++;
-    const newSong: Song = {
-      ...song,
-      id,
-      addedAt: new Date(),
-    };
-    this.songs.set(id, newSong);
+    const [newSong] = await db
+      .insert(songs)
+      .values({
+        ...song,
+        story: song.story ?? null
+      })
+      .returning();
     return newSong;
   }
 
   async getSongsByGameRoom(gameRoomId: number): Promise<Song[]> {
-    return Array.from(this.songs.values()).filter(song => song.gameRoomId === gameRoomId);
+    return await db
+      .select()
+      .from(songs)
+      .where(eq(songs.gameRoomId, gameRoomId));
   }
 
   async getCurrentChallenge(): Promise<WeeklyChallenge | undefined> {
-    return {
-      id: 1,
-      title: "Your Ultimate High School Anthem",
-      description: "What song perfectly captures your high school experience? The track that takes you right back to those hallways, friendships, and unforgettable moments.",
-      emoji: "🎓",
-      startDate: new Date("2024-06-09"),
-      endDate: new Date("2024-06-15"),
-      isActive: true,
-    };
+    const [challenge] = await db
+      .select()
+      .from(weeklyChallenge)
+      .where(eq(weeklyChallenge.isActive, true))
+      .orderBy(desc(weeklyChallenge.startDate))
+      .limit(1);
+    return challenge || undefined;
   }
 
   async addChallengeSubmission(submission: InsertChallengeSubmission): Promise<ChallengeSubmission> {
-    const id = this.currentId++;
-    const newSubmission: ChallengeSubmission = {
-      ...submission,
-      id,
-      submittedAt: new Date(),
-    };
-    this.challengeSubmissions.set(id, newSubmission);
+    const [newSubmission] = await db
+      .insert(challengeSubmissions)
+      .values({
+        ...submission,
+        story: submission.story ?? null,
+        votes: submission.votes ?? 0
+      })
+      .returning();
     return newSubmission;
   }
 
   async getChallengeSubmissions(challengeId: number): Promise<ChallengeSubmission[]> {
-    return Array.from(this.challengeSubmissions.values())
-      .filter(submission => submission.challengeId === challengeId)
-      .sort((a, b) => b.votes - a.votes);
+    return await db
+      .select()
+      .from(challengeSubmissions)
+      .where(eq(challengeSubmissions.challengeId, challengeId))
+      .orderBy(desc(challengeSubmissions.votes));
   }
 
   async voteForSubmission(submissionId: number): Promise<void> {
-    const submission = this.challengeSubmissions.get(submissionId);
+    const [submission] = await db
+      .select()
+      .from(challengeSubmissions)
+      .where(eq(challengeSubmissions.id, submissionId));
+    
     if (submission) {
-      submission.votes += 1;
-      this.challengeSubmissions.set(submissionId, submission);
+      await db
+        .update(challengeSubmissions)
+        .set({ votes: submission.votes + 1 })
+        .where(eq(challengeSubmissions.id, submissionId));
     }
   }
 
   async addToTeamsWaitlist(entry: InsertTeamsWaitlist): Promise<TeamsWaitlist> {
-    const id = this.currentId++;
-    const newEntry: TeamsWaitlist = {
-      ...entry,
-      id,
-      submittedAt: new Date(),
-    };
-    this.teamsWaitlist.set(id, newEntry);
+    const [newEntry] = await db
+      .insert(teamsWaitlist)
+      .values({
+        ...entry,
+        teamSize: entry.teamSize ?? null,
+        role: entry.role ?? null
+      })
+      .returning();
     return newEntry;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
