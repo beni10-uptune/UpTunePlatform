@@ -10,8 +10,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const gameRoomData = insertGameRoomSchema.parse(req.body);
       const gameRoom = await storage.createGameRoom(gameRoomData);
       res.json(gameRoom);
-    } catch (error) {
-      res.status(400).json({ error: "Invalid game room data" });
+    } catch (error: any) {
+      console.error("Game room creation error:", error);
+      res.status(400).json({ error: "Invalid game room data", details: error.message });
     }
   });
 

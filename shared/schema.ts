@@ -71,7 +71,10 @@ export const teamsWaitlist = pgTable("teams_waitlist", {
 
 export const insertGameRoomSchema = createInsertSchema(gameRooms).omit({
   id: true,
+  code: true,
   createdAt: true,
+}).partial({
+  isActive: true,
 });
 
 export const insertPlayerSchema = createInsertSchema(players).omit({
