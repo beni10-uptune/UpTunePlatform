@@ -99,6 +99,10 @@ export default function GameRoom() {
   const [isHost, setIsHost] = useState(false);
   const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null);
   const [currentPromptIndex, setCurrentPromptIndex] = useState(0);
+  const [showShareDialog, setShowShareDialog] = useState(false);
+  const [achievements, setAchievements] = useState<string[]>([]);
+  const [reactions, setReactions] = useState<Record<number, string[]>>({});
+  const [celebrationTrigger, setCelebrationTrigger] = useState(0);
 
   // Queries
   const { data: gameRoom, isLoading: roomLoading } = useQuery<GameRoom>({
@@ -160,6 +164,13 @@ export default function GameRoom() {
       setShowAddSong(false);
       setSelectedSong(null);
       setSongStory('');
+      
+      // Check for achievements after state updates
+      setTimeout(checkAchievements, 100);
+      
+      // Trigger celebration animation
+      setCelebrationTrigger(prev => prev + 1);
+      
       toast({
         title: 'Song added!',
         description: 'Your song has been added to the playlist.'
@@ -221,6 +232,128 @@ export default function GameRoom() {
       createPlaylistMutation.mutate();
     }
   }, []);
+
+  // Achievement detection system
+  const checkAchievements = () => {
+    const playerSongs = (songs as Song[]).filter(s => s.playerId === currentPlayer?.id);
+    const newAchievements: string[] = [];
+
+    // First Song Achievement
+    if (playerSongs.length === 1 && !achievements.includes('first-song')) {
+      newAchievements.push('first-song');
+      toast({
+        title: '🎵 First Note!',
+        description: 'You added your first song to the playlist!'
+      });
+    }
+
+    // Storyteller Achievement
+    if (playerSongs.some(s => s.story && s.story.length > 50) && !achievements.includes('storyteller')) {
+      newAchievements.push('storyteller');
+      toast({
+        title: '📖 Storyteller!',
+        description: 'Your song stories bring music to life!'
+      });
+    }
+
+    // Desert Island Master
+    if (gameRoom?.gameType === 'desert-island' && playerSongs.length === 5 && !achievements.includes('desert-master')) {
+      newAchievements.push('desert-master');
+      toast({
+        title: '🏝️ Desert Island Master!',
+        description: 'You completed your musical survival kit!'
+      });
+    }
+
+    // Playlist Pioneer (3+ songs)
+    if (playerSongs.length >= 3 && !achievements.includes('pioneer')) {
+      newAchievements.push('pioneer');
+      toast({
+        title: '🚀 Playlist Pioneer!',
+        description: 'You are shaping this musical journey!'
+      });
+    }
+
+    // Group Harmony (when playlist has 10+ songs from multiple people)
+    if ((songs as Song[]).length >= 10 && 
+        new Set((songs as Song[]).map(s => s.playerId)).size >= 2 && 
+        !achievements.includes('harmony')) {
+      newAchievements.push('harmony');
+      toast({
+        title: '🎼 Group Harmony!',
+        description: 'Together you created something beautiful!'
+      });
+    }
+
+    setAchievements(prev => [...prev, ...newAchievements]);
+  };
+
+  // Real-time reactions system
+  const addReaction = (songId: number, emoji: string) => {
+    setReactions(prev => ({
+      ...prev,
+      [songId]: [...(prev[songId] || []), emoji]
+    }));
+    
+    // Show floating reaction animation
+    toast({
+      title: `${emoji} Reaction added!`,
+      description: 'Your musical taste is appreciated!'
+    });
+  };
+
+  // Enhanced sharing functionality
+  const sharePlaylist = async () => {
+    const playlistTitle = `${gameRoom?.theme} - ${gameRoom?.gameType}`;
+    const songCount = (songs as Song[]).length;
+    const playerCount = new Set((songs as Song[]).map(s => s.playerId)).size;
+    
+    const shareText = `🎵 Just created "${playlistTitle}" with ${playerCount} friends! ${songCount} amazing songs that tell our story. Join us on Uptune!`;
+    const shareUrl = window.location.href;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: playlistTitle,
+          text: shareText,
+          url: shareUrl
+        });
+      } catch (error) {
+        // Fallback to clipboard
+        await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+        toast({
+          title: 'Copied to clipboard!',
+          description: 'Share this playlist with your friends!'
+        });
+      }
+    } else {
+      await navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+      toast({
+        title: 'Copied to clipboard!',
+        description: 'Share this playlist with your friends!'
+      });
+    }
+  };
+
+  // Generate shareable playlist card data
+  const generatePlaylistCard = () => {
+    const topSongs = (songs as Song[]).slice(0, 5);
+    const playerIdSet = new Set<number>();
+    (songs as Song[]).forEach(song => playerIdSet.add(song.playerId));
+    const contributors = Array.from(playerIdSet).map(id => 
+      (players as Player[]).find(p => p.id === id)?.nickname
+    ).filter((name): name is string => !!name);
+
+    return {
+      title: gameRoom?.theme || 'Collaborative Playlist',
+      gameType: gameRoom?.gameType,
+      songCount: (songs as Song[]).length,
+      contributors: contributors.slice(0, 3),
+      topSongs,
+      roomCode: gameRoom?.code,
+      achievements: achievements.length
+    };
+  };
 
   const handleJoinRoom = () => {
     if (!nickname.trim() || !gameRoom) return;
@@ -515,45 +648,121 @@ export default function GameRoom() {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {(songs as Song[]).map((song) => {
+                    {(songs as Song[]).map((song, index) => {
                       const player = (players as Player[]).find(p => p.id === song.playerId);
+                      const songReactions = reactions[song.id] || [];
                       return (
-                        <div key={song.id} className="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg">
-                          {song.imageUrl && (
-                            <img
-                              src={song.imageUrl}
-                              alt={`${song.title} cover`}
-                              className="w-16 h-16 rounded-lg object-cover"
-                            />
-                          )}
-                          <div className="flex-1">
-                            <div className="flex items-center space-x-2 mb-1">
-                              <h4 className="font-semibold">{song.title}</h4>
-                              {song.previewUrl && (
-                                <Button
-                                  size="sm"
-                                  variant="ghost"
-                                  onClick={() => {
-                                    const audio = new Audio(song.previewUrl!);
-                                    audio.play();
-                                  }}
+                        <motion.div 
+                          key={song.id} 
+                          className="relative group"
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.1 }}
+                        >
+                          <div className="flex items-start space-x-4 p-4 bg-gradient-to-r from-white to-purple-50 rounded-lg border border-purple-100 hover:shadow-lg transition-all duration-300">
+                            {song.imageUrl && (
+                              <div className="relative">
+                                <img
+                                  src={song.imageUrl}
+                                  alt={`${song.title} cover`}
+                                  className="w-16 h-16 rounded-lg object-cover shadow-md"
+                                />
+                                <motion.div
+                                  key={celebrationTrigger}
+                                  initial={{ scale: 0 }}
+                                  animate={{ scale: [0, 1.2, 1] }}
+                                  transition={{ duration: 0.6 }}
+                                  className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center"
                                 >
-                                  <Headphones className="w-4 h-4" />
-                                </Button>
-                              )}
-                            </div>
-                            <p className="text-gray-600">{song.artist}</p>
-                            {song.album && <p className="text-gray-500 text-sm">{song.album}</p>}
-                            {song.story && (
-                              <p className="text-gray-700 mt-2 italic">"{song.story}"</p>
+                                  <Sparkles className="w-3 h-3 text-white" />
+                                </motion.div>
+                              </div>
                             )}
-                            <div className="flex items-center justify-between mt-2">
-                              <span className="text-sm text-gray-500">
-                                Added by {player?.nickname}
-                              </span>
+                            <div className="flex-1">
+                              <div className="flex items-center space-x-2 mb-1">
+                                <h4 className="font-semibold text-gray-900">{song.title}</h4>
+                                {song.previewUrl && (
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="hover:bg-purple-100 text-purple-600"
+                                    onClick={() => {
+                                      const audio = new Audio(song.previewUrl!);
+                                      audio.play();
+                                    }}
+                                  >
+                                    <Headphones className="w-4 h-4" />
+                                  </Button>
+                                )}
+                                {song.spotifyUrl && (
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="hover:bg-green-100 text-green-600"
+                                    onClick={() => window.open(song.spotifyUrl, '_blank')}
+                                  >
+                                    <ExternalLink className="w-4 h-4" />
+                                  </Button>
+                                )}
+                              </div>
+                              <p className="text-gray-600 font-medium">{song.artist}</p>
+                              {song.album && <p className="text-gray-500 text-sm">{song.album}</p>}
+                              {song.story && (
+                                <div className="mt-2 p-3 bg-purple-50 rounded-lg border-l-4 border-purple-300">
+                                  <p className="text-gray-700 italic text-sm">"{song.story}"</p>
+                                </div>
+                              )}
+                              <div className="flex items-center justify-between mt-3">
+                                <div className="flex items-center space-x-2">
+                                  <span className="text-sm text-gray-500">
+                                    Added by <span className="font-medium text-purple-600">{player?.nickname}</span>
+                                  </span>
+                                  {player?.id === currentPlayer?.id && (
+                                    <Badge className="bg-purple-100 text-purple-700 text-xs">You</Badge>
+                                  )}
+                                </div>
+                                
+                                {/* Quick Reactions */}
+                                <div className="flex items-center space-x-1">
+                                  {songReactions.length > 0 && (
+                                    <div className="flex items-center space-x-1 mr-2">
+                                      {songReactions.slice(0, 3).map((emoji, i) => (
+                                        <span key={i} className="text-lg">{emoji}</span>
+                                      ))}
+                                      {songReactions.length > 3 && (
+                                        <span className="text-xs text-gray-500">+{songReactions.length - 3}</span>
+                                      )}
+                                    </div>
+                                  )}
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="text-red-500 hover:bg-red-50"
+                                    onClick={() => addReaction(song.id, '❤️')}
+                                  >
+                                    <Heart className="w-4 h-4" />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="text-blue-500 hover:bg-blue-50"
+                                    onClick={() => addReaction(song.id, '👍')}
+                                  >
+                                    <ThumbsUp className="w-4 h-4" />
+                                  </Button>
+                                  <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="text-yellow-500 hover:bg-yellow-50"
+                                    onClick={() => addReaction(song.id, '⭐')}
+                                  >
+                                    <Star className="w-4 h-4" />
+                                  </Button>
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
+                        </motion.div>
                       );
                     })}
                   </div>
