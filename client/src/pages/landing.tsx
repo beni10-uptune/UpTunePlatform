@@ -1,9 +1,11 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Progress } from '@/components/ui/progress';
 import { 
   Music, 
   Play, 
@@ -14,11 +16,148 @@ import {
   Headphones,
   Mic,
   Radio,
-  Volume2
+  Volume2,
+  Zap,
+  Star,
+  Activity,
+  Trophy,
+  Share2
 } from 'lucide-react';
+
+// Musical DNA Quiz Data
+const MUSICAL_DNA_QUESTIONS = [
+  {
+    question: "What's your perfect Friday night soundtrack?",
+    options: [
+      { text: "Upbeat pop hits that make me dance", personality: "energizer", emoji: "🎉" },
+      { text: "Chill indie tracks for deep conversations", personality: "connector", emoji: "💭" },
+      { text: "Classic rock anthems that never get old", personality: "timeless", emoji: "🎸" },
+      { text: "Whatever matches my current mood", personality: "chameleon", emoji: "🎭" }
+    ]
+  },
+  {
+    question: "How do you discover new music?",
+    options: [
+      { text: "Friends' recommendations and playlists", personality: "social", emoji: "👥" },
+      { text: "Deep dives into artist discographies", personality: "explorer", emoji: "🔍" },
+      { text: "Trending charts and popular picks", personality: "trendsetter", emoji: "📈" },
+      { text: "Random discoveries and happy accidents", personality: "serendipitous", emoji: "✨" }
+    ]
+  },
+  {
+    question: "Your music volume preference?",
+    options: [
+      { text: "Loud enough to feel every beat", personality: "intense", emoji: "🔊" },
+      { text: "Perfect background ambiance", personality: "ambient", emoji: "🎵" },
+      { text: "Crystal clear for every detail", personality: "audiophile", emoji: "🎧" },
+      { text: "Whatever works for the moment", personality: "adaptive", emoji: "⚡" }
+    ]
+  }
+];
+
+const PERSONALITY_RESULTS = {
+  energizer: { title: "The Musical Energizer", description: "You turn every moment into a celebration", color: "from-orange-400 to-red-400", icon: "🎉" },
+  connector: { title: "The Sonic Storyteller", description: "Music is your language of connection", color: "from-blue-400 to-purple-400", icon: "💫" },
+  timeless: { title: "The Classic Curator", description: "You appreciate the eternal power of great music", color: "from-amber-400 to-orange-400", icon: "👑" },
+  chameleon: { title: "The Mood Chameleon", description: "Your playlist reflects every facet of you", color: "from-green-400 to-blue-400", icon: "🦋" },
+  social: { title: "The Musical Connector", description: "Music builds your strongest friendships", color: "from-pink-400 to-rose-400", icon: "🤝" },
+  explorer: { title: "The Sound Explorer", description: "You uncover musical treasures others miss", color: "from-purple-400 to-indigo-400", icon: "🗺️" },
+  trendsetter: { title: "The Trend Oracle", description: "You know what's next before it happens", color: "from-emerald-400 to-teal-400", icon: "🔮" },
+  serendipitous: { title: "The Serendipity Seeker", description: "Magic happens in your musical discoveries", color: "from-violet-400 to-purple-400", icon: "✨" },
+  intense: { title: "The Sound Maximalist", description: "You live music with full intensity", color: "from-red-400 to-pink-400", icon: "🔥" },
+  ambient: { title: "The Atmosphere Architect", description: "You craft perfect sonic environments", color: "from-cyan-400 to-blue-400", icon: "🌙" },
+  audiophile: { title: "The Detail Detective", description: "You hear what others miss", color: "from-indigo-400 to-purple-400", icon: "🎯" },
+  adaptive: { title: "The Versatile Virtuoso", description: "You master every musical moment", color: "from-teal-400 to-green-400", icon: "⚡" }
+};
+
+const LIVE_ACTIVITIES = [
+  { user: "Sarah", action: "just added 'Bohemian Rhapsody' to Desert Island Discs", time: "2s ago", emoji: "🎭" },
+  { user: "Mike", action: "created a 90s nostalgia mixtape", time: "15s ago", emoji: "📼" },
+  { user: "Team Alpha", action: "discovered their perfect work soundtrack", time: "32s ago", emoji: "💼" },
+  { user: "Luna", action: "found their musical soulmate with 94% compatibility", time: "1m ago", emoji: "💫" },
+  { user: "Alex", action: "unlocked the 'Mood Matcher' achievement", time: "2m ago", emoji: "🏆" }
+];
+
+const TESTIMONIALS = [
+  { text: "My team bonded over our shared love of 80s hits!", author: "Sarah", role: "HR Manager", rating: 5 },
+  { text: "We discovered our CEO's secret punk rock phase 😂", author: "Mike", role: "Developer", rating: 5 },
+  { text: "Best virtual team building activity we've ever done", author: "Lisa", role: "Team Lead", rating: 5 },
+  { text: "Found my new favorite song through a coworker's playlist", author: "Jordan", role: "Designer", rating: 5 }
+];
 
 const LandingPage = () => {
   const [isHovered, setIsHovered] = useState(false);
+  const [activeUsers, setActiveUsers] = useState(2847);
+  const [currentActivityIndex, setCurrentActivityIndex] = useState(0);
+  const [currentTestimonialIndex, setCurrentTestimonialIndex] = useState(0);
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [quizStep, setQuizStep] = useState(0);
+  const [quizAnswers, setQuizAnswers] = useState<string[]>([]);
+  const [quizResult, setQuizResult] = useState<string | null>(null);
+
+  // Live activity rotation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentActivityIndex((prev) => (prev + 1) % LIVE_ACTIVITIES.length);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Testimonial rotation
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTestimonialIndex((prev) => (prev + 1) % TESTIMONIALS.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Simulated live user count updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveUsers(prev => prev + Math.floor(Math.random() * 3) - 1);
+    }, 8000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleQuizAnswer = (personality: string) => {
+    const newAnswers = [...quizAnswers, personality];
+    setQuizAnswers(newAnswers);
+
+    if (quizStep < MUSICAL_DNA_QUESTIONS.length - 1) {
+      setQuizStep(prev => prev + 1);
+    } else {
+      // Calculate result based on most frequent personality trait
+      const personalityCount: Record<string, number> = {};
+      newAnswers.forEach(p => {
+        personalityCount[p] = (personalityCount[p] || 0) + 1;
+      });
+      const result = Object.entries(personalityCount).reduce((a, b) => 
+        personalityCount[a[0]] > personalityCount[b[0]] ? a : b
+      )[0];
+      setQuizResult(result);
+    }
+  };
+
+  const resetQuiz = () => {
+    setQuizStep(0);
+    setQuizAnswers([]);
+    setQuizResult(null);
+  };
+
+  const shareResult = async () => {
+    const result = PERSONALITY_RESULTS[quizResult as keyof typeof PERSONALITY_RESULTS];
+    if (navigator.share) {
+      await navigator.share({
+        title: `I'm ${result.title}!`,
+        text: `${result.description} What's your Musical DNA? Take the quiz on Uptune!`,
+        url: window.location.origin
+      });
+    } else {
+      navigator.clipboard.writeText(
+        `I'm ${result.title}! ${result.description} What's your Musical DNA? Take the quiz on Uptune! ${window.location.origin}`
+      );
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
@@ -67,6 +206,31 @@ const LandingPage = () => {
               transition={{ duration: 0.8 }}
               className="space-y-8"
             >
+              {/* Live Activity & Social Proof */}
+              <motion.div 
+                className="flex items-center gap-2 text-sm text-gray-600"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5 }}
+              >
+                <div className="flex items-center gap-1">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <Activity className="w-4 h-4" />
+                </div>
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={activeUsers}
+                    initial={{ y: 10, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -10, opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="font-medium"
+                  >
+                    {activeUsers.toLocaleString()} people creating music magic right now
+                  </motion.span>
+                </AnimatePresence>
+              </motion.div>
+
               <div className="space-y-4">
                 <Badge className="gradient-bg text-white border-0 px-4 py-2">
                   <Sparkles className="w-4 h-4 mr-2" />
@@ -74,10 +238,12 @@ const LandingPage = () => {
                 </Badge>
                 
                 <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-                  Turn Music Into{' '}
+                  Turn any group into a{' '}
                   <span className="gradient-text">
-                    Connection
+                    musical family
                   </span>
+                  <br />
+                  <span className="text-3xl lg:text-4xl text-gray-600">in under 60 seconds</span>
                 </h1>
                 
                 <p className="text-xl text-gray-600 leading-relaxed">
@@ -99,6 +265,86 @@ const LandingPage = () => {
                     <ArrowRight className={`w-5 h-5 ml-2 transition-transform ${isHovered ? 'translate-x-1' : ''}`} />
                   </Button>
                 </Link>
+                
+                <Dialog open={showQuiz} onOpenChange={setShowQuiz}>
+                  <DialogTrigger asChild>
+                    <Button 
+                      size="lg" 
+                      variant="outline"
+                      className="border-purple-200 text-purple-700 hover:bg-purple-50 text-lg px-8 py-6"
+                    >
+                      <Zap className="w-5 h-5 mr-2" />
+                      Discover Your Musical DNA
+                    </Button>
+                  </DialogTrigger>
+                  
+                  <DialogContent className="max-w-2xl">
+                    <DialogHeader>
+                      <DialogTitle className="flex items-center gap-2 text-2xl">
+                        <Star className="w-6 h-6 text-purple-600" />
+                        Your Musical DNA
+                      </DialogTitle>
+                      <DialogDescription>
+                        Discover your unique musical personality in 30 seconds
+                      </DialogDescription>
+                    </DialogHeader>
+                    
+                    {!quizResult ? (
+                      <div className="space-y-6">
+                        <div className="flex items-center gap-4">
+                          <Progress value={(quizStep / MUSICAL_DNA_QUESTIONS.length) * 100} className="flex-1" />
+                          <span className="text-sm text-gray-500">{quizStep + 1}/{MUSICAL_DNA_QUESTIONS.length}</span>
+                        </div>
+                        
+                        <div className="space-y-4">
+                          <h3 className="text-lg font-semibold">{MUSICAL_DNA_QUESTIONS[quizStep].question}</h3>
+                          <div className="grid gap-3">
+                            {MUSICAL_DNA_QUESTIONS[quizStep].options.map((option, index) => (
+                              <Button
+                                key={index}
+                                variant="outline"
+                                className="justify-start text-left h-auto p-4 hover:bg-purple-50 hover:border-purple-300"
+                                onClick={() => handleQuizAnswer(option.personality)}
+                              >
+                                <span className="text-2xl mr-3">{option.emoji}</span>
+                                {option.text}
+                              </Button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <motion.div 
+                        className="space-y-6 text-center"
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.5 }}
+                      >
+                        <div className={`p-8 rounded-2xl bg-gradient-to-br ${PERSONALITY_RESULTS[quizResult as keyof typeof PERSONALITY_RESULTS].color} text-white`}>
+                          <div className="text-6xl mb-4">{PERSONALITY_RESULTS[quizResult as keyof typeof PERSONALITY_RESULTS].icon}</div>
+                          <h3 className="text-2xl font-bold mb-2">{PERSONALITY_RESULTS[quizResult as keyof typeof PERSONALITY_RESULTS].title}</h3>
+                          <p className="text-lg opacity-90">{PERSONALITY_RESULTS[quizResult as keyof typeof PERSONALITY_RESULTS].description}</p>
+                        </div>
+                        
+                        <div className="flex gap-3">
+                          <Button onClick={shareResult} className="flex-1 gradient-bg text-white">
+                            <Share2 className="w-4 h-4 mr-2" />
+                            Share Your Musical DNA
+                          </Button>
+                          <Button variant="outline" onClick={resetQuiz}>
+                            Retake Quiz
+                          </Button>
+                        </div>
+                        
+                        <Link href="/games">
+                          <Button size="lg" className="w-full gradient-bg text-white">
+                            Find Your Perfect Musical Games
+                          </Button>
+                        </Link>
+                      </motion.div>
+                    )}
+                  </DialogContent>
+                </Dialog>
                 
                 <Link href="/challenge">
                   <Button 
@@ -128,15 +374,42 @@ const LandingPage = () => {
               </div>
             </motion.div>
 
-            {/* Right Column - Visual */}
+            {/* Right Column - Enhanced Visual */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative"
+              className="relative space-y-6"
             >
+              {/* Live Activity Feed */}
+              <Card className="p-4 bg-white/80 backdrop-blur-sm border-purple-100">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-sm font-medium text-gray-700">Live Activity</span>
+                </div>
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentActivityIndex}
+                    initial={{ x: 20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    exit={{ x: -20, opacity: 0 }}
+                    transition={{ duration: 0.4 }}
+                    className="flex items-center gap-3"
+                  >
+                    <span className="text-lg">{LIVE_ACTIVITIES[currentActivityIndex].emoji}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-gray-600 truncate">
+                        <span className="font-medium text-purple-700">{LIVE_ACTIVITIES[currentActivityIndex].user}</span>
+                        {' '}{LIVE_ACTIVITIES[currentActivityIndex].action}
+                      </p>
+                      <p className="text-xs text-gray-400">{LIVE_ACTIVITIES[currentActivityIndex].time}</p>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+              </Card>
+
+              {/* Main Demo Card */}
               <div className="relative">
-                {/* Main Card */}
                 <Card className="card-hover game-card p-8 relative overflow-hidden">
                   <div className="music-wave h-2 absolute top-0 left-0 right-0"></div>
                   
@@ -194,6 +467,33 @@ const LandingPage = () => {
                   <Heart className="w-5 h-5 text-white" />
                 </motion.div>
               </div>
+
+              {/* Rotating Testimonials */}
+              <Card className="p-4 bg-gradient-to-br from-purple-50 to-pink-50 border-purple-100">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentTestimonialIndex}
+                    initial={{ y: 20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: -20, opacity: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="text-center"
+                  >
+                    <div className="flex justify-center mb-2">
+                      {[...Array(TESTIMONIALS[currentTestimonialIndex].rating)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                      ))}
+                    </div>
+                    <p className="text-sm text-gray-700 italic mb-2">
+                      "{TESTIMONIALS[currentTestimonialIndex].text}"
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      <span className="font-medium">{TESTIMONIALS[currentTestimonialIndex].author}</span>
+                      {' • '}{TESTIMONIALS[currentTestimonialIndex].role}
+                    </p>
+                  </motion.div>
+                </AnimatePresence>
+              </Card>
             </motion.div>
           </div>
         </div>

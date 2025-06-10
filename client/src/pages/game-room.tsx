@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
+import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { SongSearch } from '@/components/song-search';
@@ -19,7 +21,16 @@ import {
   Plus,
   ExternalLink,
   Headphones,
-  Radio
+  Radio,
+  Trophy,
+  Star,
+  Heart,
+  ThumbsUp,
+  Zap,
+  Crown,
+  Gift,
+  Sparkles,
+  Download
 } from 'lucide-react';
 import { getPlayerEmoji } from '@/lib/utils';
 import type { GameRoom, Player, Song } from '@shared/schema';
