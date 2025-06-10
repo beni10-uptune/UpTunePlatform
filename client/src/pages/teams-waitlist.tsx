@@ -29,15 +29,16 @@ import {
 const TeamsWaitlist = () => {
   const { toast } = useToast();
   const [formData, setFormData] = useState({
-    name: '',
+    companyName: '',
+    contactName: '',
     email: '',
-    company: '',
+    phone: '',
     teamSize: '',
-    role: ''
+    message: ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleInputChange = (field, value) => {
+  const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
       ...prev,
       [field]: value
@@ -45,12 +46,16 @@ const TeamsWaitlist = () => {
   };
 
   const submitMutation = useMutation({
-    mutationFn: async (data) => {
-      const response = await apiRequest('POST', '/api/teams-waitlist', data);
+    mutationFn: async (data: typeof formData) => {
+      const response = await apiRequest('POST', '/api/teams/contact', data);
       return response.json();
     },
     onSuccess: () => {
       setIsSubmitted(true);
+      toast({
+        title: "Thank you for your interest!",
+        description: "We'll be in touch soon to discuss how UpTune for Teams can help your organization.",
+      });
     },
     onError: () => {
       toast({
@@ -61,9 +66,9 @@ const TeamsWaitlist = () => {
     }
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.name && formData.email && formData.company) {
+    if (formData.companyName && formData.contactName && formData.email && formData.teamSize && formData.message) {
       submitMutation.mutate(formData);
     } else {
       toast({
@@ -306,6 +311,18 @@ const TeamsWaitlist = () => {
                 
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">
+                        Company Name *
+                      </label>
+                      <Input
+                        placeholder="Your Company"
+                        value={formData.companyName}
+                        onChange={(e) => handleInputChange('companyName', e.target.value)}
+                        required
+                      />
+                    </div>
+
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <label className="text-sm font-medium text-gray-700">
@@ -313,8 +330,8 @@ const TeamsWaitlist = () => {
                         </label>
                         <Input
                           placeholder="John Smith"
-                          value={formData.name}
-                          onChange={(e) => handleInputChange('name', e.target.value)}
+                          value={formData.contactName}
+                          onChange={(e) => handleInputChange('contactName', e.target.value)}
                           required
                         />
                       </div>
@@ -332,22 +349,22 @@ const TeamsWaitlist = () => {
                         />
                       </div>
                     </div>
-                    
+
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-gray-700">
-                        Company Name *
+                        Phone Number (optional)
                       </label>
                       <Input
-                        placeholder="Your Company"
-                        value={formData.company}
-                        onChange={(e) => handleInputChange('company', e.target.value)}
-                        required
+                        type="tel"
+                        placeholder="+1 (555) 123-4567"
+                        value={formData.phone}
+                        onChange={(e) => handleInputChange('phone', e.target.value)}
                       />
                     </div>
                     
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-gray-700">
-                        Team Size
+                        Team Size *
                       </label>
                       <Select value={formData.teamSize} onValueChange={(value) => handleInputChange('teamSize', value)}>
                         <SelectTrigger>
@@ -365,20 +382,15 @@ const TeamsWaitlist = () => {
                     
                     <div className="space-y-2">
                       <label className="text-sm font-medium text-gray-700">
-                        Your Role
+                        Tell us about your team's needs *
                       </label>
-                      <Select value={formData.role} onValueChange={(value) => handleInputChange('role', value)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select your role" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {roles.map((role) => (
-                            <SelectItem key={role} value={role}>
-                              {role}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <Textarea
+                        placeholder="Tell us about your team's current challenges with collaboration, team building, or culture. What would you like to achieve with UpTune for Teams?"
+                        value={formData.message}
+                        onChange={(e) => handleInputChange('message', e.target.value)}
+                        rows={4}
+                        required
+                      />
                     </div>
                     
                     <Button 
