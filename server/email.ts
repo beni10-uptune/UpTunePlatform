@@ -1,10 +1,12 @@
 import { Resend } from 'resend';
 
-if (!process.env.RESEND_API_KEY) {
-  throw new Error("RESEND_API_KEY environment variable must be set");
+// Initialize Resend only if API key is available
+let resend: Resend | null = null;
+if (process.env.RESEND_API_KEY) {
+  resend = new Resend(process.env.RESEND_API_KEY);
+} else {
+  console.warn('RESEND_API_KEY not found - email functionality will be disabled');
 }
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 interface TeamContactEmailParams {
   companyName: string;
