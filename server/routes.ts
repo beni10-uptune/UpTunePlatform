@@ -12,7 +12,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(gameRoom);
     } catch (error: any) {
       console.error("Game room creation error:", error);
-      res.status(400).json({ error: "Invalid game room data", details: error.message });
+      res.status(400).json({ error: "Invalid game room data" });
     }
   });
 
