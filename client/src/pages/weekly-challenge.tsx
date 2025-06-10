@@ -35,6 +35,29 @@ interface SpotifyTrack {
   previewUrl: string | null;
 }
 
+interface Challenge {
+  id: number;
+  title: string;
+  description: string;
+  emoji: string;
+  endDate: string;
+}
+
+interface Submission {
+  id: number;
+  challengeId: number;
+  nickname: string;
+  songTitle: string;
+  songArtist: string;
+  album: string;
+  spotifyId: string;
+  imageUrl: string;
+  previewUrl: string;
+  story: string;
+  votes: number;
+  createdAt: string;
+}
+
 const WeeklyChallenge = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -46,12 +69,12 @@ const WeeklyChallenge = () => {
   });
 
   // Get current weekly challenge
-  const { data: challenge } = useQuery({
+  const { data: challenge } = useQuery<Challenge>({
     queryKey: ['/api/weekly-challenge'],
   });
 
   // Get challenge submissions
-  const { data: submissions = [] } = useQuery({
+  const { data: submissions = [] } = useQuery<Submission[]>({
     queryKey: [`/api/weekly-challenge/${challenge?.id}/submissions`],
     enabled: !!challenge?.id,
   });
@@ -92,9 +115,14 @@ const WeeklyChallenge = () => {
     }
   });
 
+  const handleSubmit = () => {
+    if (!selectedSong || !formData.nickname.trim()) return;
+    submitMutation.mutate(formData);
+  };
+
   // Vote for submission
   const voteMutation = useMutation({
-    mutationFn: async (submissionId) => {
+    mutationFn: async (submissionId: number) => {
       const response = await apiRequest('POST', `/api/challenge-submissions/${submissionId}/vote`);
       return response.json();
     },
@@ -107,24 +135,13 @@ const WeeklyChallenge = () => {
     }
   });
 
-  const handleSubmit = () => {
-    if (!formData.nickname.trim() || !formData.songTitle.trim() || !formData.songArtist.trim()) {
-      toast({
-        title: "Missing Information",
-        description: "Please fill in all required fields.",
-        variant: "destructive",
-      });
-      return;
-    }
 
-    submitMutation.mutate(formData);
-  };
 
   const getDaysLeft = () => {
     if (!challenge?.endDate) return 0;
     const end = new Date(challenge.endDate);
     const now = new Date();
-    const diffTime = Math.abs(end - now);
+    const diffTime = Math.abs(end.getTime() - now.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays;
   };
@@ -389,20 +406,53 @@ const WeeklyChallenge = () => {
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Song title</label>
-              <Input
-                placeholder="Enter song title..."
-                value={formData.songTitle}
-                onChange={(e) => setFormData({ ...formData, songTitle: e.target.value })}
-              />
+              <label className="block text-sm font-medium text-gray-700 mb-2">Select your song</label>
+              {selectedSong ? (
+                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center overflow-hidden">
+                      {selectedSong.imageUrl ? (
+                        <img 
+                          src={selectedSong.imageUrl} 
+                          alt={selectedSong.album}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <Music className="w-6 h-6 text-gray-400" />
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-medium text-gray-900 truncate">{selectedSong.title}</h4>
+                      <p className="text-sm text-gray-600 truncate">{selectedSong.artist}</p>
+                      <p className="text-xs text-gray-500 truncate">{selectedSong.album}</p>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <Badge className="bg-green-100 text-green-800">✓ Selected</Badge>
+                      <Button
+                        onClick={() => setSelectedSong(null)}
+                        variant="outline"
+                        size="sm"
+                      >
+                        Change
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <SongSearch
+                  onSongSelect={setSelectedSong}
+                  placeholder="Search for your perfect song..."
+                />
+              )}
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Artist</label>
-              <Input
-                placeholder="Enter artist name..."
-                value={formData.songArtist}
-                onChange={(e) => setFormData({ ...formData, songArtist: e.target.value })}
+              <label className="block text-sm font-medium text-gray-700 mb-2">Why this song? (optional)</label>
+              <Textarea
+                placeholder="Tell us why this song fits the challenge..."
+                value={formData.story}
+                onChange={(e) => setFormData({ ...formData, story: e.target.value })}
+                rows={3}
               />
             </div>
             
@@ -416,7 +466,7 @@ const WeeklyChallenge = () => {
               </Button>
               <Button
                 onClick={handleSubmit}
-                disabled={submitMutation.isPending}
+                disabled={submitMutation.isPending || !selectedSong || !formData.nickname.trim()}
                 className="flex-1 gradient-bg text-white"
               >
                 <Trophy className="w-5 h-5 mr-2" />
