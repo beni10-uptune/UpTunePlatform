@@ -1,0 +1,162 @@
+Uptune: Vision, Strategy & Business Plan
+Date: 10 June 2025
+To: Cillian Murphy
+From: Shaun Murphy
+
+1.0 The Vision: The "Why"
+This idea started with a real moment: a simple game on a holiday that got our whole
+group laughing, sharing stories, and connecting over music. It was effortless, joyful,
+and it created a lasting memory that we still talk about. That feeling is the "why"
+behind this entire plan.
+Our Mission: To bottle that magic. We are building a platform that uses the universal
+language of music as a playground for connection, helping friends, families, and
+eventually colleagues, discover the soundtracks to their relationships.
+The Product: Uptune is a mobile-first web app that transforms music into a collection
+of fun, social games and collaborative tools. It’s for turning a quiet night in, a family
+gathering, or a work focus session into an opportunity for genuine connection.
+2.0 The Core Product (MVP): How We Start
+We will launch with a 100% free consumer app designed for maximum fun and
+minimum friction. The goal is to build a product people love to use and are excited to
+share. The core experience is built around two pillars:
+1. The Game Menu (On-Demand Fun):
+●​ This is the heart of the app. Any user can instantly host a game with their friends
+
+or family. The MVP menu will launch with a range of compliant, highly engaging
+modes:
+○​ The Mixtape: The ultimate collaborative playlist game. The host picks a fun
+theme (e.g., "Our Guilty Pleasures," "Songs from the 90s," "The Perfect Road
+Trip") and everyone contributes their essential tracks.
+○​ Soundtrack Session: A smart utility for real-life events. The host defines an
+event (e.g., "Dinner Party," "Team Focus Session", “Festival campsite”) and the
+app guides collaborators to submit songs for different moods (e.g., "Arrivals,"
+"Deep Work," "After Dinner").
+○​ Desert Island Discs: A personal sharing game that sparks deep
+conversations about the songs that define us.
+●​ Upon playlist completion, the host can export the playlist to their Spotify account
+
+in one click.
+2. The Weekly Challenge (The Community Pulse):
+●​ A global, themed music challenge for all users every week. This supplements the
+
+on-demand games by creating a shared "event" that keeps the app feeling fresh
+and alive. Eg, Top movie soundtracks; high school anthem; top song of the 80s.
+Full content calendar here.
+3.0 Our Growth Strategy: The Path from Living Room to Boardroom
+Our plan is a modern, two-phase strategy designed to build a beloved product first,
+then create a powerful business around it. This approach is shaped by a key insight:
+removing all barriers to entry is the fastest path to growth.
+The Strategic Insight: A Frictionless "Guest-First" Model
+Instead of forcing users to sign up, we let them play instantly. A user can start or join a
+game with just a nickname. They only need to connect their Spotify account at the
+end of a game, as a rewarding action to save a playlist they helped create.
+This model is a direct and smart response to platform constraints (like Spotify's
+developer limits). Instead of seeing them as a roadblock, we use them as a reason to
+build a better, more viral product. By delivering fun before asking for commitment, we
+build trust and maximize sharing.
+Phase 1: Build a Product People Love (The Free B2C App)
+Our first and only goal is to build an addictively fun free app.
+●​ How We Grow: The app is designed to be inherently viral. To play a game, a user
+
+shares a simple link on WhatsApp, iMessage, etc. Every game started becomes a
+word-of-mouth marketing campaign.
+●​ The Goal: We will create a community of genuine fans who use Uptune to create
+joyful memories. These users are the foundation of our entire business.
+Phase 2: The Business Engine (Uptune for Teams)
+Once we have a thriving consumer product, we will launch "Uptune for Teams," a
+premium, paid B2B version. The free app will serve as the single greatest lead
+generation tool, as our most enthusiastic users bring it to their workplaces.
+Companies will pay because "Uptune for Teams" is a powerful culture-building tool.
+The value for businesses is significantly enhanced:
+●​ Private Company Environment: All games and challenges are private to the
+
+organization, creating a safe, internal "watercooler."
+●​ Workplace Integrations: Uptune will live inside Slack, Microsoft Teams, and
+Google Chat. Games can be started with a simple command, making it a
+seamless part of the daily workflow.
+●​ Advanced Game Library: Access to exclusive games designed for work, like
+"Meeting Icebreakers." The Soundtrack Session becomes a key productivity tool
+for creating focus playlists.
+●​ AI-Powered Connection: A "Conversation Catalyst" to proactively suggest
+icebreakers based on shared musical tastes.
+●​ Company-Wide "Adventures": Large-scale, structured events that can be run
+quarterly or annually.
+●​ Brand Integration & Essential Tools: A full Admin Dashboard and Analytics
+Suite for user management and measurable insights into team engagement.
+4.0 The Business Model & Monetization
+Our monetization is focused entirely on the B2B "Uptune for Teams" product, sold as a
+tiered SaaS subscription. The consumer version for friends and families will
+remain free forever.
+Pricing Tiers (Uptune for Teams)
+Tier
+
+Price per
+User/Month
+
+Target Company
+
+Key Features
+
+Team Plan
+
+£5
+
+Small businesses or
+single teams (10-50
+users)
+
+Core game library,
+private weekly
+challenges.
+
+Business Plan
+
+£8
+
+Full company rollouts
+(50-500 employees)
+
+Everything in Team,
+plus: Admin
+Dashboard, Branding,
+Analytics,
+Integrations.
+
+Enterprise Plan
+
+Custom Quote
+
+Large corporations
+(>500 employees)
+
+Everything in
+Business, plus:
+Company
+Adventures, AI
+Catalyst, SSO,
+Dedicated Support.
+
+Financial Projections (Year 2-3 Target)
+
+This target is the goal after successfully launching the free product and transitioning
+to the B2B model.
+●​ Target: Sign up 25 companies on the Business Plan with an average of 100
+
+employees each.
+●​ Calculation: 25 companies * 100 users * £8/user/month * 12 months = £240,000
+Annual Recurring Revenue (ARR).
+This demonstrates that even with a modest number of paying clients, the business
+model is financially powerful and sustainable.
+5.0 The Path Forward
+1.​ Finalize the MVP: Lock in the development of the frictionless "guest-first" model
+
+focusing on the core compliant games.
+2.​ Launch & Learn: Release the free consumer app to the public. Our primary focus
+is on gathering user feedback, tracking engagement, and making the core
+experience as joyful and seamless as possible.
+3.​ Build the B2B Waitlist: Add a simple "Uptune for Teams" link in the app to
+capture inbound interest from our most passionate users.
+4.​ Execute the B2B Pivot: Once we have proven product-market fit with the
+consumer app, we will begin developing the "Teams" version and onboarding our
+first paying customers.
+
+
