@@ -1,15 +1,7 @@
-import type { Express, Request } from "express";
+import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertGameRoomSchema, insertPlayerSchema, insertSongSchema, insertChallengeSubmissionSchema, insertTeamsWaitlistSchema } from "@shared/schema";
-
-interface AuthenticatedRequest extends Request {
-  session: {
-    spotifyState?: string;
-    spotifyAccessToken?: string;
-    spotifyRefreshToken?: string;
-  };
-}
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Game Rooms
@@ -175,7 +167,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const state = Math.random().toString(36).substring(7);
       
       // Store state in session for verification
-      req.session.spotifyState = state;
+      (req.session as any).spotifyState = state;
       
       const authUrl = spotifyService.generateAuthUrl(redirectUri, state);
       res.json({ authUrl });
@@ -189,7 +181,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { code, state } = req.query;
       
-      if (!code || !state || state !== req.session.spotifyState) {
+      if (!code || !state || state !== (req.session as any).spotifyState) {
         return res.status(400).send("Invalid callback parameters");
       }
       
@@ -198,8 +190,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const tokens = await spotifyService.exchangeCodeForToken(code as string, redirectUri);
       
       // Store tokens in session
-      req.session.spotifyAccessToken = tokens.access_token;
-      req.session.spotifyRefreshToken = tokens.refresh_token;
+      (req.session as any).spotifyAccessToken = tokens.access_token;
+      (req.session as any).spotifyRefreshToken = tokens.refresh_token;
       
       // Redirect to success page
       res.redirect('/?spotify=connected');
@@ -212,7 +204,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/spotify/create-playlist", async (req, res) => {
     try {
       const { name, description, trackIds } = req.body;
-      const accessToken = req.session.spotifyAccessToken;
+      const accessToken = (req.session as any).spotifyAccessToken;
       
       if (!accessToken) {
         return res.status(401).json({ error: "Not authenticated with Spotify" });

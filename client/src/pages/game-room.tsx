@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Link, useParams, useLocation } from 'wouter';
+import { useLocation } from 'wouter';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,624 +14,541 @@ import {
   Music, 
   ArrowLeft, 
   Share2, 
-  Copy, 
   Users, 
-  Play, 
+  Clock, 
   Plus,
-  Sparkles,
-  Headphones,
-  Radio
+  ExternalLink,
+  Headphones
 } from 'lucide-react';
+import { getPlayerEmoji } from '@/lib/utils';
+import type { GameRoom, Player, Song } from '@shared/schema';
 
-const GameRoom = () => {
-  const params = useParams();
+interface SpotifyTrack {
+  id: string;
+  title: string;
+  artist: string;
+  album: string;
+  imageUrl: string | null;
+  spotifyUrl: string;
+  previewUrl: string | null;
+}
+
+const GAME_TYPES = {
+  mixtape: {
+    title: 'The Mixtape',
+    description: 'Create a collaborative mixtape with your friends',
+    icon: Music,
+    color: 'from-purple-500 to-pink-500',
+    themes: ['Road Trip', 'Summer Vibes', 'Workout', 'Chill Night', 'Throwback']
+  },
+  soundtrack: {
+    title: 'Soundtrack Session',
+    description: 'Build the perfect soundtrack for any occasion',
+    icon: Headphones,
+    color: 'from-blue-500 to-cyan-500',
+    themes: ['Movie Night', 'Study Session', 'Party Playlist', 'Morning Motivation', 'Rain Day']
+  },
+  'desert-island': {
+    title: 'Desert Island Discs',
+    description: 'Choose your essential songs for a desert island',
+    icon: Music,
+    color: 'from-green-500 to-teal-500',
+    themes: ['Essential Classics', 'Guilty Pleasures', 'Life Soundtrack', 'Comfort Songs', 'Energy Boosters']
+  }
+} as const;
+
+export default function GameRoom() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
+  // Get room code from URL
+  const roomCode = window.location.pathname.split('/').pop();
+  
+  // State
   const [nickname, setNickname] = useState('');
-  const [gameStarted, setGameStarted] = useState(false);
-  const [showSongDialog, setShowSongDialog] = useState(false);
-  const [newSong, setNewSong] = useState({ title: '', artist: '', story: '' });
-  const [gameRoom, setGameRoom] = useState(null);
+  const [hasJoined, setHasJoined] = useState(false);
+  const [selectedSong, setSelectedSong] = useState<SpotifyTrack | null>(null);
+  const [songStory, setSongStory] = useState('');
+  const [showAddSong, setShowAddSong] = useState(false);
+  const [isHost, setIsHost] = useState(false);
+  const [currentPlayer, setCurrentPlayer] = useState<Player | null>(null);
 
-  // Get game type and room code from URL
-  const gameType = params.gameType || 'mixtape';
-  const roomCode = params.code;
+  // Queries
+  const { data: gameRoom, isLoading: roomLoading } = useQuery<GameRoom>({
+    queryKey: ['/api/game-rooms/by-code', roomCode],
+    enabled: !!roomCode
+  });
 
-  // Game configurations
-  const gameConfigs = {
-    mixtape: {
-      title: 'The Mixtape',
-      description: 'Create a collaborative playlist with a fun theme',
-      icon: Music,
-      color: 'purple',
-      themes: ['Road Trip Anthems', 'Guilty Pleasures', '90s Hits', 'Feel Good Friday']
-    },
-    soundtrack: {
-      title: 'Soundtrack Session',
-      description: 'Build the perfect playlist for a real-life event',
-      icon: Headphones,
-      color: 'pink',
-      themes: ['Dinner Party Vibes', 'Focus Flow', 'Workout Energy', 'Celebration Time']
-    },
-    'desert-island': {
-      title: 'Desert Island Discs',
-      description: 'Share the songs that define your story',
-      icon: Radio,
-      color: 'indigo',
-      themes: ['Life Defining Moments', 'Childhood Memories', 'First Love Songs', 'Songs of Strength']
-    }
-  };
+  const { data: players = [] } = useQuery<Player[]>({
+    queryKey: ['/api/game-rooms', gameRoom?.id, 'players'],
+    enabled: !!gameRoom?.id && hasJoined
+  });
 
-  const config = gameConfigs[gameType] || gameConfigs.mixtape;
+  const { data: songs = [] } = useQuery<Song[]>({
+    queryKey: ['/api/game-rooms', gameRoom?.id, 'songs'],
+    enabled: !!gameRoom?.id && hasJoined
+  });
 
-  // Create game room mutation
-  const createRoomMutation = useMutation({
-    mutationFn: async (data) => {
-      const response = await apiRequest('POST', '/api/game-rooms', data);
-      return response.json();
-    },
-    onSuccess: (room) => {
-      setGameRoom(room);
-      setLocation(`/room/${room.code}`);
-      
-      // Add host as player
-      addPlayerMutation.mutate({
-        nickname,
-        gameRoomId: room.id,
-        isHost: true
+  // Mutations
+  const joinRoomMutation = useMutation({
+    mutationFn: async (data: { nickname: string; gameRoomId: number; isHost: boolean }) => {
+      return apiRequest('/api/players', {
+        method: 'POST',
+        body: JSON.stringify(data)
       });
+    },
+    onSuccess: (player) => {
+      setCurrentPlayer(player);
+      setHasJoined(true);
+      queryClient.invalidateQueries({ queryKey: ['/api/game-rooms', gameRoom?.id, 'players'] });
+      toast({
+        title: 'Joined successfully!',
+        description: `Welcome to the room, ${nickname}!`
+      });
+    }
+  });
+
+  const addSongMutation = useMutation({
+    mutationFn: async (data: { 
+      gameRoomId: number; 
+      playerId: number; 
+      title: string; 
+      artist: string; 
+      album?: string;
+      spotifyId?: string;
+      imageUrl?: string;
+      previewUrl?: string;
+      story: string; 
+    }) => {
+      return apiRequest('/api/songs', {
+        method: 'POST',
+        body: JSON.stringify(data)
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/game-rooms', gameRoom?.id, 'songs'] });
+      setShowAddSong(false);
+      setSelectedSong(null);
+      setSongStory('');
+      toast({
+        title: 'Song added!',
+        description: 'Your song has been added to the playlist.'
+      });
+    }
+  });
+
+  const exportToSpotifyMutation = useMutation({
+    mutationFn: async () => {
+      const authResponse = await apiRequest('/api/spotify/auth');
+      window.location.href = authResponse.authUrl;
     },
     onError: () => {
       toast({
-        title: "Error",
-        description: "Failed to create game room. Please try again.",
-        variant: "destructive",
+        title: 'Authentication Error',
+        description: 'Could not connect to Spotify. Please try again.',
+        variant: 'destructive'
       });
     }
   });
 
-  // Add player mutation
-  const addPlayerMutation = useMutation({
-    mutationFn: async (data) => {
-      const response = await apiRequest('POST', '/api/players', data);
-      return response.json();
+  const createPlaylistMutation = useMutation({
+    mutationFn: async () => {
+      const trackIds = songs
+        .filter(song => song.spotifyId)
+        .map(song => song.spotifyId);
+      
+      return apiRequest('/api/spotify/create-playlist', {
+        method: 'POST',
+        body: JSON.stringify({
+          name: `${gameRoom?.theme} - ${gameRoom?.gameType}`,
+          description: `Collaborative playlist created in Uptune`,
+          trackIds
+        })
+      });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`/api/game-rooms/${gameRoom?.id}/players`] });
-    }
-  });
-
-  // Get existing room if room code provided
-  const { data: existingRoom } = useQuery({
-    queryKey: [`/api/game-rooms/${roomCode}`],
-    enabled: !!roomCode,
-  });
-
-  // Get players for the room
-  const { data: players = [] } = useQuery({
-    queryKey: [`/api/game-rooms/${gameRoom?.id || existingRoom?.id}/players`],
-    enabled: !!(gameRoom?.id || existingRoom?.id),
-  });
-
-  // Get songs for the room
-  const { data: songs = [] } = useQuery({
-    queryKey: [`/api/game-rooms/${gameRoom?.id || existingRoom?.id}/songs`],
-    enabled: gameStarted && !!(gameRoom?.id || existingRoom?.id),
-  });
-
-  // Add song mutation
-  const addSongMutation = useMutation({
-    mutationFn: async (data) => {
-      const response = await apiRequest('POST', '/api/songs', data);
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`/api/game-rooms/${gameRoom?.id || existingRoom?.id}/songs`] });
-      setShowSongDialog(false);
-      setNewSong({ title: '', artist: '', story: '' });
+    onSuccess: (response) => {
       toast({
-        title: "Song Added!",
-        description: "Your song has been added to the playlist.",
+        title: 'Playlist Created!',
+        description: 'Your playlist has been exported to Spotify.',
       });
+      if (response.playlistUrl) {
+        window.open(response.playlistUrl, '_blank');
+      }
+    },
+    onError: () => {
+      // Try to authenticate first
+      exportToSpotifyMutation.mutate();
     }
   });
 
+  // Check for Spotify callback
   useEffect(() => {
-    if (existingRoom) {
-      setGameRoom(existingRoom);
-    }
-  }, [existingRoom]);
-
-  useEffect(() => {
-    // Get nickname from URL params or localStorage
-    const urlParams = new URLSearchParams(window.location.search);
-    const urlNickname = urlParams.get('nickname');
-    if (urlNickname) {
-      setNickname(urlNickname);
-    } else {
-      const savedNickname = localStorage.getItem('uptune-nickname');
-      if (savedNickname) {
-        setNickname(savedNickname);
-      }
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('spotify') === 'connected') {
+      // Remove the parameter and try creating playlist
+      window.history.replaceState({}, '', window.location.pathname);
+      createPlaylistMutation.mutate();
     }
   }, []);
 
-  const handleCreateRoom = () => {
-    if (!nickname.trim()) {
-      toast({
-        title: "Nickname Required",
-        description: "Please enter a nickname to create a game room.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    localStorage.setItem('uptune-nickname', nickname);
-    
-    const themes = config.themes;
-    const randomTheme = themes[Math.floor(Math.random() * themes.length)];
-    
-    createRoomMutation.mutate({
-      gameType,
-      theme: randomTheme,
-      hostNickname: nickname,
-      isActive: true
-    });
-  };
-
   const handleJoinRoom = () => {
-    if (!nickname.trim()) {
-      toast({
-        title: "Nickname Required",
-        description: "Please enter a nickname to join the game.",
-        variant: "destructive",
-      });
+    if (!nickname.trim() || !gameRoom) return;
+    
+    const playerExists = (players as Player[]).find(p => 
+      p.nickname.toLowerCase() === nickname.toLowerCase()
+    );
+    
+    if (playerExists) {
+      setCurrentPlayer(playerExists);
+      setHasJoined(true);
+      setIsHost(playerExists.isHost);
       return;
     }
 
-    if (existingRoom) {
-      localStorage.setItem('uptune-nickname', nickname);
-      addPlayerMutation.mutate({
-        nickname,
-        gameRoomId: existingRoom.id,
-        isHost: false
-      });
-    }
-  };
-
-  const handleStartGame = () => {
-    setGameStarted(true);
-    toast({
-      title: "Game Started!",
-      description: "Players can now start adding songs to the playlist.",
+    const isFirstPlayer = (players as Player[]).length === 0;
+    joinRoomMutation.mutate({
+      nickname,
+      gameRoomId: gameRoom.id,
+      isHost: isFirstPlayer
     });
+    setIsHost(isFirstPlayer);
   };
 
   const handleAddSong = () => {
-    if (!newSong.title.trim() || !newSong.artist.trim()) {
-      toast({
-        title: "Song Details Required",
-        description: "Please enter both song title and artist.",
-        variant: "destructive",
-      });
-      return;
-    }
+    if (!selectedSong || !currentPlayer || !gameRoom) return;
 
-    const currentPlayer = players.find(p => p.nickname === nickname);
-    if (currentPlayer) {
-      addSongMutation.mutate({
-        ...newSong,
-        gameRoomId: gameRoom?.id || existingRoom?.id,
-        playerId: currentPlayer.id
-      });
-    }
-  };
-
-  const copyRoomLink = () => {
-    const roomLink = `${window.location.origin}/room/${gameRoom?.code || existingRoom?.code}`;
-    navigator.clipboard.writeText(roomLink);
-    toast({
-      title: "Link Copied!",
-      description: "Room link has been copied to your clipboard.",
+    addSongMutation.mutate({
+      gameRoomId: gameRoom.id,
+      playerId: currentPlayer.id,
+      title: selectedSong.title,
+      artist: selectedSong.artist,
+      album: selectedSong.album,
+      spotifyId: selectedSong.id,
+      imageUrl: selectedSong.imageUrl,
+      previewUrl: selectedSong.previewUrl,
+      story: songStory
     });
   };
 
-  const currentRoom = gameRoom || existingRoom;
-  const isHost = players.find(p => p.nickname === nickname)?.isHost || false;
-  const isPlayerInRoom = players.some(p => p.nickname === nickname);
+  const handleShare = async () => {
+    const url = window.location.href;
+    try {
+      await navigator.clipboard.writeText(url);
+      toast({
+        title: 'Link copied!',
+        description: 'Share this link with your friends to join the room.'
+      });
+    } catch {
+      toast({
+        title: 'Share this link:',
+        description: url
+      });
+    }
+  };
 
-  // Show nickname entry if not in room yet
-  if (currentRoom && !isPlayerInRoom && nickname) {
+  if (roomLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 flex items-center justify-center p-6">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8 }}
-          className="w-full max-w-md"
-        >
-          <Card className="game-card p-8 text-center">
-            <CardHeader>
-              <div className={`w-16 h-16 bg-${config.color}-100 rounded-full flex items-center justify-center mx-auto mb-4`}>
-                <config.icon className={`w-8 h-8 text-${config.color}-600`} />
-              </div>
-              <CardTitle className="text-2xl">{config.title}</CardTitle>
-              <CardDescription>
-                Theme: {currentRoom.theme}
-              </CardDescription>
-            </CardHeader>
-            
-            <CardContent className="space-y-6">
-              <div>
-                <Input
-                  type="text"
-                  placeholder="Enter your nickname..."
-                  value={nickname}
-                  onChange={(e) => setNickname(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleJoinRoom()}
-                />
-              </div>
-              
-              <Button 
-                onClick={handleJoinRoom}
-                disabled={!nickname.trim() || addPlayerMutation.isPending}
-                className="w-full gradient-bg text-white"
-              >
-                <Users className="w-4 h-4 mr-2" />
-                Join Game
-              </Button>
-            </CardContent>
-          </Card>
-        </motion.div>
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
+        <div className="text-white text-xl">Loading room...</div>
+      </div>
+    );
+  }
+
+  if (!gameRoom) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
+        <Card className="w-full max-w-md mx-4">
+          <CardHeader className="text-center">
+            <CardTitle className="text-red-600">Room Not Found</CardTitle>
+            <CardDescription>
+              The room code "{roomCode}" doesn't exist or has expired.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button 
+              onClick={() => setLocation('/')} 
+              className="w-full"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Home
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  const gameConfig = GAME_TYPES[gameRoom.gameType as keyof typeof GAME_TYPES];
+
+  if (!hasJoined) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
+        <Card className="w-full max-w-md mx-4">
+          <CardHeader className="text-center">
+            <div className={`w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r ${gameConfig.color} flex items-center justify-center`}>
+              <gameConfig.icon className="w-8 h-8 text-white" />
+            </div>
+            <CardTitle>{gameConfig.title}</CardTitle>
+            <CardDescription>
+              Theme: {gameRoom.theme}
+            </CardDescription>
+            <Badge variant="secondary" className="mt-2">
+              Room: {gameRoom.code}
+            </Badge>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <Input
+                placeholder="Enter your nickname"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleJoinRoom()}
+                maxLength={20}
+              />
+            </div>
+            <Button 
+              onClick={handleJoinRoom}
+              disabled={!nickname.trim() || joinRoomMutation.isPending}
+              className="w-full"
+            >
+              {joinRoomMutation.isPending ? 'Joining...' : 'Join Room'}
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={() => setLocation('/')} 
+              className="w-full"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Home
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
-      {/* Header */}
-      <header className="px-6 py-4">
-        <nav className="max-w-4xl mx-auto flex items-center justify-between">
-          <Link href="/games">
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+      <div className="container mx-auto px-4 py-8">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center space-x-4">
             <Button
               variant="ghost"
-              className="flex items-center space-x-2 text-gray-600 hover:text-gray-800"
+              size="sm"
+              onClick={() => setLocation('/')}
+              className="text-white hover:bg-white/10"
             >
-              <ArrowLeft className="w-4 h-4" />
-              <span>Back to Games</span>
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Leave
             </Button>
-          </Link>
-          
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 gradient-bg rounded-lg flex items-center justify-center">
-              <Music className="w-5 h-5 text-white" />
+            <div>
+              <h1 className="text-2xl font-bold text-white">{gameConfig.title}</h1>
+              <p className="text-white/70">Theme: {gameRoom.theme}</p>
             </div>
-            <span className="text-2xl font-bold gradient-text">Uptune</span>
           </div>
-
-          <div></div>
-        </nav>
-      </header>
-
-      <div className="px-6 py-8">
-        <div className="max-w-4xl mx-auto">
-          {!currentRoom ? (
-            // Create room form
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              className="text-center"
+          <div className="flex items-center space-x-2">
+            <Badge variant="secondary" className="text-lg px-3 py-1">
+              {gameRoom.code}
+            </Badge>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleShare}
+              className="text-white border-white/20 hover:bg-white/10"
             >
-              <div className={`w-20 h-20 bg-${config.color}-100 rounded-full flex items-center justify-center mx-auto mb-6`}>
-                <config.icon className={`w-10 h-10 text-${config.color}-600`} />
-              </div>
-              <h1 className="text-4xl font-bold mb-4">{config.title}</h1>
-              <p className="text-xl text-gray-600 mb-8">{config.description}</p>
-              
-              <Card className="game-card max-w-md mx-auto p-8">
-                <CardContent className="space-y-6">
-                  <div>
-                    <Input
-                      type="text"
-                      placeholder="Enter your nickname..."
-                      value={nickname}
-                      onChange={(e) => setNickname(e.target.value)}
-                      onKeyPress={(e) => e.key === 'Enter' && handleCreateRoom()}
-                    />
-                  </div>
-                  
-                  <Button 
-                    onClick={handleCreateRoom}
-                    disabled={!nickname.trim() || createRoomMutation.isPending}
-                    className="w-full gradient-bg text-white"
+              <Share2 className="w-4 h-4 mr-2" />
+              Share
+            </Button>
+          </div>
+        </div>
+
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Players Panel */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <Users className="w-5 h-5 mr-2" />
+                Players ({(players as Player[]).length})
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                {(players as Player[]).map((player, index) => (
+                  <div
+                    key={player.id}
+                    className={`flex items-center justify-between p-2 rounded-lg ${
+                      player.id === currentPlayer?.id ? 'bg-blue-50' : 'bg-gray-50'
+                    }`}
                   >
-                    <Play className="w-4 h-4 mr-2" />
-                    Create Game Room
-                  </Button>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ) : (
-            // Game room interface
-            <>
-              {/* Game Header */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-                className="text-center mb-12"
-              >
-                <div className={`w-20 h-20 bg-${config.color}-100 rounded-full flex items-center justify-center mx-auto mb-6`}>
-                  <config.icon className={`w-10 h-10 text-${config.color}-600`} />
-                </div>
-                <h1 className="text-4xl font-bold mb-4">{config.title}</h1>
-                <p className="text-xl text-gray-600 mb-6">{config.description}</p>
-                <Badge className="gradient-bg text-white px-6 py-2">
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  Theme: "{currentRoom.theme}"
-                </Badge>
-              </motion.div>
-
-              <div className="grid lg:grid-cols-2 gap-8">
-                {/* Share Game */}
-                <Card className="game-card">
-                  <CardHeader>
-                    <CardTitle className="flex items-center space-x-2">
-                      <Share2 className="w-5 h-5" />
-                      <span>Invite Friends</span>
-                    </CardTitle>
-                    <CardDescription>
-                      Share this link to let others join your game
-                    </CardDescription>
-                  </CardHeader>
-                  
-                  <CardContent className="space-y-4">
-                    <div className="flex space-x-2">
-                      <Input
-                        value={`uptune.app/room/${currentRoom.code}`}
-                        readOnly
-                        className="font-mono text-sm bg-gray-50"
-                      />
-                      <Button onClick={copyRoomLink} variant="outline" size="icon">
-                        <Copy className="w-4 h-4" />
-                      </Button>
+                    <div className="flex items-center space-x-2">
+                      <span className="text-lg">{getPlayerEmoji(index)}</span>
+                      <span className="font-medium">{player.nickname}</span>
+                      {player.isHost && (
+                        <Badge variant="secondary" className="text-xs">
+                          Host
+                        </Badge>
+                      )}
                     </div>
-                    
-                    <Button onClick={copyRoomLink} className="w-full gradient-bg text-white">
-                      <Share2 className="w-4 h-4 mr-2" />
-                      Share Game Link
-                    </Button>
-                    
-                    <p className="text-sm text-gray-600 text-center">
-                      Send via WhatsApp, iMessage, or any messaging app
-                    </p>
-                  </CardContent>
-                </Card>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
 
-                {/* Players */}
-                <Card className="game-card">
-                  <CardHeader>
-                    <CardTitle className="flex items-center space-x-2">
-                      <Users className="w-5 h-5" />
-                      <span>Players ({players.length})</span>
-                    </CardTitle>
-                    <CardDescription>
-                      {gameStarted ? 'Players in the game' : 'Waiting for friends to join...'}
-                    </CardDescription>
-                  </CardHeader>
-                  
-                  <CardContent className="space-y-4">
-                    <div className="space-y-3 max-h-48 overflow-y-auto">
-                      {players.map((player, index) => (
-                        <div key={player.id} className="flex items-center space-x-3 p-3 bg-white/50 rounded-lg">
-                          <div className={`w-10 h-10 bg-${config.color}-100 rounded-full flex items-center justify-center text-lg`}>
-                            {player.nickname.charAt(0).toUpperCase()}
-                          </div>
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Add Song Section */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <CardTitle className="flex items-center">
+                    <Music className="w-5 h-5 mr-2" />
+                    Playlist ({(songs as Song[]).length} songs)
+                  </CardTitle>
+                  <div className="flex space-x-2">
+                    <Button
+                      onClick={() => setShowAddSong(true)}
+                      size="sm"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add Song
+                    </Button>
+                    {(songs as Song[]).some(song => song.spotifyId) && (
+                      <Button
+                        onClick={() => createPlaylistMutation.mutate()}
+                        disabled={createPlaylistMutation.isPending}
+                        size="sm"
+                        variant="outline"
+                      >
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        Export to Spotify
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                {(songs as Song[]).length === 0 ? (
+                  <div className="text-center py-8 text-gray-500">
+                    <Music className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                    <p>No songs added yet. Be the first to add a song!</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {(songs as Song[]).map((song) => {
+                      const player = (players as Player[]).find(p => p.id === song.playerId);
+                      return (
+                        <div key={song.id} className="flex items-start space-x-4 p-4 bg-gray-50 rounded-lg">
+                          {song.imageUrl && (
+                            <img
+                              src={song.imageUrl}
+                              alt={`${song.title} cover`}
+                              className="w-16 h-16 rounded-lg object-cover"
+                            />
+                          )}
                           <div className="flex-1">
-                            <div className="flex items-center space-x-2">
-                              <span className="font-medium">{player.nickname}</span>
-                              {player.isHost && (
-                                <Badge variant="secondary" className="text-xs">Host</Badge>
+                            <div className="flex items-center space-x-2 mb-1">
+                              <h4 className="font-semibold">{song.title}</h4>
+                              {song.previewUrl && (
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  onClick={() => {
+                                    const audio = new Audio(song.previewUrl!);
+                                    audio.play();
+                                  }}
+                                >
+                                  <Headphones className="w-4 h-4" />
+                                </Button>
                               )}
+                            </div>
+                            <p className="text-gray-600">{song.artist}</p>
+                            {song.album && <p className="text-gray-500 text-sm">{song.album}</p>}
+                            {song.story && (
+                              <p className="text-gray-700 mt-2 italic">"{song.story}"</p>
+                            )}
+                            <div className="flex items-center justify-between mt-2">
+                              <span className="text-sm text-gray-500">
+                                Added by {player?.nickname}
+                              </span>
                             </div>
                           </div>
                         </div>
-                      ))}
-                      
-                      {/* Waiting placeholder */}
-                      {players.length < 8 && (
-                        <div className="flex items-center space-x-3 p-3 border-2 border-dashed border-gray-200 rounded-lg">
-                          <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
-                            <Users className="w-5 h-5 text-gray-400" />
-                          </div>
-                          <span className="text-gray-400">Waiting for player...</span>
-                        </div>
-                      )}
-                    </div>
-                    
-                    {isHost && !gameStarted && players.length >= 2 && (
-                      <Button onClick={handleStartGame} className="w-full gradient-bg text-white">
-                        <Play className="w-4 h-4 mr-2" />
-                        Start Game
-                      </Button>
-                    )}
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Game Content */}
-              {gameStarted && (
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.5 }}
-                  className="mt-12"
-                >
-                  <Card className="game-card">
-                    <CardHeader>
-                      <CardTitle className="flex items-center justify-between">
-                        <span>Playlist ({songs.length} songs)</span>
-                        <Button 
-                          onClick={() => setShowSongDialog(true)}
-                          size="sm"
-                          className="gradient-bg text-white"
-                        >
-                          <Plus className="w-4 h-4 mr-2" />
-                          Add Song
-                        </Button>
-                      </CardTitle>
-                    </CardHeader>
-                    
-                    <CardContent>
-                      {songs.length === 0 ? (
-                        <div className="text-center py-12">
-                          <Music className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                          <p className="text-gray-600">No songs added yet. Be the first to add a song!</p>
-                        </div>
-                      ) : (
-                        <div className="space-y-4">
-                          {songs.map((song) => {
-                            const player = players.find(p => p.id === song.playerId);
-                            return (
-                              <div key={song.id} className="p-4 bg-white/50 rounded-lg">
-                                <div className="flex items-start space-x-3">
-                                  <div className={`w-10 h-10 bg-${config.color}-100 rounded-full flex items-center justify-center flex-shrink-0`}>
-                                    {player?.nickname.charAt(0).toUpperCase()}
-                                  </div>
-                                  <div className="flex-1 min-w-0">
-                                    <div className="font-semibold text-lg">{song.title}</div>
-                                    <div className="text-gray-600">{song.artist}</div>
-                                    <div className="text-sm text-gray-500 mt-1">Added by {player?.nickname}</div>
-                                    {song.story && (
-                                      <div className="text-sm text-gray-700 mt-2 italic">"{song.story}"</div>
-                                    )}
-                                  </div>
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              )}
-
-              {/* Game Instructions */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                className="mt-12"
-              >
-                <Card className="game-card">
-                  <CardHeader>
-                    <CardTitle>How to Play</CardTitle>
-                  </CardHeader>
-                  
-                  <CardContent>
-                    <div className="grid md:grid-cols-3 gap-6">
-                      <div className="text-center">
-                        <div className="w-12 h-12 gradient-bg rounded-full flex items-center justify-center mx-auto mb-3 text-white font-bold">
-                          1
-                        </div>
-                        <h4 className="font-semibold mb-2">Add Songs</h4>
-                        <p className="text-sm text-gray-600">
-                          Each player adds songs that fit the theme "{currentRoom.theme}"
-                        </p>
-                      </div>
-                      
-                      <div className="text-center">
-                        <div className="w-12 h-12 gradient-bg rounded-full flex items-center justify-center mx-auto mb-3 text-white font-bold">
-                          2
-                        </div>
-                        <h4 className="font-semibold mb-2">Share Stories</h4>
-                        <p className="text-sm text-gray-600">
-                          Tell everyone why you picked each song and what it means to you
-                        </p>
-                      </div>
-                      
-                      <div className="text-center">
-                        <div className="w-12 h-12 gradient-bg rounded-full flex items-center justify-center mx-auto mb-3 text-white font-bold">
-                          3
-                        </div>
-                        <h4 className="font-semibold mb-2">Export & Enjoy</h4>
-                        <p className="text-sm text-gray-600">
-                          Save your collaborative playlist to Spotify and keep the memories
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            </>
-          )}
-        </div>
-      </div>
-
-      {/* Add Song Dialog */}
-      <Dialog open={showSongDialog} onOpenChange={setShowSongDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Add a Song</DialogTitle>
-            <DialogDescription>
-              Add a song that fits the theme "{currentRoom?.theme}"
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">Song Title</label>
-              <Input
-                placeholder="Enter song title..."
-                value={newSong.title}
-                onChange={(e) => setNewSong({ ...newSong, title: e.target.value })}
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium mb-2">Artist</label>
-              <Input
-                placeholder="Enter artist name..."
-                value={newSong.artist}
-                onChange={(e) => setNewSong({ ...newSong, artist: e.target.value })}
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium mb-2">Why this song? (Optional)</label>
-              <Textarea
-                placeholder="Share why you chose this song..."
-                value={newSong.story}
-                onChange={(e) => setNewSong({ ...newSong, story: e.target.value })}
-                rows={3}
-              />
-            </div>
-            
-            <div className="flex gap-3 pt-4">
-              <Button
-                onClick={() => setShowSongDialog(false)}
-                variant="outline"
-                className="flex-1"
-              >
-                Cancel
-              </Button>
-              <Button
-                onClick={handleAddSong}
-                disabled={addSongMutation.isPending}
-                className="flex-1 gradient-bg text-white"
-              >
-                Add Song
-              </Button>
-            </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </div>
-        </DialogContent>
-      </Dialog>
+        </div>
+
+        {/* Add Song Dialog */}
+        <Dialog open={showAddSong} onOpenChange={setShowAddSong}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Add a Song</DialogTitle>
+              <DialogDescription>
+                Search for a song and tell us why you chose it for this {gameConfig.title.toLowerCase()}.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-4">
+              <SongSearch
+                onSongSelect={setSelectedSong}
+                placeholder="Search for a song..."
+              />
+              
+              {selectedSong && (
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <div className="flex items-center space-x-4">
+                    {selectedSong.imageUrl && (
+                      <img
+                        src={selectedSong.imageUrl}
+                        alt={`${selectedSong.title} cover`}
+                        className="w-16 h-16 rounded-lg object-cover"
+                      />
+                    )}
+                    <div>
+                      <h4 className="font-semibold">{selectedSong.title}</h4>
+                      <p className="text-gray-600">{selectedSong.artist}</p>
+                      <p className="text-gray-500 text-sm">{selectedSong.album}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              <div>
+                <label className="block text-sm font-medium mb-2">
+                  Why did you choose this song? (Optional)
+                </label>
+                <Textarea
+                  placeholder="Share the story behind your choice..."
+                  value={songStory}
+                  onChange={(e) => setSongStory(e.target.value)}
+                  maxLength={500}
+                />
+              </div>
+              
+              <div className="flex justify-end space-x-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowAddSong(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleAddSong}
+                  disabled={!selectedSong || addSongMutation.isPending}
+                >
+                  {addSongMutation.isPending ? 'Adding...' : 'Add Song'}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
     </div>
   );
-};
-
-export default GameRoom;
+}
