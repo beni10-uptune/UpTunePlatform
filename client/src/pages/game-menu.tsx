@@ -6,13 +6,17 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { Music, Play, Headphones, Radio, ArrowLeft } from 'lucide-react';
+import { Music, Play, Headphones, Radio, ArrowLeft, Sparkles, ArrowRight } from 'lucide-react';
 
 const GameMenu = () => {
   const [, setLocation] = useLocation();
   const [nickname, setNickname] = useState('');
+  const [showThemeDialog, setShowThemeDialog] = useState(false);
+  const [selectedGame, setSelectedGame] = useState<string | null>(null);
+  const [customTheme, setCustomTheme] = useState('');
   const { toast } = useToast();
 
   const games = [
@@ -22,7 +26,7 @@ const GameMenu = () => {
       description: 'Create a collaborative playlist with a fun theme',
       icon: Music,
       color: 'purple',
-      themes: ['Guilty Pleasures', 'Road Trip', '90s Hits']
+      exampleThemes: ['Guilty Pleasures', 'Road Trip Classics', '90s Nostalgia', 'Songs That Make You Dance', 'Rainy Day Vibes']
     },
     {
       id: 'soundtrack',
@@ -30,7 +34,7 @@ const GameMenu = () => {
       description: 'Build the perfect playlist for a real-life event',
       icon: Headphones,
       color: 'pink',
-      themes: ['Dinner Party', 'Focus Time', 'Workout']
+      exampleThemes: ['Dinner Party Elegance', 'Focus & Flow', 'High Energy Workout', 'Study Session', 'Weekend Chill']
     },
     {
       id: 'desert-island',
@@ -38,7 +42,7 @@ const GameMenu = () => {
       description: 'Share the songs that define your story',
       icon: Radio,
       color: 'indigo',
-      themes: ['Life Stories', 'Memories', 'Identity']
+      exampleThemes: ['Life Soundtrack', 'Childhood Memories', 'Songs That Changed Me', 'Musical Identity', 'Comfort Classics']
     }
   ];
 
@@ -61,22 +65,32 @@ const GameMenu = () => {
   });
 
   const handleStartGame = (gameId: string) => {
-    const game = games.find(g => g.id === gameId);
-    if (!game) return;
-    
-    const randomTheme = game.themes[Math.floor(Math.random() * game.themes.length)];
+    setSelectedGame(gameId);
+    setShowThemeDialog(true);
+  };
+
+  const handleCreateGame = () => {
+    if (!selectedGame || !customTheme.trim()) return;
     
     createGameMutation.mutate({
-      gameType: gameId,
-      theme: randomTheme,
+      gameType: selectedGame,
+      theme: customTheme.trim(),
       hostNickname: 'Host' // We'll prompt for nickname in the room
     });
+    
+    setShowThemeDialog(false);
+    setCustomTheme('');
+    setSelectedGame(null);
+  };
+
+  const handleSelectExampleTheme = (theme: string) => {
+    setCustomTheme(theme);
   };
 
   const handleQuickStart = () => {
     if (nickname.trim()) {
       const randomGame = games[Math.floor(Math.random() * games.length)];
-      const randomTheme = randomGame.themes[Math.floor(Math.random() * randomGame.themes.length)];
+      const randomTheme = randomGame.exampleThemes[Math.floor(Math.random() * randomGame.exampleThemes.length)];
       
       createGameMutation.mutate({
         gameType: randomGame.id,
@@ -162,7 +176,7 @@ const GameMenu = () => {
                   
                   <CardContent className="space-y-6">
                     <div className="flex flex-wrap gap-2 justify-center">
-                      {game.themes.map((theme) => (
+                      {game.exampleThemes.slice(0, 3).map((theme: string) => (
                         <Badge
                           key={theme}
                           variant="secondary"
@@ -224,6 +238,79 @@ const GameMenu = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* Theme Selection Dialog */}
+      <Dialog open={showThemeDialog} onOpenChange={setShowThemeDialog}>
+        <DialogContent className="max-w-lg w-[95vw] max-h-[90vh] overflow-y-auto mx-4">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-purple-600" />
+              Choose Your Theme
+            </DialogTitle>
+            <DialogDescription>
+              {selectedGame && games.find(g => g.id === selectedGame)?.title}: What's the vibe for your playlist?
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                Create your own theme or pick from examples
+              </label>
+              <Input
+                placeholder="Enter your theme (e.g., 'Songs for a Road Trip to the Beach')"
+                value={customTheme}
+                onChange={(e) => setCustomTheme(e.target.value)}
+                className="w-full"
+              />
+            </div>
+            
+            {selectedGame && (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-3">
+                  Or choose from these examples:
+                </label>
+                <div className="grid grid-cols-1 gap-2">
+                  {games.find(g => g.id === selectedGame)?.exampleThemes.map((theme: string) => (
+                    <Button
+                      key={theme}
+                      variant="outline"
+                      onClick={() => handleSelectExampleTheme(theme)}
+                      className="justify-start text-left h-auto p-3 hover:bg-purple-50 hover:border-purple-200"
+                    >
+                      <div className="flex items-center gap-2">
+                        <ArrowRight className="w-4 h-4 text-purple-500" />
+                        <span>{theme}</span>
+                      </div>
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            <div className="flex flex-col sm:flex-row gap-3 pt-4">
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setShowThemeDialog(false);
+                  setCustomTheme('');
+                  setSelectedGame(null);
+                }}
+                className="flex-1 sm:flex-none"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={handleCreateGame}
+                disabled={!customTheme.trim() || createGameMutation.isPending}
+                className="flex-1 sm:flex-none gradient-bg text-white"
+              >
+                {createGameMutation.isPending ? 'Creating...' : 'Create Game'}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
