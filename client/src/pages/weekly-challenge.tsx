@@ -7,8 +7,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
+import { SongSearch } from '@/components/song-search';
 import { 
   ArrowLeft,
   Calendar,
@@ -18,17 +20,28 @@ import {
   Heart,
   Trophy,
   Award,
-  Music
+  Music,
+  ExternalLink,
+  Headphones
 } from 'lucide-react';
+
+interface SpotifyTrack {
+  id: string;
+  title: string;
+  artist: string;
+  album: string;
+  imageUrl: string | null;
+  spotifyUrl: string;
+  previewUrl: string | null;
+}
 
 const WeeklyChallenge = () => {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [showSubmissionForm, setShowSubmissionForm] = useState(false);
+  const [selectedSong, setSelectedSong] = useState<SpotifyTrack | null>(null);
   const [formData, setFormData] = useState({
     nickname: '',
-    songTitle: '',
-    songArtist: '',
     story: ''
   });
 

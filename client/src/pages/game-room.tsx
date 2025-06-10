@@ -93,12 +93,10 @@ export default function GameRoom() {
   // Mutations
   const joinRoomMutation = useMutation({
     mutationFn: async (data: { nickname: string; gameRoomId: number; isHost: boolean }) => {
-      return apiRequest('/api/players', {
-        method: 'POST',
-        body: JSON.stringify(data)
-      });
+      const response = await apiRequest('POST', '/api/players', data);
+      return await response.json() as Player;
     },
-    onSuccess: (player) => {
+    onSuccess: (player: Player) => {
       setCurrentPlayer(player);
       setHasJoined(true);
       queryClient.invalidateQueries({ queryKey: ['/api/game-rooms', gameRoom?.id, 'players'] });
@@ -117,14 +115,19 @@ export default function GameRoom() {
       artist: string; 
       album?: string;
       spotifyId?: string;
-      imageUrl?: string;
-      previewUrl?: string;
+      imageUrl?: string | null;
+      previewUrl?: string | null;
       story: string; 
     }) => {
-      return apiRequest('/api/songs', {
-        method: 'POST',
-        body: JSON.stringify(data)
-      });
+      const songData = {
+        ...data,
+        album: data.album || '',
+        spotifyId: data.spotifyId || '',
+        imageUrl: data.imageUrl || '',
+        previewUrl: data.previewUrl || ''
+      };
+      const response = await apiRequest('POST', '/api/songs', songData);
+      return await response.json() as Song;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/game-rooms', gameRoom?.id, 'songs'] });
@@ -140,8 +143,9 @@ export default function GameRoom() {
 
   const exportToSpotifyMutation = useMutation({
     mutationFn: async () => {
-      const authResponse = await apiRequest('/api/spotify/auth');
-      window.location.href = authResponse.authUrl;
+      const response = await apiRequest('GET', '/api/spotify/auth');
+      const authData = await response.json() as { authUrl: string };
+      window.location.href = authData.authUrl;
     },
     onError: () => {
       toast({
@@ -154,18 +158,18 @@ export default function GameRoom() {
 
   const createPlaylistMutation = useMutation({
     mutationFn: async () => {
-      const trackIds = songs
+      const trackIds = (songs as Song[])
         .filter(song => song.spotifyId)
-        .map(song => song.spotifyId);
+        .map(song => song.spotifyId)
+        .filter(Boolean);
       
-      return apiRequest('/api/spotify/create-playlist', {
-        method: 'POST',
-        body: JSON.stringify({
-          name: `${gameRoom?.theme} - ${gameRoom?.gameType}`,
-          description: `Collaborative playlist created in Uptune`,
-          trackIds
-        })
-      });
+      const playlistData = {
+        name: `${gameRoom?.theme} - ${gameRoom?.gameType}`,
+        description: `Collaborative playlist created in Uptune`,
+        trackIds
+      };
+      const response = await apiRequest('POST', '/api/spotify/create-playlist', playlistData);
+      return await response.json() as { success: boolean; playlistUrl: string; message: string };
     },
     onSuccess: (response) => {
       toast({
@@ -225,8 +229,8 @@ export default function GameRoom() {
       artist: selectedSong.artist,
       album: selectedSong.album,
       spotifyId: selectedSong.id,
-      imageUrl: selectedSong.imageUrl,
-      previewUrl: selectedSong.previewUrl,
+      imageUrl: selectedSong.imageUrl || undefined,
+      previewUrl: selectedSong.previewUrl || undefined,
       story: songStory
     });
   };
