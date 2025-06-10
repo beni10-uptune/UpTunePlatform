@@ -1,15 +1,19 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useLocation } from 'wouter';
+import { useMutation } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
+import { useToast } from '@/hooks/use-toast';
+import { apiRequest } from '@/lib/queryClient';
 import { Music, Play, Headphones, Radio, ArrowLeft } from 'lucide-react';
 
 const GameMenu = () => {
   const [, setLocation] = useLocation();
   const [nickname, setNickname] = useState('');
+  const { toast } = useToast();
 
   const games = [
     {
@@ -38,11 +42,47 @@ const GameMenu = () => {
     }
   ];
 
+  // Create game room mutation
+  const createGameMutation = useMutation({
+    mutationFn: async (gameData: { gameType: string; theme: string; hostNickname: string }) => {
+      const response = await apiRequest('POST', '/api/game-rooms', gameData);
+      return await response.json();
+    },
+    onSuccess: (gameRoom: any) => {
+      setLocation(`/game/${gameRoom.code}`);
+    },
+    onError: () => {
+      toast({
+        title: 'Error',
+        description: 'Failed to create game room. Please try again.',
+        variant: 'destructive'
+      });
+    }
+  });
+
+  const handleStartGame = (gameId: string) => {
+    const game = games.find(g => g.id === gameId);
+    if (!game) return;
+    
+    const randomTheme = game.themes[Math.floor(Math.random() * game.themes.length)];
+    
+    createGameMutation.mutate({
+      gameType: gameId,
+      theme: randomTheme,
+      hostNickname: 'Host' // We'll prompt for nickname in the room
+    });
+  };
+
   const handleQuickStart = () => {
     if (nickname.trim()) {
-      // In a real app, this would use AI to match with the perfect game
       const randomGame = games[Math.floor(Math.random() * games.length)];
-      setLocation(`/game/${randomGame.id}?nickname=${encodeURIComponent(nickname)}`);
+      const randomTheme = randomGame.themes[Math.floor(Math.random() * randomGame.themes.length)];
+      
+      createGameMutation.mutate({
+        gameType: randomGame.id,
+        theme: randomTheme,
+        hostNickname: nickname.trim()
+      });
     }
   };
 
@@ -133,12 +173,14 @@ const GameMenu = () => {
                       ))}
                     </div>
                     
-                    <Link href={`/game/${game.id}`}>
-                      <Button className="gradient-bg text-white hover:opacity-90 transition-opacity w-full">
-                        <Play className="w-4 h-4 mr-2" />
-                        Start Game
-                      </Button>
-                    </Link>
+                    <Button 
+                      onClick={() => handleStartGame(game.id)}
+                      disabled={createGameMutation.isPending}
+                      className="gradient-bg text-white hover:opacity-90 transition-opacity w-full"
+                    >
+                      <Play className="w-4 h-4 mr-2" />
+                      {createGameMutation.isPending ? 'Creating...' : 'Start Game'}
+                    </Button>
                   </CardContent>
                 </Card>
               </motion.div>

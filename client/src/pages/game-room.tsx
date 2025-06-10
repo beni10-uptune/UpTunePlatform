@@ -76,7 +76,7 @@ export default function GameRoom() {
 
   // Queries
   const { data: gameRoom, isLoading: roomLoading } = useQuery<GameRoom>({
-    queryKey: ['/api/game-rooms/by-code', roomCode],
+    queryKey: ['/api/game-rooms', roomCode],
     enabled: !!roomCode
   });
 
