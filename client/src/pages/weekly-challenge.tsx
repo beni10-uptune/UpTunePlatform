@@ -384,12 +384,12 @@ const WeeklyChallenge = () => {
 
       {/* Submission Form Modal */}
       <Dialog open={showSubmissionForm} onOpenChange={setShowSubmissionForm}>
-        <DialogContent className="max-w-md">
+        <DialogContent className="max-w-lg w-[95vw] max-h-[90vh] overflow-y-auto mx-4">
           <DialogHeader>
             <div className="text-center">
               <div className="text-4xl mb-4">{challenge.emoji}</div>
-              <DialogTitle className="text-2xl">{challenge.title}</DialogTitle>
-              <DialogDescription>
+              <DialogTitle className="text-xl sm:text-2xl">{challenge.title}</DialogTitle>
+              <DialogDescription className="text-sm sm:text-base">
                 {challenge.description}
               </DialogDescription>
             </div>
@@ -409,31 +409,34 @@ const WeeklyChallenge = () => {
               <label className="block text-sm font-medium text-gray-700 mb-2">Select your song</label>
               {selectedSong ? (
                 <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center overflow-hidden">
-                      {selectedSong.imageUrl ? (
-                        <img 
-                          src={selectedSong.imageUrl} 
-                          alt={selectedSong.album}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <Music className="w-6 h-6 text-gray-400" />
-                      )}
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                    <div className="flex items-center space-x-3 min-w-0">
+                      <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center overflow-hidden flex-shrink-0">
+                        {selectedSong.imageUrl ? (
+                          <img 
+                            src={selectedSong.imageUrl} 
+                            alt={selectedSong.album}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <Music className="w-6 h-6 text-gray-400" />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="font-medium text-gray-900 truncate">{selectedSong.title}</h4>
+                        <p className="text-sm text-gray-600 truncate">{selectedSong.artist}</p>
+                        <p className="text-xs text-gray-500 truncate">{selectedSong.album}</p>
+                      </div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-gray-900 truncate">{selectedSong.title}</h4>
-                      <p className="text-sm text-gray-600 truncate">{selectedSong.artist}</p>
-                      <p className="text-xs text-gray-500 truncate">{selectedSong.album}</p>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Badge className="bg-green-100 text-green-800">✓ Selected</Badge>
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:flex-shrink-0">
+                      <Badge className="bg-green-100 text-green-800 text-center">✓ Selected</Badge>
                       <Button
                         onClick={() => setSelectedSong(null)}
                         variant="outline"
                         size="sm"
+                        className="text-sm"
                       >
-                        Change
+                        Change Song
                       </Button>
                     </div>
                   </div>

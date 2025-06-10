@@ -336,7 +336,7 @@ export default function GameRoom() {
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
           <div className="flex items-center space-x-4">
             <Button
               variant="ghost"
@@ -348,21 +348,22 @@ export default function GameRoom() {
               Leave
             </Button>
             <div>
-              <h1 className="text-2xl font-bold text-white">{gameConfig.title}</h1>
-              <p className="text-white/70">Theme: {gameRoom.theme}</p>
+              <h1 className="text-xl sm:text-2xl font-bold text-white">{gameConfig.title}</h1>
+              <p className="text-white/70 text-sm sm:text-base">Theme: {gameRoom.theme}</p>
             </div>
           </div>
           <div className="flex items-center space-x-3">
-            <Badge variant="secondary" className="text-lg px-4 py-2 font-mono">
+            <Badge variant="secondary" className="text-sm sm:text-lg px-3 sm:px-4 py-1 sm:py-2 font-mono">
               {gameRoom.code}
             </Badge>
             <Button
               onClick={handleShare}
-              className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm px-4 py-2"
+              className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm px-3 sm:px-4 py-2"
               size="sm"
             >
               <Share2 className="w-4 h-4 mr-2" />
-              Share Room
+              <span className="hidden sm:inline">Share Room</span>
+              <span className="sm:hidden">Share</span>
             </Button>
           </div>
         </div>
@@ -490,7 +491,7 @@ export default function GameRoom() {
 
         {/* Add Song Dialog */}
         <Dialog open={showAddSong} onOpenChange={setShowAddSong}>
-          <DialogContent className="max-w-2xl">
+          <DialogContent className="max-w-2xl w-[95vw] max-h-[90vh] overflow-y-auto mx-4">
             <DialogHeader>
               <DialogTitle>Add a Song</DialogTitle>
               <DialogDescription>
@@ -505,32 +506,32 @@ export default function GameRoom() {
               
               {selectedSong && (
                 <div className="p-4 bg-green-50 border-2 border-green-200 rounded-lg">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div className="flex items-center space-x-3 min-w-0">
                       {selectedSong.imageUrl && (
                         <img
                           src={selectedSong.imageUrl}
                           alt={`${selectedSong.title} cover`}
-                          className="w-16 h-16 rounded-lg object-cover"
+                          className="w-12 h-12 sm:w-16 sm:h-16 rounded-lg object-cover flex-shrink-0"
                         />
                       )}
-                      <div>
-                        <h4 className="font-semibold text-green-800">{selectedSong.title}</h4>
-                        <p className="text-green-700">{selectedSong.artist}</p>
-                        <p className="text-green-600 text-sm">{selectedSong.album}</p>
+                      <div className="min-w-0 flex-1">
+                        <h4 className="font-semibold text-green-800 truncate">{selectedSong.title}</h4>
+                        <p className="text-green-700 truncate">{selectedSong.artist}</p>
+                        <p className="text-green-600 text-sm truncate">{selectedSong.album}</p>
                       </div>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <div className="bg-green-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                      <div className="bg-green-500 text-white px-3 py-2 rounded-lg text-sm font-medium text-center">
                         ✓ Selected
                       </div>
                       <Button
-                        variant="ghost"
+                        variant="outline"
                         size="sm"
                         onClick={() => setSelectedSong(null)}
-                        className="text-green-700 hover:text-green-900"
+                        className="text-green-700 hover:text-green-900 border-green-300"
                       >
-                        Change
+                        Change Song
                       </Button>
                     </div>
                   </div>
@@ -549,16 +550,18 @@ export default function GameRoom() {
                 />
               </div>
               
-              <div className="flex justify-end space-x-2">
+              <div className="flex flex-col sm:flex-row gap-3 pt-2">
                 <Button
                   variant="outline"
                   onClick={() => setShowAddSong(false)}
+                  className="flex-1 sm:flex-none"
                 >
                   Cancel
                 </Button>
                 <Button
                   onClick={handleAddSong}
                   disabled={!selectedSong || addSongMutation.isPending}
+                  className="flex-1 sm:flex-none gradient-bg text-white"
                 >
                   {addSongMutation.isPending ? 'Adding...' : 'Add Song'}
                 </Button>
