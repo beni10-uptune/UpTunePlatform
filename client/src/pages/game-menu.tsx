@@ -65,8 +65,17 @@ const GameMenu = () => {
   });
 
   const handleStartGame = (gameId: string) => {
-    setSelectedGame(gameId);
-    setShowThemeDialog(true);
+    if (gameId === 'desert-island') {
+      // Desert Island Discs is a guided experience - no theme selection needed
+      createGameMutation.mutate({
+        gameType: gameId,
+        theme: 'Musical Essentials',
+        hostNickname: 'Host'
+      });
+    } else {
+      setSelectedGame(gameId);
+      setShowThemeDialog(true);
+    }
   };
 
   const handleCreateGame = () => {

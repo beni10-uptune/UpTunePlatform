@@ -55,21 +55,18 @@ const GAME_TYPES = {
   },
   'desert-island': {
     title: 'Desert Island Discs',
-    description: 'Share 8 songs that tell your life story, inspired by the legendary BBC Radio 4 show',
+    description: 'Share 5 essential songs that represent different parts of who you are',
     icon: Radio,
     color: 'from-green-500 to-teal-500',
-    themes: ['Musical DNA', 'Life Through Music', 'Songs That Shaped Me', 'Musical Autobiography', 'Personal Soundtrack'],
+    themes: ['Musical Essentials'],
     isGuided: true,
-    maxSongs: 8,
+    maxSongs: 5,
     prompts: [
-      'A song from your childhood that brings back vivid memories',
-      'A piece of music that represents your teenage years',
-      'Something that reminds you of home or family',
-      'A song that got you through a difficult time',
-      'Music that makes you feel most like yourself',
-      'A track that represents love or a significant relationship',
-      'Something that energizes or motivates you',
-      'A song you\'d want to hear one last time'
+      'A song for your head - something that makes you think',
+      'A song for your heart - something that moves you emotionally',
+      'A song for your feet - something that makes you want to move',
+      'Your guilty pleasure - a song you love but might be embarrassed to admit',
+      'A song from your current favorite album'
     ]
   }
 } as const;
@@ -261,7 +258,7 @@ export default function GameRoom() {
     });
 
     // For Desert Island Discs, advance to next prompt
-    if (isDesertIsland && desertIslandConfig.prompts && currentPromptIndex < desertIslandConfig.prompts.length - 1) {
+    if (isDesertIsland && desertIslandConfig.prompts && currentPromptIndex < 4) {
       setCurrentPromptIndex(prev => prev + 1);
     }
   };
@@ -437,29 +434,31 @@ export default function GameRoom() {
             {/* Add Song Section */}
             <Card>
               <CardHeader>
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex flex-col gap-3">
                   <CardTitle className="flex items-center text-lg">
                     <Music className="w-5 h-5 mr-2" />
                     Playlist ({(songs as Song[]).length} songs)
                   </CardTitle>
-                  <div className="flex flex-col sm:flex-row gap-2">
+                  <div className="flex flex-col sm:flex-row gap-2 w-full">
                     {gameRoom?.gameType === 'desert-island' ? (
                       <Button
                         onClick={() => setShowAddSong(true)}
                         size="sm"
-                        disabled={(songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length >= 8}
-                        className="gradient-bg text-white w-full sm:w-auto disabled:opacity-50"
+                        disabled={(songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length >= 5}
+                        className="gradient-bg text-white flex-1 sm:flex-none disabled:opacity-50 min-w-0"
                       >
-                        <Radio className="w-4 h-4 mr-2" />
-                        {(songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length >= 8 
-                          ? 'All 8 Songs Added' 
-                          : `Add Disc ${Math.min((songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length + 1, 8)}/8`}
+                        <Radio className="w-4 h-4 mr-2 flex-shrink-0" />
+                        <span className="truncate">
+                          {(songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length >= 5 
+                            ? 'All 5 Songs Added' 
+                            : `Add Song ${Math.min((songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length + 1, 5)}/5`}
+                        </span>
                       </Button>
                     ) : (
                       <Button
                         onClick={() => setShowAddSong(true)}
                         size="sm"
-                        className="gradient-bg text-white w-full sm:w-auto"
+                        className="gradient-bg text-white flex-1 sm:flex-none"
                       >
                         <Plus className="w-4 h-4 mr-2" />
                         Add Song
@@ -471,7 +470,7 @@ export default function GameRoom() {
                         disabled={createPlaylistMutation.isPending}
                         size="sm"
                         variant="outline"
-                        className="w-full sm:w-auto"
+                        className="flex-1 sm:flex-none"
                       >
                         <ExternalLink className="w-4 h-4 mr-2" />
                         <span className="hidden sm:inline">Export to Spotify</span>
@@ -487,13 +486,13 @@ export default function GameRoom() {
                     {gameRoom?.gameType === 'desert-island' ? (
                       <>
                         <Radio className="w-12 h-12 mx-auto mb-4 text-green-400" />
-                        <h3 className="text-lg font-medium text-green-700 mb-2">Welcome to Desert Island Discs</h3>
+                        <h3 className="text-lg font-medium text-green-700 mb-2">Desert Island Discs</h3>
                         <p className="text-sm text-gray-600 max-w-md mx-auto">
-                          Inspired by the legendary BBC Radio 4 show, you'll each choose 8 songs that tell your life story. 
-                          Each song should represent a different chapter or feeling that's shaped who you are.
+                          Choose 5 essential songs that represent different parts of who you are. 
+                          Each song represents your head, heart, feet, guilty pleasure, and current favorite.
                         </p>
                         <p className="text-xs text-green-600 mt-3 font-medium">
-                          Start by adding your first disc - what song from your childhood brings back vivid memories?
+                          Start with a song for your head - something that makes you think.
                         </p>
                       </>
                     ) : (
@@ -561,7 +560,7 @@ export default function GameRoom() {
                 <>
                   <DialogTitle className="flex items-center gap-2">
                     <Radio className="w-5 h-5 text-green-600" />
-                    Desert Island Disc #{currentPromptIndex + 1}/8
+                    Song #{currentPromptIndex + 1}/5
                   </DialogTitle>
                   <DialogDescription className="text-left space-y-2">
                     <span className="block font-medium text-green-700">
