@@ -2,6 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertGameRoomSchema, insertPlayerSchema, insertSongSchema, insertChallengeSubmissionSchema, insertTeamsWaitlistSchema } from "@shared/schema";
+import { sendTeamContactEmail } from "./email";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Game Rooms
@@ -261,6 +262,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Get playlist error:", error);
       res.status(500).json({ error: "Failed to get playlist data" });
+    }
+  });
+
+  // Teams contact form
+  app.post("/api/teams/contact", async (req, res) => {
+    try {
+      const { companyName, contactName, email, phone, teamSize, message } = req.body;
+      
+      if (!companyName || !contactName || !email || !teamSize || !message) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+
+      const success = await sendTeamContactEmail({
+        companyName,
+        contactName,
+        email,
+        phone,
+        teamSize,
+        message
+      });
+
+      if (success) {
+        res.json({ success: true, message: "Contact form submitted successfully" });
+      } else {
+        res.status(500).json({ error: "Failed to send email" });
+      }
+    } catch (error) {
+      console.error("Teams contact error:", error);
+      res.status(500).json({ error: "Failed to process contact form" });
     }
   });
 
