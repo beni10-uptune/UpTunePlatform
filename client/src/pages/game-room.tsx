@@ -261,7 +261,7 @@ export default function GameRoom() {
     });
 
     // For Desert Island Discs, advance to next prompt
-    if (isDesertIsland && gameConfig.prompts && currentPromptIndex < gameConfig.prompts.length - 1) {
+    if (isDesertIsland && desertIslandConfig.prompts && currentPromptIndex < desertIslandConfig.prompts.length - 1) {
       setCurrentPromptIndex(prev => prev + 1);
     }
   };
@@ -443,14 +443,28 @@ export default function GameRoom() {
                     Playlist ({(songs as Song[]).length} songs)
                   </CardTitle>
                   <div className="flex flex-col sm:flex-row gap-2">
-                    <Button
-                      onClick={() => setShowAddSong(true)}
-                      size="sm"
-                      className="gradient-bg text-white w-full sm:w-auto"
-                    >
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add Song
-                    </Button>
+                    {gameRoom?.gameType === 'desert-island' ? (
+                      <Button
+                        onClick={() => setShowAddSong(true)}
+                        size="sm"
+                        disabled={(songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length >= 8}
+                        className="gradient-bg text-white w-full sm:w-auto disabled:opacity-50"
+                      >
+                        <Radio className="w-4 h-4 mr-2" />
+                        {(songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length >= 8 
+                          ? 'All 8 Songs Added' 
+                          : `Add Disc ${Math.min((songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length + 1, 8)}/8`}
+                      </Button>
+                    ) : (
+                      <Button
+                        onClick={() => setShowAddSong(true)}
+                        size="sm"
+                        className="gradient-bg text-white w-full sm:w-auto"
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Add Song
+                      </Button>
+                    )}
                     {(songs as Song[]).some(song => song.spotifyId) && (
                       <Button
                         onClick={() => createPlaylistMutation.mutate()}
@@ -470,8 +484,24 @@ export default function GameRoom() {
               <CardContent>
                 {(songs as Song[]).length === 0 ? (
                   <div className="text-center py-8 text-gray-500">
-                    <Music className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                    <p>No songs added yet. Be the first to add a song!</p>
+                    {gameRoom?.gameType === 'desert-island' ? (
+                      <>
+                        <Radio className="w-12 h-12 mx-auto mb-4 text-green-400" />
+                        <h3 className="text-lg font-medium text-green-700 mb-2">Welcome to Desert Island Discs</h3>
+                        <p className="text-sm text-gray-600 max-w-md mx-auto">
+                          Inspired by the legendary BBC Radio 4 show, you'll each choose 8 songs that tell your life story. 
+                          Each song should represent a different chapter or feeling that's shaped who you are.
+                        </p>
+                        <p className="text-xs text-green-600 mt-3 font-medium">
+                          Start by adding your first disc - what song from your childhood brings back vivid memories?
+                        </p>
+                      </>
+                    ) : (
+                      <>
+                        <Music className="w-12 h-12 mx-auto mb-4 opacity-50" />
+                        <p>No songs added yet. Be the first to add a song!</p>
+                      </>
+                    )}
                   </div>
                 ) : (
                   <div className="space-y-4">
@@ -533,15 +563,13 @@ export default function GameRoom() {
                     <Radio className="w-5 h-5 text-green-600" />
                     Desert Island Disc #{currentPromptIndex + 1}/8
                   </DialogTitle>
-                  <DialogDescription className="text-left">
-                    <div className="space-y-2">
-                      <p className="font-medium text-green-700">
-                        {gameConfig.prompts?.[currentPromptIndex]}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        Share the story behind this song and why it's essential to your musical DNA.
-                      </p>
-                    </div>
+                  <DialogDescription className="text-left space-y-2">
+                    <span className="block font-medium text-green-700">
+                      {(gameConfig as typeof GAME_TYPES['desert-island']).prompts?.[currentPromptIndex]}
+                    </span>
+                    <span className="block text-sm text-gray-600">
+                      Share the story behind this song and why it's essential to your musical DNA.
+                    </span>
                   </DialogDescription>
                 </>
               ) : (
@@ -594,15 +622,33 @@ export default function GameRoom() {
               )}
               
               <div>
-                <label className="block text-sm font-medium mb-2">
-                  Why did you choose this song? (Optional)
-                </label>
-                <Textarea
-                  placeholder="Share the story behind your choice..."
-                  value={songStory}
-                  onChange={(e) => setSongStory(e.target.value)}
-                  maxLength={500}
-                />
+                {gameRoom?.gameType === 'desert-island' ? (
+                  <>
+                    <label className="block text-sm font-medium mb-2 text-green-700">
+                      Tell us your story - Why is this song essential to who you are?
+                    </label>
+                    <Textarea
+                      placeholder="Share the memories, emotions, or experiences this song represents in your life..."
+                      value={songStory}
+                      onChange={(e) => setSongStory(e.target.value)}
+                      maxLength={800}
+                      rows={4}
+                      className="border-green-200 focus:border-green-400"
+                    />
+                  </>
+                ) : (
+                  <>
+                    <label className="block text-sm font-medium mb-2">
+                      Why did you choose this song? (Optional)
+                    </label>
+                    <Textarea
+                      placeholder="Share the story behind your choice..."
+                      value={songStory}
+                      onChange={(e) => setSongStory(e.target.value)}
+                      maxLength={500}
+                    />
+                  </>
+                )}
               </div>
               
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
