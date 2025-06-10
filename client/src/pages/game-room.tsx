@@ -76,17 +76,17 @@ export default function GameRoom() {
 
   // Queries
   const { data: gameRoom, isLoading: roomLoading } = useQuery<GameRoom>({
-    queryKey: ['/api/game-rooms', roomCode],
+    queryKey: [`/api/game-rooms/${roomCode}`],
     enabled: !!roomCode
   });
 
   const { data: players = [] } = useQuery<Player[]>({
-    queryKey: ['/api/game-rooms', gameRoom?.id, 'players'],
+    queryKey: [`/api/game-rooms/${gameRoom?.id}/players`],
     enabled: !!gameRoom?.id && hasJoined
   });
 
   const { data: songs = [] } = useQuery<Song[]>({
-    queryKey: ['/api/game-rooms', gameRoom?.id, 'songs'],
+    queryKey: [`/api/game-rooms/${gameRoom?.id}/songs`],
     enabled: !!gameRoom?.id && hasJoined
   });
 
@@ -99,7 +99,7 @@ export default function GameRoom() {
     onSuccess: (player: Player) => {
       setCurrentPlayer(player);
       setHasJoined(true);
-      queryClient.invalidateQueries({ queryKey: ['/api/game-rooms', gameRoom?.id, 'players'] });
+      queryClient.invalidateQueries({ queryKey: [`/api/game-rooms/${gameRoom?.id}/players`] });
       toast({
         title: 'Joined successfully!',
         description: `Welcome to the room, ${nickname}!`
@@ -130,7 +130,7 @@ export default function GameRoom() {
       return await response.json() as Song;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/game-rooms', gameRoom?.id, 'songs'] });
+      queryClient.invalidateQueries({ queryKey: [`/api/game-rooms/${gameRoom?.id}/songs`] });
       setShowAddSong(false);
       setSelectedSong(null);
       setSongStory('');
