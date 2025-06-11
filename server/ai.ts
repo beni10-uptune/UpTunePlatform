@@ -213,3 +213,136 @@ Respond in JSON:
     };
   }
 }
+
+// AI Host Game Mode Functions
+export async function generateAiHostQuestion(context: {
+  playerName?: string;
+  previousSongs?: Song[];
+  conversationHistory?: string[];
+  questionNumber: number;
+}): Promise<{
+  question: string;
+  followUpSuggestions: string[];
+}> {
+  try {
+    if (!process.env.ANTHROPIC_API_KEY) {
+      throw new Error('Anthropic API key not available');
+    }
+
+    const { playerName, previousSongs = [], conversationHistory = [], questionNumber } = context;
+    
+    const songContext = previousSongs.length > 0 
+      ? `Previous songs chosen: ${previousSongs.map(s => `"${s.title}" by ${s.artist}`).join(', ')}`
+      : 'No songs chosen yet';
+    
+    const historyContext = conversationHistory.length > 0
+      ? `Previous conversation: ${conversationHistory.slice(-3).join('\n')}`
+      : 'Starting fresh conversation';
+
+    const prompt = `You're an AI music host helping ${playerName || 'a player'} discover amazing songs through conversation. 
+    This is question #${questionNumber}.
+
+    Context:
+    ${songContext}
+    ${historyContext}
+
+    Generate an engaging, personal question that helps discover their musical taste and personality. 
+    Questions should be:
+    - Conversational and fun
+    - Lead to specific song recommendations
+    - Build on previous context
+    - Avoid generic "what's your favorite" questions
+
+    Examples of good questions:
+    - "What song always makes you feel like the main character in your own movie?"
+    - "If you could soundtrack a road trip with your best friend, what vibe are you going for?"
+    - "What's a song that takes you back to a specific moment you'll never forget?"
+
+    Respond with JSON:
+    {
+      "question": "your engaging question",
+      "followUpSuggestions": ["3 follow-up prompts that could lead to song suggestions"]
+    }`;
+
+    const response = await anthropic.messages.create({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 400,
+      messages: [{ role: 'user', content: prompt }]
+    });
+
+    const content = response.content[0];
+    if (content.type === 'text') {
+      return JSON.parse(content.text);
+    }
+    
+    throw new Error('Invalid response format');
+  } catch (error) {
+    console.error('AI host question generation error:', error);
+    return {
+      question: "What song always puts you in a great mood, no matter what?",
+      followUpSuggestions: [
+        "Tell me about the first time you heard it",
+        "What memories does it bring back?",
+        "How does it make you want to move or dance?"
+      ]
+    };
+  }
+}
+
+export async function generateSongSuggestionsFromResponse(userResponse: string, context: {
+  question: string;
+  playerName?: string;
+  previousSongs?: Song[];
+}): Promise<{
+  suggestions: string[];
+  reasoning: string;
+}> {
+  try {
+    if (!process.env.ANTHROPIC_API_KEY) {
+      throw new Error('Anthropic API key not available');
+    }
+
+    const { question, playerName, previousSongs = [] } = context;
+    
+    const songContext = previousSongs.length > 0 
+      ? `Previous songs: ${previousSongs.map(s => `"${s.title}" by ${s.artist}`).join(', ')}`
+      : '';
+
+    const prompt = `You're an AI music host. ${playerName || 'A player'} was asked: "${question}"
+    
+    Their response: "${userResponse}"
+    ${songContext}
+
+    Based on their response, suggest 3-5 specific songs that perfectly match their vibe, story, or emotion. 
+    Consider their personality, the context they shared, and create a diverse but cohesive selection.
+
+    Respond with JSON:
+    {
+      "suggestions": ["Song Title - Artist", "Song Title - Artist", "Song Title - Artist"],
+      "reasoning": "brief explanation of why these songs fit their response"
+    }`;
+
+    const response = await anthropic.messages.create({
+      model: 'claude-sonnet-4-20250514',
+      max_tokens: 500,
+      messages: [{ role: 'user', content: prompt }]
+    });
+
+    const content = response.content[0];
+    if (content.type === 'text') {
+      return JSON.parse(content.text);
+    }
+    
+    throw new Error('Invalid response format');
+  } catch (error) {
+    console.error('Song suggestion generation error:', error);
+    return {
+      suggestions: [
+        "Good Vibes - The Beach Boys",
+        "Walking on Sunshine - Katrina and the Waves",
+        "Don't Stop Me Now - Queen"
+      ],
+      reasoning: "Classic feel-good songs that lift anyone's mood"
+    };
+  }
+}

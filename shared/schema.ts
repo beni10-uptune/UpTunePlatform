@@ -80,6 +80,18 @@ export const contactSubmissions = pgTable("contact_submissions", {
   submittedAt: timestamp("submitted_at").defaultNow().notNull(),
 });
 
+export const aiConversations = pgTable("ai_conversations", {
+  id: serial("id").primaryKey(),
+  gameRoomId: integer("game_room_id").notNull(),
+  playerId: integer("player_id").notNull(),
+  question: text("question").notNull(),
+  response: text("response"),
+  suggestions: text("suggestions").array(),
+  reasoning: text("reasoning"),
+  questionNumber: integer("question_number").notNull().default(1),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const insertGameRoomSchema = createInsertSchema(gameRooms).omit({
   id: true,
   code: true,
