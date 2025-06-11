@@ -165,6 +165,18 @@ export default function GameRoom() {
       setSelectedSong(null);
       setSongStory('');
       
+      // For Desert Island Discs, advance to next prompt automatically
+      if (gameRoom?.gameType === 'desert-island') {
+        const userSongs = (songs as Song[]).filter(s => s.playerId === currentPlayer?.id);
+        const nextPromptIndex = userSongs.length;
+        setCurrentPromptIndex(nextPromptIndex);
+        
+        // If user hasn't completed all 5 songs, show the next prompt immediately
+        if (nextPromptIndex < 5) {
+          setTimeout(() => setShowAddSong(true), 1000);
+        }
+      }
+      
       // Check for achievements after state updates
       setTimeout(checkAchievements, 100);
       
@@ -173,7 +185,9 @@ export default function GameRoom() {
       
       toast({
         title: 'Song added!',
-        description: 'Your song has been added to the playlist.'
+        description: gameRoom?.gameType === 'desert-island' && (songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length < 4
+          ? 'Next song category coming up...'
+          : 'Your song has been added to the playlist.'
       });
     }
   });
@@ -721,15 +735,19 @@ export default function GameRoom() {
                     <Music className="w-5 h-5 mr-2" />
                     Playlist ({(songs as Song[]).length} songs)
                   </CardTitle>
-                  <div className="flex flex-col sm:flex-row gap-2 w-full">
+                  <div className="flex flex-col sm:flex-row gap-3 w-full">
                     {gameRoom?.gameType === 'desert-island' ? (
                       <Button
-                        onClick={() => setShowAddSong(true)}
-                        size="sm"
+                        onClick={() => {
+                          const userSongs = (songs as Song[]).filter(s => s.playerId === currentPlayer?.id);
+                          setCurrentPromptIndex(userSongs.length);
+                          setShowAddSong(true);
+                        }}
+                        size="lg"
                         disabled={(songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length >= 5}
-                        className="gradient-bg text-white flex-1 sm:flex-none disabled:opacity-50 min-w-0"
+                        className="gradient-bg text-white w-full sm:flex-1 py-4 sm:py-3 text-base sm:text-sm font-semibold disabled:opacity-50 shadow-lg hover:shadow-xl transition-all animate-pulse"
                       >
-                        <Radio className="w-4 h-4 mr-2 flex-shrink-0" />
+                        <Radio className="w-5 h-5 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
                         <span className="truncate">
                           {(songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length >= 5 
                             ? 'All 5 Songs Added' 
@@ -739,11 +757,11 @@ export default function GameRoom() {
                     ) : (
                       <Button
                         onClick={() => setShowAddSong(true)}
-                        size="sm"
-                        className="gradient-bg text-white flex-1 sm:flex-none"
+                        size="lg"
+                        className="gradient-bg text-white w-full sm:flex-1 py-4 sm:py-3 text-base sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all animate-pulse"
                       >
-                        <Plus className="w-4 h-4 mr-2" />
-                        Add Song
+                        <Plus className="w-5 h-5 sm:w-4 sm:h-4 mr-2" />
+                        Add Your Song
                       </Button>
                     )}
                     {(songs as Song[]).some(song => song.spotifyId) && (
@@ -782,7 +800,15 @@ export default function GameRoom() {
                     ) : (
                       <>
                         <Music className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                        <p>No songs added yet. Be the first to add a song!</p>
+                        <p className="mb-4">No songs added yet. Be the first to add a song!</p>
+                        <Button
+                          onClick={() => setShowAddSong(true)}
+                          size="lg"
+                          className="gradient-bg text-white shadow-lg hover:shadow-xl transition-all animate-pulse"
+                        >
+                          <Plus className="w-5 h-5 mr-2" />
+                          Add First Song
+                        </Button>
                       </>
                     )}
                   </div>
@@ -924,13 +950,32 @@ export default function GameRoom() {
                     <Radio className="w-5 h-5 text-green-600" />
                     Song #{currentPromptIndex + 1}/5
                   </DialogTitle>
-                  <DialogDescription className="text-left space-y-2">
-                    <span className="block font-medium text-green-700">
-                      {(gameConfig as typeof GAME_TYPES['desert-island']).prompts?.[currentPromptIndex]}
-                    </span>
-                    <span className="block text-sm text-gray-600">
-                      Share the story behind this song and why it's essential to your musical DNA.
-                    </span>
+                  <DialogDescription className="text-left space-y-3">
+                    <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                      <span className="block font-semibold text-green-800 mb-1">
+                        {(gameConfig as typeof GAME_TYPES['desert-island']).prompts?.[currentPromptIndex]}
+                      </span>
+                      <span className="block text-sm text-green-700">
+                        Share the story behind this song and why it's essential to your musical DNA.
+                      </span>
+                    </div>
+                    <div className="text-xs text-gray-500 space-y-1">
+                      <div>Progress: {(songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length}/5 songs added</div>
+                      <div className="flex gap-1">
+                        {[0,1,2,3,4].map(i => (
+                          <div 
+                            key={i} 
+                            className={`w-3 h-3 rounded-full ${
+                              i < (songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length 
+                                ? 'bg-green-500' 
+                                : i === currentPromptIndex 
+                                  ? 'bg-green-300 animate-pulse' 
+                                  : 'bg-gray-200'
+                            }`} 
+                          />
+                        ))}
+                      </div>
+                    </div>
                   </DialogDescription>
                 </>
               ) : (
