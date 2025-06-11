@@ -22,27 +22,27 @@ const GameMenu = () => {
   const games = [
     {
       id: 'mixtape',
-      title: 'The Mixtape',
-      description: 'Create a collaborative playlist with a fun theme',
+      title: 'Memory Mixtape',
+      description: 'Turn shared experiences into an unforgettable playlist that captures your friendship',
       icon: Music,
       color: 'purple',
-      exampleThemes: ['Guilty Pleasures', 'Road Trip Classics', '90s Nostalgia', 'Songs That Make You Dance', 'Rainy Day Vibes']
+      exampleThemes: ['Guilty Pleasures Confessions', 'Road Trip Adventure', 'Songs That Make Us Unstoppable', 'Late Night Feelings', 'Dancing Like Nobody\'s Watching']
     },
     {
       id: 'soundtrack',
-      title: 'Soundtrack Session',
-      description: 'Build the perfect playlist for a real-life event',
+      title: 'Life Soundtrack',
+      description: 'Create the perfect musical backdrop for the moments that matter most',
       icon: Headphones,
       color: 'pink',
-      exampleThemes: ['Dinner Party Elegance', 'Focus & Flow', 'High Energy Workout', 'Study Session', 'Weekend Chill']
+      exampleThemes: ['Epic Movie Night', 'Victory Celebration', 'Heartbreak Recovery', 'New Beginnings', 'Pure Nostalgia Trip']
     },
     {
       id: 'desert-island',
-      title: 'Desert Island Discs',
-      description: 'Share the 8 songs that tell your life story - inspired by the legendary BBC show',
+      title: 'Musical Soul Story',
+      description: 'Share the 5 songs that reveal who you really are - the tracks that define your journey',
       icon: Radio,
       color: 'indigo',
-      exampleThemes: ['My Musical DNA', 'Songs That Shaped Me', 'Life Through Music', 'Musical Autobiography', 'Desert Island Journey']
+      exampleThemes: ['Songs That Shaped My Heart', 'My Musical DNA', 'The Real Me Playlist', 'Life in 5 Songs', 'Musical Autobiography']
     }
   ];
 
@@ -154,10 +154,10 @@ const GameMenu = () => {
             className="text-center mb-12"
           >
             <h1 className="text-5xl font-bold mb-4">
-              Choose Your <span className="gradient-text">Musical Adventure</span>
+              What Memory Will You <span className="gradient-text">Create Today?</span>
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Each game creates a unique way to connect through music. Pick one and start sharing your soundtrack.
+              Each game turns music into connection, laughter into memories, and friends into family. Pick your moment.
             </p>
           </motion.div>
 

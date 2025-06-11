@@ -162,15 +162,15 @@ const LandingPage = () => {
               </Badge>
               
               <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">
-                Build collaborative playlists{' '}
+                Turn Your Friendship into a{' '}
                 <span className="gradient-text">
-                  with friends
+                  Mixtape
                 </span>
               </h1>
               
               <p className="text-base sm:text-lg lg:text-xl text-gray-600 leading-relaxed">
-                Create music games where everyone adds songs and tells their stories. 
-                Three game modes: collaborative mixtapes, movie soundtracks, and desert island picks.
+                The most fun you'll have with music. Start a game, invite your friends, and create hilarious, 
+                unforgettable playlists together. No sign-ups needed.
               </p>
             </motion.div>
 
@@ -187,8 +187,8 @@ const LandingPage = () => {
                   onMouseEnter={() => setIsHovered(true)}
                   onMouseLeave={() => setIsHovered(false)}
                 >
-                  <Plus className={`w-4 h-4 sm:w-5 sm:h-5 mr-2 transition-transform ${isHovered ? 'scale-110' : ''}`} />
-                  <span className="truncate">Create Game</span>
+                  <Music className={`w-4 h-4 sm:w-5 sm:h-5 mr-2 transition-transform ${isHovered ? 'scale-110' : ''}`} />
+                  <span className="truncate">Start Making Memories</span>
                 </Button>
               </Link>
               
@@ -286,98 +286,160 @@ const LandingPage = () => {
             className="mt-20 space-y-8"
           >
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Try These Popular Games</h2>
-              <p className="text-gray-600">Get inspired by what others are creating, then make your own</p>
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">A Game for Every Memory</h2>
+              <p className="text-gray-600">Turn any moment into an unforgettable musical experience</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
               <Card 
-                className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-purple-300"
+                className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-purple-300 relative overflow-hidden"
                 onClick={() => createGameMutation.mutate({ gameType: 'mixtape', theme: 'Road Trip Vibes' })}
               >
+                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-purple-500 to-pink-500"></div>
                 <CardHeader className="pb-3">
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <Headphones className="w-5 h-5 text-purple-600" />
-                    Road Trip Vibes
+                  <div className="text-sm font-medium text-purple-600 mb-1">For the Perfect Road Trip</div>
+                  <CardTitle className="flex items-center gap-2 text-xl">
+                    <Headphones className="w-6 h-6 text-purple-600" />
+                    The Mixtape
                   </CardTitle>
-                  <Badge className="w-fit bg-purple-100 text-purple-700 text-xs">Collaborative Mixtape</Badge>
-                  <CardDescription className="text-sm">
-                    Songs that make the perfect road trip playlist - windows down, volume up!
+                  <CardDescription className="text-sm leading-relaxed">
+                    "Settle the ultimate debate: What's the best song for the open road? Everyone adds their essential track to the list. At the end, you get a real Spotify playlist for your journey."
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="pt-0">
-                  <div className="text-xs text-gray-500 mb-3">Example songs: "Life is a Highway", "Don't Stop Believin'", "Mr. Blue Sky"</div>
                   <Button 
                     className="w-full gradient-bg text-white hover:opacity-90"
                     disabled={createGameMutation.isPending}
                   >
-                    {createGameMutation.isPending ? 'Creating...' : 'Join This Game'}
+                    {createGameMutation.isPending ? 'Creating...' : 'Start Road Trip Game'}
                   </Button>
                 </CardContent>
               </Card>
 
               <Card 
-                className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-blue-300"
-                onClick={() => createGameMutation.mutate({ gameType: 'soundtrack', theme: 'Heist Movie' })}
+                className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-amber-300 relative overflow-hidden"
+                onClick={() => createGameMutation.mutate({ gameType: 'mixtape', theme: 'Guilty Pleasures' })}
               >
+                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-amber-500 to-orange-500"></div>
                 <CardHeader className="pb-3">
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <Play className="w-5 h-5 text-blue-600" />
-                    Heist Movie
+                  <div className="text-sm font-medium text-amber-600 mb-1">For a Hilarious Night In</div>
+                  <CardTitle className="flex items-center gap-2 text-xl">
+                    <Heart className="w-6 h-6 text-amber-600" />
+                    Guilty Pleasures
                   </CardTitle>
-                  <Badge className="w-fit bg-blue-100 text-blue-700 text-xs">Movie Soundtrack</Badge>
-                  <CardDescription className="text-sm">
-                    Intense, clever tracks for the ultimate heist film soundtrack
+                  <CardDescription className="text-sm leading-relaxed">
+                    "Time to confess. Everyone anonymously submits their favourite guilty pleasure song. Guess who chose what, then hit 'Reveal' for the big moment. Laughter guaranteed."
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="pt-0">
-                  <div className="text-xs text-gray-500 mb-3">Example songs: "Seven Nation Army", "Pressure", "Thunderstruck"</div>
                   <Button 
-                    className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:opacity-90"
+                    className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:opacity-90"
                     disabled={createGameMutation.isPending}
                   >
-                    {createGameMutation.isPending ? 'Creating...' : 'Join This Game'}
+                    {createGameMutation.isPending ? 'Creating...' : 'Start Confession Game'}
                   </Button>
                 </CardContent>
               </Card>
 
               <Card 
-                className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-green-300"
-                onClick={() => createGameMutation.mutate({ gameType: 'desert-island', theme: 'Emotional Journey' })}
+                className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-emerald-300 relative overflow-hidden"
+                onClick={() => createGameMutation.mutate({ gameType: 'desert-island', theme: 'Life Soundtrack' })}
               >
+                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-500 to-teal-500"></div>
                 <CardHeader className="pb-3">
-                  <CardTitle className="flex items-center gap-2 text-lg">
-                    <Radio className="w-5 h-5 text-green-600" />
-                    Emotional Journey
+                  <div className="text-sm font-medium text-emerald-600 mb-1">For a Trip Down Memory Lane</div>
+                  <CardTitle className="flex items-center gap-2 text-xl">
+                    <Radio className="w-6 h-6 text-emerald-600" />
+                    Desert Island Discs
                   </CardTitle>
-                  <Badge className="w-fit bg-green-100 text-green-700 text-xs">Desert Island Discs</Badge>
-                  <CardDescription className="text-sm">
-                    5 songs that tell the story of your emotional highs and lows
+                  <CardDescription className="text-sm leading-relaxed">
+                    "What are the 5 songs that tell your life story? Share your most important tracks and discover the music that shaped your friends."
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="pt-0">
-                  <div className="text-xs text-gray-500 mb-3">Categories: Joy, Sadness, Hope, Love, Growth</div>
                   <Button 
-                    className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white hover:opacity-90"
+                    className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:opacity-90"
                     disabled={createGameMutation.isPending}
                   >
-                    {createGameMutation.isPending ? 'Creating...' : 'Join This Game'}
+                    {createGameMutation.isPending ? 'Creating...' : 'Start Memory Game'}
                   </Button>
                 </CardContent>
               </Card>
             </div>
 
+            {/* Live Feed - Social Proof Engine */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1, delay: 1 }}
+              className="mt-16"
+            >
+              <Card className="max-w-4xl mx-auto bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+                <CardHeader className="text-center pb-4">
+                  <CardTitle className="flex items-center justify-center gap-2 text-xl">
+                    <Sparkles className="w-5 h-5 text-blue-600" />
+                    What the World is Creating Right Now
+                  </CardTitle>
+                  <CardDescription>
+                    Join thousands creating musical memories every day
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="pb-6">
+                  <div className="space-y-3 max-h-48 overflow-hidden">
+                    <motion.div
+                      animate={{ y: [0, -200] }}
+                      transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                      className="space-y-3"
+                    >
+                      <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="text-sm text-gray-700">Someone just created <strong>"Ultimate 80s Power Ballads"</strong></span>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="text-sm text-gray-700">Someone just created <strong>"Best Songs from a Movie"</strong></span>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="text-sm text-gray-700">Someone just created <strong>"Songs That Remind Us of Summer"</strong></span>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="text-sm text-gray-700">Someone just created <strong>"Guilty Pleasure Dance Floor"</strong></span>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="text-sm text-gray-700">Someone just created <strong>"Road Trip Anthems"</strong></span>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="text-sm text-gray-700">Someone just created <strong>"Heartbreak Recovery Playlist"</strong></span>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="text-sm text-gray-700">Someone just created <strong>"Epic Movie Soundtrack Vibes"</strong></span>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="text-sm text-gray-700">Someone just created <strong>"Childhood Memory Lane"</strong></span>
+                      </div>
+                    </motion.div>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+
             {/* Custom Game Creation CTA */}
-            <Card className="max-w-3xl mx-auto bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
+            <Card className="max-w-3xl mx-auto bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200 mt-12">
               <CardContent className="p-8 text-center">
-                <h3 className="text-xl font-semibold mb-2">Want Something Different?</h3>
+                <h3 className="text-xl font-semibold mb-2">Ready to Create Your Own Musical Memory?</h3>
                 <p className="text-gray-600 mb-4">
-                  Create your own custom mixtape, festival soundtrack, or personal music challenge
+                  Design a custom game that's perfect for your group
                 </p>
                 <Link href="/games">
                   <Button size="lg" className="gradient-bg text-white hover:opacity-90">
                     <Plus className="w-5 h-5 mr-2" />
-                    Create Custom Game
+                    Create Your Game
                   </Button>
                 </Link>
               </CardContent>
@@ -391,21 +453,26 @@ const LandingPage = () => {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="mt-20"
           >
-            <Card className="max-w-2xl mx-auto text-center p-8 bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
+            <Card className="max-w-3xl mx-auto text-center p-8 bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50 border-yellow-200">
               <CardHeader>
                 <CardTitle className="flex items-center justify-center gap-2 text-2xl">
-                  <Trophy className="w-6 h-6 text-yellow-500" />
-                  Weekly Challenge
+                  <Trophy className="w-6 h-6 text-yellow-600" />
+                  This Week: "Songs That Make You Invincible"
                 </CardTitle>
-                <CardDescription className="text-lg">
-                  Join our community challenge and discover new music
+                <CardDescription className="text-lg leading-relaxed">
+                  What song makes you feel like you can conquer the world? Join hundreds sharing their power anthems and discover the music that makes others feel unstoppable.
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
+                <div className="flex justify-center gap-4 text-sm text-gray-600">
+                  <span>🎵 247 songs submitted</span>
+                  <span>🔥 Most voted: "Eye of the Tiger"</span>
+                  <span>⏰ 3 days left</span>
+                </div>
                 <Link href="/weekly-challenge">
-                  <Button variant="outline" className="border-purple-200 text-purple-700 hover:bg-purple-100">
+                  <Button size="lg" className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white hover:opacity-90">
                     <Heart className="w-4 h-4 mr-2" />
-                    View This Week's Challenge
+                    Share Your Power Song
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 </Link>
