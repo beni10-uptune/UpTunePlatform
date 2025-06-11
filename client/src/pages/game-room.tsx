@@ -508,35 +508,34 @@ export default function GameRoom() {
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-8">
-          <div className="flex items-center space-x-4">
+        <div className="flex flex-col gap-4 mb-6 sm:mb-8">
+          <div className="flex items-center justify-between">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setLocation('/')}
-              className="text-white hover:bg-white/10"
+              className="text-white hover:bg-white/10 flex-shrink-0"
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Leave
+              <ArrowLeft className="w-4 h-4 mr-1 sm:mr-2" />
+              <span className="hidden xs:inline">Leave</span>
             </Button>
-            <div>
-              <h1 className="text-xl sm:text-2xl font-bold text-white">{gameConfig.title}</h1>
-              <p className="text-white/70 text-sm sm:text-base">Theme: {gameRoom.theme}</p>
+            <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
+              <Badge variant="secondary" className="text-sm px-2 sm:px-3 py-1 font-mono flex-shrink-0">
+                {gameRoom.code}
+              </Badge>
+              <Button
+                onClick={handleShare}
+                className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm px-2 sm:px-3 py-1.5 sm:py-2 text-sm"
+                size="sm"
+              >
+                <Share2 className="w-4 h-4 sm:mr-2" />
+                <span className="hidden sm:inline">Share Room</span>
+              </Button>
             </div>
           </div>
-          <div className="flex items-center space-x-3">
-            <Badge variant="secondary" className="text-sm sm:text-lg px-3 sm:px-4 py-1 sm:py-2 font-mono">
-              {gameRoom.code}
-            </Badge>
-            <Button
-              onClick={handleShare}
-              className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm px-3 sm:px-4 py-2"
-              size="sm"
-            >
-              <Share2 className="w-4 h-4 mr-2" />
-              <span className="hidden sm:inline">Share Room</span>
-              <span className="sm:hidden">Share</span>
-            </Button>
+          <div className="text-center sm:text-left">
+            <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-1">{gameConfig.title}</h1>
+            <p className="text-white/70 text-sm sm:text-base">Theme: {gameRoom.theme}</p>
           </div>
         </div>
 
@@ -752,12 +751,14 @@ export default function GameRoom() {
                         onClick={() => createPlaylistMutation.mutate()}
                         disabled={createPlaylistMutation.isPending}
                         size="sm"
-                        variant="outline"
-                        className="flex-1 sm:flex-none"
+                        className="bg-green-600 hover:bg-green-700 text-white flex-1 sm:flex-none min-w-0 px-3 py-2"
                       >
-                        <ExternalLink className="w-4 h-4 mr-2" />
-                        <span className="hidden sm:inline">Export to Spotify</span>
-                        <span className="sm:hidden">Export</span>
+                        <svg className="w-4 h-4 mr-2 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.84-.179-.84-.66 0-.36.24-.66.54-.779 4.56-1.021 8.52-.6 11.64 1.32.36.18.479.66.241 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.32 11.28-1.08 15.721 1.621.539.3.719 1.02.42 1.56-.299.421-1.02.599-1.559.3z"/>
+                        </svg>
+                        <span className="truncate">
+                          {createPlaylistMutation.isPending ? 'Creating...' : 'Create Playlist in Spotify'}
+                        </span>
                       </Button>
                     )}
                   </div>
@@ -798,13 +799,13 @@ export default function GameRoom() {
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ delay: index * 0.1 }}
                         >
-                          <div className="flex items-start space-x-4 p-4 bg-gradient-to-r from-white to-purple-50 rounded-lg border border-purple-100 hover:shadow-lg transition-all duration-300">
+                          <div className="flex flex-col sm:flex-row sm:items-start space-y-3 sm:space-y-0 sm:space-x-4 p-3 sm:p-4 bg-gradient-to-r from-white to-purple-50 rounded-lg border border-purple-100 hover:shadow-lg transition-all duration-300">
                             {song.imageUrl && (
-                              <div className="relative">
+                              <div className="relative mx-auto sm:mx-0 flex-shrink-0">
                                 <img
                                   src={song.imageUrl}
                                   alt={`${song.title} cover`}
-                                  className="w-16 h-16 rounded-lg object-cover shadow-md"
+                                  className="w-16 h-16 sm:w-16 sm:h-16 rounded-lg object-cover shadow-md"
                                 />
                                 <motion.div
                                   key={celebrationTrigger}
@@ -817,43 +818,45 @@ export default function GameRoom() {
                                 </motion.div>
                               </div>
                             )}
-                            <div className="flex-1">
-                              <div className="flex items-center space-x-2 mb-1">
-                                <h4 className="font-semibold text-gray-900">{song.title}</h4>
-                                {song.previewUrl && (
-                                  <Button
-                                    size="sm"
-                                    variant="ghost"
-                                    className="hover:bg-purple-100 text-purple-600"
-                                    onClick={() => {
-                                      const audio = new Audio(song.previewUrl!);
-                                      audio.play();
-                                    }}
-                                  >
-                                    <Headphones className="w-4 h-4" />
-                                  </Button>
-                                )}
-                                {song.spotifyId && (
-                                  <Button
-                                    size="sm"
-                                    variant="ghost"
-                                    className="hover:bg-green-100 text-green-600"
-                                    onClick={() => window.open(`https://open.spotify.com/track/${song.spotifyId}`, '_blank')}
-                                  >
-                                    <ExternalLink className="w-4 h-4" />
-                                  </Button>
-                                )}
+                            <div className="flex-1 min-w-0 text-center sm:text-left">
+                              <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2 mb-1">
+                                <h4 className="font-semibold text-gray-900 text-base sm:text-lg leading-tight break-words">{song.title}</h4>
+                                <div className="flex items-center justify-center sm:justify-start gap-1 flex-shrink-0">
+                                  {song.previewUrl && (
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      className="hover:bg-purple-100 text-purple-600 p-2"
+                                      onClick={() => {
+                                        const audio = new Audio(song.previewUrl!);
+                                        audio.play();
+                                      }}
+                                    >
+                                      <Headphones className="w-4 h-4" />
+                                    </Button>
+                                  )}
+                                  {song.spotifyId && (
+                                    <Button
+                                      size="sm"
+                                      variant="ghost"
+                                      className="hover:bg-green-100 text-green-600 p-2"
+                                      onClick={() => window.open(`https://open.spotify.com/track/${song.spotifyId}`, '_blank')}
+                                    >
+                                      <ExternalLink className="w-4 h-4" />
+                                    </Button>
+                                  )}
+                                </div>
                               </div>
-                              <p className="text-gray-600 font-medium">{song.artist}</p>
-                              {song.album && <p className="text-gray-500 text-sm">{song.album}</p>}
+                              <p className="text-gray-600 font-medium text-sm sm:text-base break-words">{song.artist}</p>
+                              {song.album && <p className="text-gray-500 text-xs sm:text-sm break-words">{song.album}</p>}
                               {song.story && (
                                 <div className="mt-2 p-3 bg-purple-50 rounded-lg border-l-4 border-purple-300">
-                                  <p className="text-gray-700 italic text-sm">"{song.story}"</p>
+                                  <p className="text-gray-700 italic text-sm break-words">"{song.story}"</p>
                                 </div>
                               )}
-                              <div className="flex items-center justify-between mt-3">
-                                <div className="flex items-center space-x-2">
-                                  <span className="text-sm text-gray-500">
+                              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-3">
+                                <div className="flex items-center justify-center sm:justify-start space-x-2">
+                                  <span className="text-xs sm:text-sm text-gray-500 text-center sm:text-left">
                                     Added by <span className="font-medium text-purple-600">{player?.nickname}</span>
                                   </span>
                                   {player?.id === currentPlayer?.id && (
@@ -862,11 +865,11 @@ export default function GameRoom() {
                                 </div>
                                 
                                 {/* Quick Reactions */}
-                                <div className="flex items-center space-x-1">
+                                <div className="flex items-center justify-center sm:justify-end space-x-1">
                                   {songReactions.length > 0 && (
                                     <div className="flex items-center space-x-1 mr-2">
                                       {songReactions.slice(0, 3).map((emoji, i) => (
-                                        <span key={i} className="text-lg">{emoji}</span>
+                                        <span key={i} className="text-base sm:text-lg">{emoji}</span>
                                       ))}
                                       {songReactions.length > 3 && (
                                         <span className="text-xs text-gray-500">+{songReactions.length - 3}</span>
@@ -876,26 +879,26 @@ export default function GameRoom() {
                                   <Button
                                     size="sm"
                                     variant="ghost"
-                                    className="text-red-500 hover:bg-red-50"
+                                    className="text-red-500 hover:bg-red-50 p-1.5 sm:p-2"
                                     onClick={() => addReaction(song.id, '❤️')}
                                   >
-                                    <Heart className="w-4 h-4" />
+                                    <Heart className="w-3 h-3 sm:w-4 sm:h-4" />
                                   </Button>
                                   <Button
                                     size="sm"
                                     variant="ghost"
-                                    className="text-blue-500 hover:bg-blue-50"
+                                    className="text-blue-500 hover:bg-blue-50 p-1.5 sm:p-2"
                                     onClick={() => addReaction(song.id, '👍')}
                                   >
-                                    <ThumbsUp className="w-4 h-4" />
+                                    <ThumbsUp className="w-3 h-3 sm:w-4 sm:h-4" />
                                   </Button>
                                   <Button
                                     size="sm"
                                     variant="ghost"
-                                    className="text-yellow-500 hover:bg-yellow-50"
+                                    className="text-yellow-500 hover:bg-yellow-50 p-1.5 sm:p-2"
                                     onClick={() => addReaction(song.id, '⭐')}
                                   >
-                                    <Star className="w-4 h-4" />
+                                    <Star className="w-3 h-3 sm:w-4 sm:h-4" />
                                   </Button>
                                 </div>
                               </div>

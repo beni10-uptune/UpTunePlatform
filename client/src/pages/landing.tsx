@@ -237,32 +237,32 @@ const LandingPage = () => {
                   100% Free Forever
                 </Badge>
                 
-                <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight">
                   Turn any group into a{' '}
                   <span className="gradient-text">
                     musical family
                   </span>
                   <br />
-                  <span className="text-3xl lg:text-4xl text-gray-600">in under 60 seconds</span>
+                  <span className="text-xl sm:text-2xl lg:text-3xl xl:text-4xl text-gray-600">in under 60 seconds</span>
                 </h1>
                 
-                <p className="text-xl text-gray-600 leading-relaxed">
+                <p className="text-base sm:text-lg lg:text-xl text-gray-600 leading-relaxed">
                   Transform any gathering into a joyful musical experience. Create collaborative playlists, 
                   play engaging music games, and discover the soundtracks to your relationships.
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/games">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                <Link href="/games" className="w-full sm:w-auto">
                   <Button 
                     size="lg" 
-                    className="gradient-bg text-white hover:opacity-90 transition-opacity text-lg px-8 py-6"
+                    className="gradient-bg text-white hover:opacity-90 transition-opacity text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 w-full sm:w-auto"
                     onMouseEnter={() => setIsHovered(true)}
                     onMouseLeave={() => setIsHovered(false)}
                   >
-                    <Play className={`w-5 h-5 mr-2 transition-transform ${isHovered ? 'scale-110' : ''}`} />
-                    Start Playing Now
-                    <ArrowRight className={`w-5 h-5 ml-2 transition-transform ${isHovered ? 'translate-x-1' : ''}`} />
+                    <Play className={`w-4 h-4 sm:w-5 sm:h-5 mr-2 transition-transform ${isHovered ? 'scale-110' : ''}`} />
+                    <span className="truncate">Start Playing Now</span>
+                    <ArrowRight className={`w-4 h-4 sm:w-5 sm:h-5 ml-2 transition-transform ${isHovered ? 'translate-x-1' : ''}`} />
                   </Button>
                 </Link>
                 
@@ -271,10 +271,10 @@ const LandingPage = () => {
                     <Button 
                       size="lg" 
                       variant="outline"
-                      className="border-purple-200 text-purple-700 hover:bg-purple-50 text-lg px-8 py-6"
+                      className="border-purple-200 text-purple-700 hover:bg-purple-50 text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 w-full sm:w-auto"
                     >
-                      <Zap className="w-5 h-5 mr-2" />
-                      Discover Your Musical DNA
+                      <Zap className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                      <span className="truncate">Discover Your Musical DNA</span>
                     </Button>
                   </DialogTrigger>
                   
