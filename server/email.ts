@@ -18,19 +18,20 @@ interface TeamContactEmailParams {
 
 export async function sendTeamContactEmail(params: TeamContactEmailParams): Promise<boolean> {
   try {
-    // Check if SendGrid is available
+    // Always log contact form submissions for now (no email service needed)
+    console.log('\n=== NEW CONTACT FORM SUBMISSION ===');
+    console.log(`Company: ${params.companyName}`);
+    console.log(`Contact: ${params.contactName}`);
+    console.log(`Email: ${params.email}`);
+    console.log(`Phone: ${params.phone || 'Not provided'}`);
+    console.log(`Team Size: ${params.teamSize}`);
+    console.log(`Message: ${params.message}`);
+    console.log(`Timestamp: ${new Date().toISOString()}`);
+    console.log('===================================\n');
+    
+    // Check if SendGrid is available for future use
     if (!process.env.SENDGRID_API_KEY) {
-      console.log('Email service not available - logging contact form submission instead:');
-      console.log({
-        company: params.companyName,
-        contact: params.contactName,
-        email: params.email,
-        phone: params.phone,
-        teamSize: params.teamSize,
-        message: params.message,
-        timestamp: new Date().toISOString()
-      });
-      return true; // Return success to not break the form flow
+      return true; // Return success - submissions are logged above
     }
 
     const emailContent = `
