@@ -24,7 +24,7 @@ import {
   aiConversations
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc } from "drizzle-orm";
+import { eq, desc, and } from "drizzle-orm";
 
 export interface IStorage {
   // Game Rooms
@@ -214,7 +214,7 @@ export class DatabaseStorage implements IStorage {
     return await db
       .select()
       .from(aiConversations)
-      .where(eq(aiConversations.gameRoomId, gameRoomId) && eq(aiConversations.playerId, playerId))
+      .where(and(eq(aiConversations.gameRoomId, gameRoomId), eq(aiConversations.playerId, playerId)))
       .orderBy(aiConversations.questionNumber);
   }
 

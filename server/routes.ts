@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertGameRoomSchema, insertPlayerSchema, insertSongSchema, insertChallengeSubmissionSchema, insertTeamsWaitlistSchema } from "@shared/schema";
+import { insertGameRoomSchema, insertPlayerSchema, insertSongSchema, insertChallengeSubmissionSchema, insertTeamsWaitlistSchema, type AiConversation } from "@shared/schema";
 import { sendTeamContactEmail } from "./email";
 import { analyzePlaylist, enhanceStory, generateSongRecommendations, suggestGameMode, generateAiHostQuestion, generateSongSuggestionsFromResponse } from "./ai";
 
@@ -368,7 +368,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // Get previous songs
       const songs = await storage.getSongsByGameRoom(gameRoomId);
-      const playerSongs = songs.filter(s => s.playerId === playerId);
+      const playerSongs = songs.filter(s => s.playerId === playerId).map(s => ({
+        title: s.title,
+        artist: s.artist,
+        album: s.album || undefined,
+        story: s.story || undefined
+      }));
       
       const question = await generateAiHostQuestion({
         playerName: player?.nickname,
@@ -412,7 +417,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const players = await storage.getPlayersByGameRoom(gameRoomId);
       const player = players.find(p => p.id === playerId);
       const songs = await storage.getSongsByGameRoom(gameRoomId);
-      const playerSongs = songs.filter(s => s.playerId === playerId);
+      const playerSongs = songs.filter(s => s.playerId === playerId).map(s => ({
+        title: s.title,
+        artist: s.artist,
+        album: s.album || undefined,
+        story: s.story || undefined
+      }));
       
       // Generate song suggestions based on response
       const suggestions = await generateSongSuggestionsFromResponse(response, {
