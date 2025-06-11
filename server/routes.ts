@@ -3,6 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertGameRoomSchema, insertPlayerSchema, insertSongSchema, insertChallengeSubmissionSchema, insertTeamsWaitlistSchema } from "@shared/schema";
 import { sendTeamContactEmail } from "./email";
+import { analyzePlaylist, enhanceStory, generateSongRecommendations, suggestGameMode } from "./ai";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Game Rooms
@@ -301,6 +302,82 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Teams contact error:", error);
       res.status(500).json({ error: "Failed to process contact form" });
+    }
+  });
+
+  // AI-powered features
+  app.post("/api/ai/analyze-playlist", async (req, res) => {
+    try {
+      const { gameRoomId } = req.body;
+      const songs = await storage.getSongsByGameRoom(gameRoomId);
+      
+      if (songs.length === 0) {
+        return res.json({
+          mood: 'Getting started',
+          description: 'Add some songs to see AI analysis!',
+          recommendations: []
+        });
+      }
+
+      const songsForAI = songs.map(song => ({
+        title: song.title,
+        artist: song.artist,
+        album: song.album || undefined,
+        story: song.story || undefined
+      }));
+      
+      const analysis = await analyzePlaylist(songsForAI);
+      res.json(analysis);
+    } catch (error) {
+      console.error("AI playlist analysis error:", error);
+      res.status(500).json({ error: "Failed to analyze playlist" });
+    }
+  });
+
+  app.post("/api/ai/enhance-story", async (req, res) => {
+    try {
+      const { song, currentStory } = req.body;
+      
+      if (!song || !currentStory) {
+        return res.status(400).json({ error: "Song and story are required" });
+      }
+
+      const enhancement = await enhanceStory(song, currentStory);
+      res.json(enhancement);
+    } catch (error) {
+      console.error("AI story enhancement error:", error);
+      res.status(500).json({ error: "Failed to enhance story" });
+    }
+  });
+
+  app.post("/api/ai/song-recommendations", async (req, res) => {
+    try {
+      const { gameRoomId, gameType } = req.body;
+      const songs = await storage.getSongsByGameRoom(gameRoomId);
+      
+      const songsForAI = songs.map(song => ({
+        title: song.title,
+        artist: song.artist,
+        album: song.album || undefined,
+        story: song.story || undefined
+      }));
+      
+      const recommendations = await generateSongRecommendations(songsForAI, gameType);
+      res.json({ recommendations });
+    } catch (error) {
+      console.error("AI recommendations error:", error);
+      res.status(500).json({ error: "Failed to get recommendations" });
+    }
+  });
+
+  app.post("/api/ai/suggest-game", async (req, res) => {
+    try {
+      const { playerCount, context } = req.body;
+      const suggestion = await suggestGameMode(playerCount, context);
+      res.json(suggestion);
+    } catch (error) {
+      console.error("AI game suggestion error:", error);
+      res.status(500).json({ error: "Failed to suggest game mode" });
     }
   });
 

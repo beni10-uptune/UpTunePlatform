@@ -103,6 +103,9 @@ export default function GameRoom() {
   const [achievements, setAchievements] = useState<string[]>([]);
   const [reactions, setReactions] = useState<Record<number, string[]>>({});
   const [celebrationTrigger, setCelebrationTrigger] = useState(0);
+  const [playlistAnalysis, setPlaylistAnalysis] = useState<any>(null);
+  const [aiRecommendations, setAiRecommendations] = useState<string[]>([]);
+  const [showAiInsights, setShowAiInsights] = useState(false);
 
   // Queries
   const { data: gameRoom, isLoading: roomLoading } = useQuery<GameRoom>({
