@@ -22,27 +22,27 @@ const GameMenu = () => {
   const games = [
     {
       id: 'mixtape',
-      title: 'Memory Mixtape',
-      description: 'Turn shared experiences into an unforgettable playlist that captures your friendship',
+      title: 'The Mixtape',
+      description: 'Everyone adds their favorite songs with personal stories to create the perfect collaborative playlist',
       icon: Music,
       color: 'purple',
-      exampleThemes: ['Guilty Pleasures Confessions', 'Road Trip Adventure', 'Songs That Make Us Unstoppable', 'Late Night Feelings', 'Dancing Like Nobody\'s Watching']
+      exampleThemes: ['Guilty Pleasures', 'Road Trip Classics', '90s Nostalgia', 'Songs That Make You Dance', 'Late Night Vibes']
     },
     {
       id: 'soundtrack',
-      title: 'Life Soundtrack',
-      description: 'Create the perfect musical backdrop for the moments that matter most',
+      title: 'Soundtrack Session',
+      description: 'Build the perfect soundtrack for any movie, moment, or mood you can imagine',
       icon: Headphones,
       color: 'pink',
-      exampleThemes: ['Epic Movie Night', 'Victory Celebration', 'Heartbreak Recovery', 'New Beginnings', 'Pure Nostalgia Trip']
+      exampleThemes: ['Epic Adventure Movie', 'Romantic Comedy', 'Workout Motivation', 'Study Focus', 'Dinner Party Vibes']
     },
     {
       id: 'desert-island',
-      title: 'Musical Soul Story',
-      description: 'Share the 5 songs that reveal who you really are - the tracks that define your journey',
+      title: 'Desert Island Discs',
+      description: 'Share your 5 essential songs: one for your head, heart, feet, guilty pleasure, and current obsession',
       icon: Radio,
       color: 'indigo',
-      exampleThemes: ['Songs That Shaped My Heart', 'My Musical DNA', 'The Real Me Playlist', 'Life in 5 Songs', 'Musical Autobiography']
+      exampleThemes: ['Musical Essentials', 'Life Soundtrack', 'Songs That Define Me', 'Desert Island Classics', 'Personal Anthems']
     }
   ];
 

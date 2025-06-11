@@ -302,66 +302,72 @@ const LandingPage = () => {
                     <Headphones className="w-6 h-6 text-purple-600" />
                     The Mixtape
                   </CardTitle>
+                  <Badge className="w-fit bg-purple-100 text-purple-700 text-xs mb-2">Road Trip Vibes</Badge>
                   <CardDescription className="text-sm leading-relaxed">
-                    "Settle the ultimate debate: What's the best song for the open road? Everyone adds their essential track to the list. At the end, you get a real Spotify playlist for your journey."
+                    "Settle the ultimate debate: What's the best song for the open road? Everyone adds their essential track to create the perfect journey playlist."
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="pt-0">
+                  <div className="text-xs text-gray-500 mb-3">Popular picks: "Life is a Highway", "Don't Stop Believin'", "Mr. Blue Sky"</div>
                   <Button 
                     className="w-full gradient-bg text-white hover:opacity-90"
                     disabled={createGameMutation.isPending}
                   >
-                    {createGameMutation.isPending ? 'Creating...' : 'Start Road Trip Game'}
+                    {createGameMutation.isPending ? 'Creating...' : 'Start Road Trip Mixtape'}
                   </Button>
                 </CardContent>
               </Card>
 
               <Card 
-                className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-amber-300 relative overflow-hidden"
-                onClick={() => createGameMutation.mutate({ gameType: 'mixtape', theme: 'Guilty Pleasures' })}
+                className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-blue-300 relative overflow-hidden"
+                onClick={() => createGameMutation.mutate({ gameType: 'soundtrack', theme: 'Heist Movie' })}
               >
-                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-amber-500 to-orange-500"></div>
+                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
                 <CardHeader className="pb-3">
-                  <div className="text-sm font-medium text-amber-600 mb-1">For a Hilarious Night In</div>
+                  <div className="text-sm font-medium text-blue-600 mb-1">For an Epic Movie Night</div>
                   <CardTitle className="flex items-center gap-2 text-xl">
-                    <Heart className="w-6 h-6 text-amber-600" />
-                    Guilty Pleasures
+                    <Play className="w-6 h-6 text-blue-600" />
+                    Soundtrack Session
                   </CardTitle>
+                  <Badge className="w-fit bg-blue-100 text-blue-700 text-xs mb-2">Heist Movie</Badge>
                   <CardDescription className="text-sm leading-relaxed">
-                    "Time to confess. Everyone anonymously submits their favourite guilty pleasure song. Guess who chose what, then hit 'Reveal' for the big moment. Laughter guaranteed."
+                    "Create the perfect soundtrack for the ultimate heist film. Think clever, intense, and absolutely unforgettable tracks."
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="pt-0">
+                  <div className="text-xs text-gray-500 mb-3">Perfect for: "Seven Nation Army", "Pressure", "The Chain"</div>
                   <Button 
-                    className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:opacity-90"
+                    className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:opacity-90"
                     disabled={createGameMutation.isPending}
                   >
-                    {createGameMutation.isPending ? 'Creating...' : 'Start Confession Game'}
+                    {createGameMutation.isPending ? 'Creating...' : 'Start Heist Soundtrack'}
                   </Button>
                 </CardContent>
               </Card>
 
               <Card 
                 className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-emerald-300 relative overflow-hidden"
-                onClick={() => createGameMutation.mutate({ gameType: 'desert-island', theme: 'Life Soundtrack' })}
+                onClick={() => createGameMutation.mutate({ gameType: 'desert-island', theme: 'Musical Essentials' })}
               >
                 <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-500 to-teal-500"></div>
                 <CardHeader className="pb-3">
-                  <div className="text-sm font-medium text-emerald-600 mb-1">For a Trip Down Memory Lane</div>
+                  <div className="text-sm font-medium text-emerald-600 mb-1">For Deep Conversations</div>
                   <CardTitle className="flex items-center gap-2 text-xl">
                     <Radio className="w-6 h-6 text-emerald-600" />
                     Desert Island Discs
                   </CardTitle>
+                  <Badge className="w-fit bg-emerald-100 text-emerald-700 text-xs mb-2">Musical Essentials</Badge>
                   <CardDescription className="text-sm leading-relaxed">
-                    "What are the 5 songs that tell your life story? Share your most important tracks and discover the music that shaped your friends."
+                    "Share your 5 essential songs: head, heart, feet, guilty pleasure, and current obsession. Discover what music shaped your friends."
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="pt-0">
+                  <div className="text-xs text-gray-500 mb-3">Categories: Head • Heart • Feet • Guilty • Current</div>
                   <Button 
                     className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white hover:opacity-90"
                     disabled={createGameMutation.isPending}
                   >
-                    {createGameMutation.isPending ? 'Creating...' : 'Start Memory Game'}
+                    {createGameMutation.isPending ? 'Creating...' : 'Start Desert Island'}
                   </Button>
                 </CardContent>
               </Card>
@@ -457,17 +463,17 @@ const LandingPage = () => {
               <CardHeader>
                 <CardTitle className="flex items-center justify-center gap-2 text-2xl">
                   <Trophy className="w-6 h-6 text-yellow-600" />
-                  This Week: "Songs That Make You Invincible"
+                  💪 This Week: "Songs That Make You Invincible"
                 </CardTitle>
                 <CardDescription className="text-lg leading-relaxed">
-                  What song makes you feel like you can conquer the world? Join hundreds sharing their power anthems and discover the music that makes others feel unstoppable.
+                  What song makes you feel like you can conquer the world? Share the track that turns you into your most confident, unstoppable self.
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-center gap-4 text-sm text-gray-600">
-                  <span>🎵 247 songs submitted</span>
-                  <span>🔥 Most voted: "Eye of the Tiger"</span>
-                  <span>⏰ 3 days left</span>
+                  <span>🎵 6 songs submitted</span>
+                  <span>🔥 Most voted: "Mr. Brightside"</span>
+                  <span>⏰ 5 days left</span>
                 </div>
                 <Link href="/weekly-challenge">
                   <Button size="lg" className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white hover:opacity-90">
