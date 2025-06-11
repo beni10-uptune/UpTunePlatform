@@ -43,8 +43,7 @@ const GameMenu = () => {
       icon: Radio,
       color: 'indigo',
       exampleThemes: ['My Musical DNA', 'Songs That Shaped Me', 'Life Through Music', 'Musical Autobiography', 'Desert Island Journey']
-    },
-
+    }
   ];
 
   // Create game room mutation
@@ -71,13 +70,6 @@ const GameMenu = () => {
       createGameMutation.mutate({
         gameType: gameId,
         theme: 'Musical Essentials',
-        hostNickname: 'Host'
-      });
-    } else if (gameId === 'ai-host') {
-      // Perfect moment playlist - no theme selection needed
-      createGameMutation.mutate({
-        gameType: gameId,
-        theme: 'Perfect Moment Together',
         hostNickname: 'Host'
       });
     } else {

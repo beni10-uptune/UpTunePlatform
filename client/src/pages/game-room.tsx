@@ -80,15 +80,7 @@ const GAME_TYPES = {
       'A song from your current favorite album'
     ]
   },
-  'ai-host': {
-    title: 'Perfect Moment Playlist',
-    description: 'Create the ideal soundtrack for your shared experiences together',
-    icon: Heart,
-    color: 'from-rose-500 to-pink-500',
-    themes: ['Perfect Moment Together'],
-    isGuided: false,
-    prompts: undefined
-  }
+
 } as const;
 
 export default function GameRoom() {
@@ -116,12 +108,7 @@ export default function GameRoom() {
   const [aiRecommendations, setAiRecommendations] = useState<string[]>([]);
   const [showAiInsights, setShowAiInsights] = useState(false);
   
-  // AI Host state
-  const [aiQuestion, setAiQuestion] = useState<any>(null);
-  const [userResponse, setUserResponse] = useState('');
-  const [showAiChat, setShowAiChat] = useState(false);
-  const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);
-  const [conversations, setConversations] = useState<any[]>([]);
+
 
   // Queries
   const { data: gameRoom, isLoading: roomLoading } = useQuery<GameRoom>({
@@ -283,35 +270,7 @@ export default function GameRoom() {
     }
   });
 
-  // AI Host mutations
-  const getAiQuestionMutation = useMutation({
-    mutationFn: async () => {
-      const response = await apiRequest('POST', '/api/ai/host-question', {
-        gameRoomId: gameRoom?.id,
-        playerId: currentPlayer?.id
-      });
-      return await response.json();
-    },
-    onSuccess: (question) => {
-      setAiQuestion(question);
-      setShowAiChat(true);
-    }
-  });
 
-  const submitResponseMutation = useMutation({
-    mutationFn: async (response: string) => {
-      const res = await apiRequest('POST', '/api/ai/host-response', {
-        gameRoomId: gameRoom?.id,
-        playerId: currentPlayer?.id,
-        response
-      });
-      return await res.json();
-    },
-    onSuccess: (suggestions) => {
-      setAiSuggestions(suggestions.suggestions);
-      setUserResponse('');
-    }
-  });
 
   // Check for Spotify callback
   useEffect(() => {
@@ -323,15 +282,7 @@ export default function GameRoom() {
     }
   }, []);
 
-  // Auto-start AI Host conversation
-  useEffect(() => {
-    if (gameRoom?.gameType === 'ai-host' && currentPlayer && !aiQuestion && !getAiQuestionMutation.isPending) {
-      // Automatically trigger the AI conversation for the AI Host experience
-      setTimeout(() => {
-        getAiQuestionMutation.mutate();
-      }, 1000);
-    }
-  }, [gameRoom, currentPlayer, aiQuestion]);
+
 
   // Achievement detection system
   const checkAchievements = () => {
@@ -818,18 +769,6 @@ export default function GameRoom() {
                       {analyzePlaylistMutation.isPending ? 'Analyzing...' : 'AI Playlist Insights'}
                     </Button>
                   )}
-                  
-                  {gameRoom?.gameType === 'ai-host' && currentPlayer && (
-                    <Button
-                      onClick={() => getAiQuestionMutation.mutate()}
-                      disabled={getAiQuestionMutation.isPending}
-                      className="w-full mt-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white hover:opacity-90"
-                      size="sm"
-                    >
-                      <Heart className="w-4 h-4 mr-2" />
-                      {getAiQuestionMutation.isPending ? 'Thinking...' : 'Get Perfect Song Ideas'}
-                    </Button>
-                  )}
                 </div>
               </CardContent>
             </Card>
@@ -1291,118 +1230,7 @@ export default function GameRoom() {
           </DialogContent>
         </Dialog>
 
-        {/* AI Host Chat Dialog */}
-        <Dialog open={showAiChat} onOpenChange={setShowAiChat}>
-          <DialogContent className="max-w-2xl w-[90vw] max-h-[85vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                <Heart className="w-5 h-5 text-rose-600" />
-                Perfect Moment Creator
-              </DialogTitle>
-              <DialogDescription>
-                Discover what makes your group's musical experience unforgettable
-              </DialogDescription>
-            </DialogHeader>
-            
-            {aiQuestion && (
-              <div className="space-y-6">
-                {/* AI Question */}
-                <Card className="p-4 bg-gradient-to-r from-rose-50 to-pink-50 border-rose-200">
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-rose-500 rounded-full flex items-center justify-center">
-                      <Heart className="w-4 h-4 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-rose-800 mb-2">Let's discover your vision:</h3>
-                      <p className="text-gray-700">{aiQuestion.question}</p>
-                    </div>
-                  </div>
-                </Card>
 
-                {/* Follow-up Suggestions */}
-                {aiQuestion.followUpSuggestions && aiQuestion.followUpSuggestions.length > 0 && (
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-600 mb-2">Need inspiration? Try one of these:</h4>
-                    <div className="space-y-2">
-                      {aiQuestion.followUpSuggestions.map((suggestion: string, index: number) => (
-                        <Button
-                          key={index}
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setUserResponse(suggestion)}
-                          className="w-full text-left justify-start h-auto p-3 text-sm"
-                        >
-                          {suggestion}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* User Response Input */}
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-sm font-medium text-gray-700 mb-2 block">Your Response:</label>
-                    <textarea
-                      value={userResponse}
-                      onChange={(e) => setUserResponse(e.target.value)}
-                      placeholder="Share your thoughts, stories, or feelings about music..."
-                      className="w-full p-3 border rounded-lg resize-none h-24 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-                    />
-                  </div>
-                  
-                  <Button
-                    onClick={() => submitResponseMutation.mutate(userResponse)}
-                    disabled={!userResponse.trim() || submitResponseMutation.isPending}
-                    className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white"
-                  >
-                    {submitResponseMutation.isPending ? 'Creating perfect suggestions...' : 'Share Your Vision'}
-                  </Button>
-                </div>
-
-                {/* AI Song Suggestions */}
-                {aiSuggestions.length > 0 && (
-                  <Card className="p-4 bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200">
-                    <h3 className="font-semibold text-amber-800 mb-3 flex items-center gap-2">
-                      <Heart className="w-4 h-4" />
-                      Songs That Create Connection:
-                    </h3>
-                    <div className="space-y-2">
-                      {aiSuggestions.map((suggestion: string, index: number) => (
-                        <div key={index} className="flex items-center gap-3 p-3 bg-white rounded-lg border">
-                          <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
-                          <span className="font-medium">{suggestion}</span>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="mt-4 text-sm text-gray-600">
-                      These songs will help create the perfect moment you envisioned. Search for them above to add to your shared playlist!
-                    </div>
-                  </Card>
-                )}
-
-                {/* Action Buttons */}
-                <div className="flex gap-3">
-                  <Button
-                    onClick={() => getAiQuestionMutation.mutate()}
-                    disabled={getAiQuestionMutation.isPending}
-                    variant="outline"
-                    className="flex-1"
-                  >
-                    <Heart className="w-4 h-4 mr-2" />
-                    {getAiQuestionMutation.isPending ? 'Thinking...' : 'Explore More Ideas'}
-                  </Button>
-                  <Button
-                    onClick={() => setShowAiChat(false)}
-                    className="flex-1 gradient-bg text-white"
-                  >
-                    Close Chat
-                  </Button>
-                </div>
-              </div>
-            )}
-          </DialogContent>
-        </Dialog>
       </div>
     </div>
   );
