@@ -823,11 +823,11 @@ export default function GameRoom() {
                     <Button
                       onClick={() => getAiQuestionMutation.mutate()}
                       disabled={getAiQuestionMutation.isPending}
-                      className="w-full mt-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:opacity-90"
+                      className="w-full mt-2 bg-gradient-to-r from-rose-500 to-pink-500 text-white hover:opacity-90"
                       size="sm"
                     >
-                      <Sparkles className="w-4 h-4 mr-2" />
-                      {getAiQuestionMutation.isPending ? 'Thinking...' : 'Ask AI Host'}
+                      <Heart className="w-4 h-4 mr-2" />
+                      {getAiQuestionMutation.isPending ? 'Thinking...' : 'Get Perfect Song Ideas'}
                     </Button>
                   )}
                 </div>
@@ -1296,24 +1296,24 @@ export default function GameRoom() {
           <DialogContent className="max-w-2xl w-[90vw] max-h-[85vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5 text-purple-600" />
-                AI Music Host
+                <Heart className="w-5 h-5 text-rose-600" />
+                Perfect Moment Creator
               </DialogTitle>
               <DialogDescription>
-                Chat with your AI music companion to discover perfect songs
+                Discover what makes your group's musical experience unforgettable
               </DialogDescription>
             </DialogHeader>
             
             {aiQuestion && (
               <div className="space-y-6">
                 {/* AI Question */}
-                <Card className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
+                <Card className="p-4 bg-gradient-to-r from-rose-50 to-pink-50 border-rose-200">
                   <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
-                      <Sparkles className="w-4 h-4 text-white" />
+                    <div className="w-8 h-8 bg-rose-500 rounded-full flex items-center justify-center">
+                      <Heart className="w-4 h-4 text-white" />
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-semibold text-purple-800 mb-2">AI Host asks:</h3>
+                      <h3 className="font-semibold text-rose-800 mb-2">Let's discover your vision:</h3>
                       <p className="text-gray-700">{aiQuestion.question}</p>
                     </div>
                   </div>
@@ -1354,29 +1354,29 @@ export default function GameRoom() {
                   <Button
                     onClick={() => submitResponseMutation.mutate(userResponse)}
                     disabled={!userResponse.trim() || submitResponseMutation.isPending}
-                    className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+                    className="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white"
                   >
-                    {submitResponseMutation.isPending ? 'AI is thinking...' : 'Send Response'}
+                    {submitResponseMutation.isPending ? 'Creating perfect suggestions...' : 'Share Your Vision'}
                   </Button>
                 </div>
 
                 {/* AI Song Suggestions */}
                 {aiSuggestions.length > 0 && (
-                  <Card className="p-4 bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
-                    <h3 className="font-semibold text-green-800 mb-3 flex items-center gap-2">
-                      <Gift className="w-4 h-4" />
-                      Perfect Songs for You:
+                  <Card className="p-4 bg-gradient-to-r from-amber-50 to-orange-50 border-amber-200">
+                    <h3 className="font-semibold text-amber-800 mb-3 flex items-center gap-2">
+                      <Heart className="w-4 h-4" />
+                      Songs That Create Connection:
                     </h3>
                     <div className="space-y-2">
                       {aiSuggestions.map((suggestion: string, index: number) => (
                         <div key={index} className="flex items-center gap-3 p-3 bg-white rounded-lg border">
-                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                          <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
                           <span className="font-medium">{suggestion}</span>
                         </div>
                       ))}
                     </div>
                     <div className="mt-4 text-sm text-gray-600">
-                      Search for these songs above to add them to your playlist!
+                      These songs will help create the perfect moment you envisioned. Search for them above to add to your shared playlist!
                     </div>
                   </Card>
                 )}
@@ -1389,8 +1389,8 @@ export default function GameRoom() {
                     variant="outline"
                     className="flex-1"
                   >
-                    <Sparkles className="w-4 h-4 mr-2" />
-                    {getAiQuestionMutation.isPending ? 'Thinking...' : 'Ask Another Question'}
+                    <Heart className="w-4 h-4 mr-2" />
+                    {getAiQuestionMutation.isPending ? 'Thinking...' : 'Explore More Ideas'}
                   </Button>
                   <Button
                     onClick={() => setShowAiChat(false)}

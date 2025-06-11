@@ -239,29 +239,34 @@ export async function generateAiHostQuestion(context: {
       ? `Previous conversation: ${conversationHistory.slice(-3).join('\n')}`
       : 'Starting fresh conversation';
 
-    const prompt = `You're an AI music host helping ${playerName || 'a player'} discover amazing songs through conversation. 
+    const prompt = `You're helping ${playerName || 'someone'} create the perfect shared music experience. 
     This is question #${questionNumber}.
 
     Context:
     ${songContext}
     ${historyContext}
 
-    Generate an engaging, personal question that helps discover their musical taste and personality. 
-    Questions should be:
-    - Conversational and fun
-    - Lead to specific song recommendations
-    - Build on previous context
-    - Avoid generic "what's your favorite" questions
+    Your role is to help them discover what kind of moment they want to create with others, then guide the group toward that perfect experience.
 
-    Examples of good questions:
-    - "What song always makes you feel like the main character in your own movie?"
-    - "If you could soundtrack a road trip with your best friend, what vibe are you going for?"
-    - "What's a song that takes you back to a specific moment you'll never forget?"
+    For early questions (1-2), focus on uncovering their vision:
+    - What kind of experience are they trying to create?
+    - What mood or feeling do they want to share?
+    - What moments matter most to them?
+
+    For later questions (3+), help them guide others:
+    - How can the group contribute to this vision?
+    - What would make this moment even more special?
+    - How can everyone feel connected through the music?
+
+    Examples of vision-discovery questions:
+    - "What's a moment you've shared with others where the music made everything perfect?"
+    - "If you could create the ideal soundtrack for time with your favorite people, what feeling would it capture?"
+    - "What's a song that always brings people together when it comes on?"
 
     Respond with JSON:
     {
       "question": "your engaging question",
-      "followUpSuggestions": ["3 follow-up prompts that could lead to song suggestions"]
+      "followUpSuggestions": ["3 follow-up prompts that help them think deeper about connection and shared experiences"]
     }`;
 
     const response = await anthropic.messages.create({
