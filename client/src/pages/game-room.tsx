@@ -115,6 +115,13 @@ export default function GameRoom() {
   const [playlistAnalysis, setPlaylistAnalysis] = useState<any>(null);
   const [aiRecommendations, setAiRecommendations] = useState<string[]>([]);
   const [showAiInsights, setShowAiInsights] = useState(false);
+  
+  // AI Host state
+  const [aiQuestion, setAiQuestion] = useState<any>(null);
+  const [userResponse, setUserResponse] = useState('');
+  const [showAiChat, setShowAiChat] = useState(false);
+  const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);
+  const [conversations, setConversations] = useState<any[]>([]);
 
   // Queries
   const { data: gameRoom, isLoading: roomLoading } = useQuery<GameRoom>({
@@ -273,6 +280,36 @@ export default function GameRoom() {
     },
     onSuccess: (data) => {
       setAiRecommendations(data.recommendations);
+    }
+  });
+
+  // AI Host mutations
+  const getAiQuestionMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest('POST', '/api/ai/host-question', {
+        gameRoomId: gameRoom?.id,
+        playerId: currentPlayer?.id
+      });
+      return await response.json();
+    },
+    onSuccess: (question) => {
+      setAiQuestion(question);
+      setShowAiChat(true);
+    }
+  });
+
+  const submitResponseMutation = useMutation({
+    mutationFn: async (response: string) => {
+      const res = await apiRequest('POST', '/api/ai/host-response', {
+        gameRoomId: gameRoom?.id,
+        playerId: currentPlayer?.id,
+        response
+      });
+      return await res.json();
+    },
+    onSuccess: (suggestions) => {
+      setAiSuggestions(suggestions.suggestions);
+      setUserResponse('');
     }
   });
 
@@ -771,6 +808,18 @@ export default function GameRoom() {
                       {analyzePlaylistMutation.isPending ? 'Analyzing...' : 'AI Playlist Insights'}
                     </Button>
                   )}
+                  
+                  {gameRoom?.gameType === 'ai-host' && currentPlayer && (
+                    <Button
+                      onClick={() => getAiQuestionMutation.mutate()}
+                      disabled={getAiQuestionMutation.isPending}
+                      className="w-full mt-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:opacity-90"
+                      size="sm"
+                    >
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      {getAiQuestionMutation.isPending ? 'Thinking...' : 'Ask AI Host'}
+                    </Button>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -1225,6 +1274,119 @@ export default function GameRoom() {
                     className="flex-1 gradient-bg text-white"
                   >
                     Close
+                  </Button>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
+
+        {/* AI Host Chat Dialog */}
+        <Dialog open={showAiChat} onOpenChange={setShowAiChat}>
+          <DialogContent className="max-w-2xl w-[90vw] max-h-[85vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Sparkles className="w-5 h-5 text-purple-600" />
+                AI Music Host
+              </DialogTitle>
+              <DialogDescription>
+                Chat with your AI music companion to discover perfect songs
+              </DialogDescription>
+            </DialogHeader>
+            
+            {aiQuestion && (
+              <div className="space-y-6">
+                {/* AI Question */}
+                <Card className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+                      <Sparkles className="w-4 h-4 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-purple-800 mb-2">AI Host asks:</h3>
+                      <p className="text-gray-700">{aiQuestion.question}</p>
+                    </div>
+                  </div>
+                </Card>
+
+                {/* Follow-up Suggestions */}
+                {aiQuestion.followUpSuggestions && aiQuestion.followUpSuggestions.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-medium text-gray-600 mb-2">Need inspiration? Try one of these:</h4>
+                    <div className="space-y-2">
+                      {aiQuestion.followUpSuggestions.map((suggestion: string, index: number) => (
+                        <Button
+                          key={index}
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setUserResponse(suggestion)}
+                          className="w-full text-left justify-start h-auto p-3 text-sm"
+                        >
+                          {suggestion}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* User Response Input */}
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium text-gray-700 mb-2 block">Your Response:</label>
+                    <textarea
+                      value={userResponse}
+                      onChange={(e) => setUserResponse(e.target.value)}
+                      placeholder="Share your thoughts, stories, or feelings about music..."
+                      className="w-full p-3 border rounded-lg resize-none h-24 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                    />
+                  </div>
+                  
+                  <Button
+                    onClick={() => submitResponseMutation.mutate(userResponse)}
+                    disabled={!userResponse.trim() || submitResponseMutation.isPending}
+                    className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+                  >
+                    {submitResponseMutation.isPending ? 'AI is thinking...' : 'Send Response'}
+                  </Button>
+                </div>
+
+                {/* AI Song Suggestions */}
+                {aiSuggestions.length > 0 && (
+                  <Card className="p-4 bg-gradient-to-r from-green-50 to-blue-50 border-green-200">
+                    <h3 className="font-semibold text-green-800 mb-3 flex items-center gap-2">
+                      <Gift className="w-4 h-4" />
+                      Perfect Songs for You:
+                    </h3>
+                    <div className="space-y-2">
+                      {aiSuggestions.map((suggestion: string, index: number) => (
+                        <div key={index} className="flex items-center gap-3 p-3 bg-white rounded-lg border">
+                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                          <span className="font-medium">{suggestion}</span>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="mt-4 text-sm text-gray-600">
+                      Search for these songs above to add them to your playlist!
+                    </div>
+                  </Card>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex gap-3">
+                  <Button
+                    onClick={() => getAiQuestionMutation.mutate()}
+                    disabled={getAiQuestionMutation.isPending}
+                    variant="outline"
+                    className="flex-1"
+                  >
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    {getAiQuestionMutation.isPending ? 'Thinking...' : 'Ask Another Question'}
+                  </Button>
+                  <Button
+                    onClick={() => setShowAiChat(false)}
+                    className="flex-1 gradient-bg text-white"
+                  >
+                    Close Chat
                   </Button>
                 </div>
               </div>
