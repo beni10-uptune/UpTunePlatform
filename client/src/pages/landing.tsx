@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link, useLocation } from 'wouter';
+import { useMutation } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { apiRequest } from '@/lib/queryClient';
 import { 
   Music, 
   Play, 
@@ -29,6 +31,38 @@ const LandingPage = () => {
     if (joinCode.trim()) {
       navigate(`/room/${joinCode.toUpperCase()}`);
     }
+  };
+
+  // Create game mutation
+  const createGameMutation = useMutation({
+    mutationFn: async (gameType: string) => {
+      const response = await apiRequest('POST', '/api/game-rooms', {
+        gameType,
+        theme: getDefaultTheme(gameType),
+        hostNickname: 'Host'
+      });
+      return await response.json();
+    },
+    onSuccess: (gameRoom) => {
+      navigate(`/room/${gameRoom.code}`);
+    }
+  });
+
+  const getDefaultTheme = (gameType: string) => {
+    switch (gameType) {
+      case 'mixtape':
+        return 'Musical Essentials';
+      case 'soundtrack':
+        return 'Epic Adventure';
+      case 'desert-island':
+        return 'Musical Essentials';
+      default:
+        return 'Musical Essentials';
+    }
+  };
+
+  const handleGameModeClick = (gameType: string) => {
+    createGameMutation.mutate(gameType);
   };
 
   return (
@@ -171,8 +205,11 @@ const LandingPage = () => {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="mt-20 grid md:grid-cols-3 gap-6 max-w-5xl mx-auto"
           >
-            <Card className="group hover:shadow-lg transition-shadow duration-300">
-              <CardHeader>
+            <Card 
+              className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-purple-300"
+              onClick={() => handleGameModeClick('mixtape')}
+            >
+              <CardHeader className="pb-4">
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <Headphones className="w-5 h-5 text-purple-600" />
                   Collaborative Mixtape
@@ -181,10 +218,25 @@ const LandingPage = () => {
                   Everyone adds their favorite songs with personal stories
                 </CardDescription>
               </CardHeader>
+              <CardContent className="pt-0">
+                <Button 
+                  className="w-full gradient-bg text-white hover:opacity-90"
+                  disabled={createGameMutation.isPending}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleGameModeClick('mixtape');
+                  }}
+                >
+                  {createGameMutation.isPending ? 'Creating...' : 'Start Mixtape Game'}
+                </Button>
+              </CardContent>
             </Card>
 
-            <Card className="group hover:shadow-lg transition-shadow duration-300">
-              <CardHeader>
+            <Card 
+              className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-blue-300"
+              onClick={() => handleGameModeClick('soundtrack')}
+            >
+              <CardHeader className="pb-4">
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <Play className="w-5 h-5 text-blue-600" />
                   Movie Soundtrack
@@ -193,10 +245,25 @@ const LandingPage = () => {
                   Create the perfect soundtrack for any movie theme
                 </CardDescription>
               </CardHeader>
+              <CardContent className="pt-0">
+                <Button 
+                  className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:opacity-90"
+                  disabled={createGameMutation.isPending}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleGameModeClick('soundtrack');
+                  }}
+                >
+                  {createGameMutation.isPending ? 'Creating...' : 'Start Soundtrack Game'}
+                </Button>
+              </CardContent>
             </Card>
 
-            <Card className="group hover:shadow-lg transition-shadow duration-300">
-              <CardHeader>
+            <Card 
+              className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-green-300"
+              onClick={() => handleGameModeClick('desert-island')}
+            >
+              <CardHeader className="pb-4">
                 <CardTitle className="flex items-center gap-2 text-lg">
                   <Radio className="w-5 h-5 text-green-600" />
                   Desert Island Discs
@@ -205,6 +272,18 @@ const LandingPage = () => {
                   5 essential songs: head, heart, feet, guilty pleasure, current obsession
                 </CardDescription>
               </CardHeader>
+              <CardContent className="pt-0">
+                <Button 
+                  className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white hover:opacity-90"
+                  disabled={createGameMutation.isPending}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleGameModeClick('desert-island');
+                  }}
+                >
+                  {createGameMutation.isPending ? 'Creating...' : 'Start Desert Island Game'}
+                </Button>
+              </CardContent>
             </Card>
           </motion.div>
 
