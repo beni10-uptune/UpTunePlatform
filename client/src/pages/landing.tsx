@@ -464,7 +464,7 @@ const LandingPage = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex justify-center gap-4 text-sm text-gray-600">
-                  <span>🎵 6 songs submitted</span>
+                  <span>🎵 11 songs submitted</span>
                   <span>🔥 Most voted: "Mr. Brightside"</span>
                   <span>⏰ 5 days left</span>
                 </div>

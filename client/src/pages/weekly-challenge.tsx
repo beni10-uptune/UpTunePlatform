@@ -75,8 +75,7 @@ const WeeklyChallenge = () => {
 
   // Get challenge submissions
   const { data: submissions = [] } = useQuery<Submission[]>({
-    queryKey: [`/api/weekly-challenge/${challenge?.id}/submissions`],
-    enabled: !!challenge?.id,
+    queryKey: ['/api/weekly-challenge/submissions'],
   });
 
   // Submit challenge entry
@@ -127,7 +126,7 @@ const WeeklyChallenge = () => {
       return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [`/api/weekly-challenge/${challenge?.id}/submissions`] });
+      queryClient.invalidateQueries({ queryKey: ['/api/weekly-challenge/submissions'] });
       toast({
         title: "Vote Cast!",
         description: "Thanks for voting on this submission.",
