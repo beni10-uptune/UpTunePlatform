@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
-import { Music, Play, Headphones, Radio, ArrowLeft, Sparkles, ArrowRight, Bot } from 'lucide-react';
+import { Music, Play, Headphones, Radio, ArrowLeft, Sparkles, ArrowRight, Bot, Heart } from 'lucide-react';
 
 const GameMenu = () => {
   const [, setLocation] = useLocation();
@@ -46,11 +46,11 @@ const GameMenu = () => {
     },
     {
       id: 'ai-host',
-      title: 'AI Music Host',
-      description: 'Chat with an intelligent AI that asks engaging questions and suggests perfect songs based on your answers',
-      icon: Bot,
-      color: 'blue',
-      exampleThemes: ['Conversational Music Discovery', 'AI-Powered Playlist Building', 'Interactive Song Exploration', 'Personal Music Journey', 'Smart Recommendations']
+      title: 'Perfect Moment Playlist',
+      description: 'Work together to create the ideal soundtrack for your shared experiences and memories',
+      icon: Heart,
+      color: 'rose',
+      exampleThemes: ['Our First Date Songs', 'Road Trip Memories', 'Friendship Soundtrack', 'Party Vibes Together', 'Songs That Connect Us']
     }
   ];
 
@@ -81,10 +81,10 @@ const GameMenu = () => {
         hostNickname: 'Host'
       });
     } else if (gameId === 'ai-host') {
-      // AI Host is a conversational experience - no theme selection needed
+      // Perfect moment playlist - no theme selection needed
       createGameMutation.mutate({
         gameType: gameId,
-        theme: 'AI Music Discovery',
+        theme: 'Perfect Moment Together',
         hostNickname: 'Host'
       });
     } else {

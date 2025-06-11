@@ -81,11 +81,11 @@ const GAME_TYPES = {
     ]
   },
   'ai-host': {
-    title: 'AI Music Host',
-    description: 'Chat with an intelligent AI that asks engaging questions and suggests perfect songs',
-    icon: Sparkles,
-    color: 'from-blue-500 to-purple-500',
-    themes: ['AI Music Discovery'],
+    title: 'Perfect Moment Playlist',
+    description: 'Create the ideal soundtrack for your shared experiences together',
+    icon: Heart,
+    color: 'from-rose-500 to-pink-500',
+    themes: ['Perfect Moment Together'],
     isGuided: false,
     prompts: undefined
   }
@@ -322,6 +322,16 @@ export default function GameRoom() {
       createPlaylistMutation.mutate();
     }
   }, []);
+
+  // Auto-start AI Host conversation
+  useEffect(() => {
+    if (gameRoom?.gameType === 'ai-host' && currentPlayer && !aiQuestion && !getAiQuestionMutation.isPending) {
+      // Automatically trigger the AI conversation for the AI Host experience
+      setTimeout(() => {
+        getAiQuestionMutation.mutate();
+      }, 1000);
+    }
+  }, [gameRoom, currentPlayer, aiQuestion]);
 
   // Achievement detection system
   const checkAchievements = () => {
