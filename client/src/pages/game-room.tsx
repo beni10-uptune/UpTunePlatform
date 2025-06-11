@@ -942,7 +942,7 @@ export default function GameRoom() {
 
         {/* Add Song Dialog */}
         <Dialog open={showAddSong} onOpenChange={setShowAddSong}>
-          <DialogContent className="max-w-2xl w-[95vw] max-h-[90vh] overflow-y-auto mx-4">
+          <DialogContent className="max-w-2xl w-[100vw] sm:w-[90vw] max-h-[90vh] overflow-y-auto p-3 sm:p-6 m-0 sm:mx-auto rounded-t-xl sm:rounded-lg border-0 sm:border inset-x-0 bottom-0 sm:inset-auto sm:top-[50%] sm:left-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] data-[state=open]:slide-in-from-bottom sm:data-[state=open]:slide-in-from-bottom-0">
             <DialogHeader>
               {gameRoom?.gameType === 'desert-island' ? (
                 <>
@@ -1057,18 +1057,18 @@ export default function GameRoom() {
                 )}
               </div>
               
-              <div className="flex flex-col sm:flex-row gap-3 pt-2">
+              <div className="flex flex-col sm:flex-row gap-3 pt-4 sticky bottom-0 bg-white p-3 -mx-3 border-t sm:border-t-0 sm:bg-transparent sm:p-0 sm:mx-0 sm:static">
                 <Button
                   variant="outline"
                   onClick={() => setShowAddSong(false)}
-                  className="flex-1 sm:flex-none"
+                  className="w-full sm:flex-1 py-3 text-base sm:text-sm"
                 >
                   Cancel
                 </Button>
                 <Button
                   onClick={handleAddSong}
                   disabled={!selectedSong || addSongMutation.isPending}
-                  className="flex-1 sm:flex-none gradient-bg text-white"
+                  className="w-full sm:flex-1 gradient-bg text-white py-3 text-base sm:text-sm font-semibold"
                 >
                   {addSongMutation.isPending ? 'Adding...' : 'Add Song'}
                 </Button>
