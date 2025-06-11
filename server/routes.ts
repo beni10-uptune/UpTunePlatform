@@ -81,6 +81,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       res.json(challenge);
     } catch (error) {
+      console.error("Weekly challenge error:", error);
       res.status(500).json({ error: "Failed to fetch weekly challenge" });
     }
   });

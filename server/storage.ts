@@ -24,7 +24,7 @@ import {
   aiConversations
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, and, sql } from "drizzle-orm";
+import { eq, desc, and, lte, gte, lt, gt } from "drizzle-orm";
 
 export interface IStorage {
   // Game Rooms
