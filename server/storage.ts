@@ -12,13 +12,16 @@ import {
   type InsertTeamsWaitlist,
   type ContactSubmission,
   type InsertContactSubmission,
+  type AiConversation,
+  type InsertAiConversation,
   gameRooms,
   players,
   songs,
   challengeSubmissions,
   teamsWaitlist,
   weeklyChallenge,
-  contactSubmissions
+  contactSubmissions,
+  aiConversations
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
@@ -51,6 +54,11 @@ export interface IStorage {
   // Contact Submissions
   addContactSubmission(submission: InsertContactSubmission): Promise<ContactSubmission>;
   getContactSubmissions(): Promise<ContactSubmission[]>;
+  
+  // AI Conversations
+  addAiConversation(conversation: InsertAiConversation): Promise<AiConversation>;
+  getAiConversations(gameRoomId: number, playerId: number): Promise<AiConversation[]>;
+  updateAiConversation(id: number, updates: Partial<Pick<AiConversation, 'response' | 'suggestions' | 'reasoning'>>): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -177,6 +185,44 @@ export class DatabaseStorage implements IStorage {
       })
       .returning();
     return newEntry;
+  }
+
+  async addContactSubmission(submission: InsertContactSubmission): Promise<ContactSubmission> {
+    const [newSubmission] = await db
+      .insert(contactSubmissions)
+      .values(submission)
+      .returning();
+    return newSubmission;
+  }
+
+  async getContactSubmissions(): Promise<ContactSubmission[]> {
+    return await db
+      .select()
+      .from(contactSubmissions)
+      .orderBy(desc(contactSubmissions.submittedAt));
+  }
+
+  async addAiConversation(conversation: InsertAiConversation): Promise<AiConversation> {
+    const [newConversation] = await db
+      .insert(aiConversations)
+      .values(conversation)
+      .returning();
+    return newConversation;
+  }
+
+  async getAiConversations(gameRoomId: number, playerId: number): Promise<AiConversation[]> {
+    return await db
+      .select()
+      .from(aiConversations)
+      .where(eq(aiConversations.gameRoomId, gameRoomId) && eq(aiConversations.playerId, playerId))
+      .orderBy(aiConversations.questionNumber);
+  }
+
+  async updateAiConversation(id: number, updates: Partial<Pick<AiConversation, 'response' | 'suggestions' | 'reasoning'>>): Promise<void> {
+    await db
+      .update(aiConversations)
+      .set(updates)
+      .where(eq(aiConversations.id, id));
   }
 }
 

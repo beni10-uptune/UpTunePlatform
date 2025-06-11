@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertGameRoomSchema, insertPlayerSchema, insertSongSchema, insertChallengeSubmissionSchema, insertTeamsWaitlistSchema } from "@shared/schema";
 import { sendTeamContactEmail } from "./email";
-import { analyzePlaylist, enhanceStory, generateSongRecommendations, suggestGameMode } from "./ai";
+import { analyzePlaylist, enhanceStory, generateSongRecommendations, suggestGameMode, generateAiHostQuestion, generateSongSuggestionsFromResponse } from "./ai";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Game Rooms
@@ -347,6 +347,107 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("AI story enhancement error:", error);
       res.status(500).json({ error: "Failed to enhance story" });
+    }
+  });
+
+  // AI Host Game Mode Routes
+  app.post("/api/ai/host-question", async (req, res) => {
+    try {
+      const { gameRoomId, playerId } = req.body;
+      
+      if (!gameRoomId || !playerId) {
+        return res.status(400).json({ error: "Game room ID and player ID are required" });
+      }
+
+      // Get player info
+      const players = await storage.getPlayersByGameRoom(gameRoomId);
+      const player = players.find(p => p.id === playerId);
+      
+      // Get conversation history
+      const conversations = await storage.getAiConversations(gameRoomId, playerId);
+      
+      // Get previous songs
+      const songs = await storage.getSongsByGameRoom(gameRoomId);
+      const playerSongs = songs.filter(s => s.playerId === playerId);
+      
+      const question = await generateAiHostQuestion({
+        playerName: player?.nickname,
+        previousSongs: playerSongs,
+        conversationHistory: conversations.map(c => `Q: ${c.question}\nA: ${c.response || 'No response'}`),
+        questionNumber: conversations.length + 1
+      });
+      
+      // Save the question to conversation history
+      await storage.addAiConversation({
+        gameRoomId,
+        playerId,
+        question: question.question,
+        questionNumber: conversations.length + 1
+      });
+      
+      res.json(question);
+    } catch (error) {
+      console.error("AI host question error:", error);
+      res.status(500).json({ error: "Failed to generate question" });
+    }
+  });
+
+  app.post("/api/ai/host-response", async (req, res) => {
+    try {
+      const { gameRoomId, playerId, response, conversationId } = req.body;
+      
+      if (!gameRoomId || !playerId || !response) {
+        return res.status(400).json({ error: "Missing required fields" });
+      }
+
+      // Get the latest conversation
+      const conversations = await storage.getAiConversations(gameRoomId, playerId);
+      const latestConversation = conversations[conversations.length - 1];
+      
+      if (!latestConversation) {
+        return res.status(400).json({ error: "No conversation found" });
+      }
+
+      // Get player info and songs for context
+      const players = await storage.getPlayersByGameRoom(gameRoomId);
+      const player = players.find(p => p.id === playerId);
+      const songs = await storage.getSongsByGameRoom(gameRoomId);
+      const playerSongs = songs.filter(s => s.playerId === playerId);
+      
+      // Generate song suggestions based on response
+      const suggestions = await generateSongSuggestionsFromResponse(response, {
+        question: latestConversation.question,
+        playerName: player?.nickname,
+        previousSongs: playerSongs
+      });
+      
+      // Update conversation with response and suggestions
+      await storage.updateAiConversation(latestConversation.id, {
+        response,
+        suggestions: suggestions.suggestions,
+        reasoning: suggestions.reasoning
+      });
+      
+      res.json(suggestions);
+    } catch (error) {
+      console.error("AI host response error:", error);
+      res.status(500).json({ error: "Failed to process response" });
+    }
+  });
+
+  app.get("/api/ai/conversations/:gameRoomId/:playerId", async (req, res) => {
+    try {
+      const { gameRoomId, playerId } = req.params;
+      
+      const conversations = await storage.getAiConversations(
+        parseInt(gameRoomId), 
+        parseInt(playerId)
+      );
+      
+      res.json(conversations);
+    } catch (error) {
+      console.error("AI conversations fetch error:", error);
+      res.status(500).json({ error: "Failed to fetch conversations" });
     }
   });
 
