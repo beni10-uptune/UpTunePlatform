@@ -1,11 +1,10 @@
-import { Resend } from 'resend';
+import sgMail from '@sendgrid/mail';
 
-// Initialize Resend only if API key is available
-let resend: Resend | null = null;
-if (process.env.RESEND_API_KEY) {
-  resend = new Resend(process.env.RESEND_API_KEY);
+// Initialize SendGrid
+if (process.env.SENDGRID_API_KEY) {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 } else {
-  console.warn('RESEND_API_KEY not found - email functionality will be disabled');
+  console.warn('SENDGRID_API_KEY not found - email functionality will be disabled');
 }
 
 interface TeamContactEmailParams {
@@ -19,8 +18,8 @@ interface TeamContactEmailParams {
 
 export async function sendTeamContactEmail(params: TeamContactEmailParams): Promise<boolean> {
   try {
-    // Check if Resend is available
-    if (!resend) {
+    // Check if SendGrid is available
+    if (!process.env.SENDGRID_API_KEY) {
       console.log('Email service not available - logging contact form submission instead:');
       console.log({
         company: params.companyName,
@@ -50,9 +49,9 @@ ${params.message}
 Sent from UpTune Teams Contact Form
     `.trim();
 
-    await resend!.emails.send({
-      from: 'UpTune Teams <noreply@resend.dev>',
-      to: ['b10smith5@gmail.com'],
+    const msg = {
+      to: 'b10smith5@gmail.com',
+      from: 'noreply@uptune.app', // You'll need to verify this domain in SendGrid
       subject: `New UpTune Teams Inquiry from ${params.companyName}`,
       text: emailContent,
       html: `
@@ -78,11 +77,13 @@ Sent from UpTune Teams Contact Form
           <p style="color: #666; font-size: 12px;">Sent from UpTune Teams Contact Form</p>
         </div>
       `,
-    });
+    };
 
+    await sgMail.send(msg);
+    console.log('Email sent successfully to b10smith5@gmail.com');
     return true;
   } catch (error) {
-    console.error('Resend email error:', error);
+    console.error('SendGrid email error:', error);
     return false;
   }
 }

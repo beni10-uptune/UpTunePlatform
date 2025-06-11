@@ -69,6 +69,17 @@ export const teamsWaitlist = pgTable("teams_waitlist", {
   submittedAt: timestamp("submitted_at").defaultNow().notNull(),
 });
 
+export const contactSubmissions = pgTable("contact_submissions", {
+  id: serial("id").primaryKey(),
+  companyName: text("company_name").notNull(),
+  contactName: text("contact_name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone"),
+  teamSize: text("team_size").notNull(),
+  message: text("message").notNull(),
+  submittedAt: timestamp("submitted_at").defaultNow().notNull(),
+});
+
 export const insertGameRoomSchema = createInsertSchema(gameRooms).omit({
   id: true,
   code: true,
@@ -97,6 +108,11 @@ export const insertTeamsWaitlistSchema = createInsertSchema(teamsWaitlist).omit(
   submittedAt: true,
 });
 
+export const insertContactSubmissionSchema = createInsertSchema(contactSubmissions).omit({
+  id: true,
+  submittedAt: true,
+});
+
 export type GameRoom = typeof gameRooms.$inferSelect;
 export type InsertGameRoom = z.infer<typeof insertGameRoomSchema>;
 
@@ -113,3 +129,6 @@ export type InsertChallengeSubmission = z.infer<typeof insertChallengeSubmission
 
 export type TeamsWaitlist = typeof teamsWaitlist.$inferSelect;
 export type InsertTeamsWaitlist = z.infer<typeof insertTeamsWaitlistSchema>;
+
+export type ContactSubmission = typeof contactSubmissions.$inferSelect;
+export type InsertContactSubmission = z.infer<typeof insertContactSubmissionSchema>;

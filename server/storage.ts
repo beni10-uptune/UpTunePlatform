@@ -10,12 +10,15 @@ import {
   type InsertChallengeSubmission,
   type TeamsWaitlist,
   type InsertTeamsWaitlist,
+  type ContactSubmission,
+  type InsertContactSubmission,
   gameRooms,
   players,
   songs,
   challengeSubmissions,
   teamsWaitlist,
-  weeklyChallenge
+  weeklyChallenge,
+  contactSubmissions
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc } from "drizzle-orm";
@@ -44,6 +47,10 @@ export interface IStorage {
   
   // Teams Waitlist
   addToTeamsWaitlist(entry: InsertTeamsWaitlist): Promise<TeamsWaitlist>;
+  
+  // Contact Submissions
+  addContactSubmission(submission: InsertContactSubmission): Promise<ContactSubmission>;
+  getContactSubmissions(): Promise<ContactSubmission[]>;
 }
 
 export class DatabaseStorage implements IStorage {
