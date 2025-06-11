@@ -24,7 +24,7 @@ import {
   aiConversations
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, and } from "drizzle-orm";
+import { eq, desc, and, sql } from "drizzle-orm";
 
 export interface IStorage {
   // Game Rooms
@@ -132,10 +132,16 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getCurrentChallenge(): Promise<WeeklyChallenge | undefined> {
+    const now = new Date();
     const [challenge] = await db
       .select()
       .from(weeklyChallenge)
-      .where(eq(weeklyChallenge.isActive, true))
+      .where(
+        and(
+          lte(weeklyChallenge.startDate, now),
+          gte(weeklyChallenge.endDate, now)
+        )
+      )
       .orderBy(desc(weeklyChallenge.startDate))
       .limit(1);
     return challenge || undefined;
