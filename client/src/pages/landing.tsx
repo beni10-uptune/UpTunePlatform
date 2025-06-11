@@ -7,6 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { apiRequest } from '@/lib/queryClient';
 import { 
   Music, 
@@ -25,6 +26,9 @@ const LandingPage = () => {
   const [isHovered, setIsHovered] = useState(false);
   const [showJoinDialog, setShowJoinDialog] = useState(false);
   const [joinCode, setJoinCode] = useState('');
+  const [showThemeDialog, setShowThemeDialog] = useState(false);
+  const [selectedGameType, setSelectedGameType] = useState('');
+  const [selectedTheme, setSelectedTheme] = useState('');
   const [, navigate] = useLocation();
 
   const handleJoinGame = () => {
@@ -35,10 +39,10 @@ const LandingPage = () => {
 
   // Create game mutation
   const createGameMutation = useMutation({
-    mutationFn: async (gameType: string) => {
+    mutationFn: async ({ gameType, theme }: { gameType: string; theme: string }) => {
       const response = await apiRequest('POST', '/api/game-rooms', {
         gameType,
-        theme: getDefaultTheme(gameType),
+        theme,
         hostNickname: 'Host'
       });
       return await response.json();
@@ -48,21 +52,58 @@ const LandingPage = () => {
     }
   });
 
-  const getDefaultTheme = (gameType: string) => {
+  const getThemeOptions = (gameType: string) => {
     switch (gameType) {
       case 'mixtape':
-        return 'Musical Essentials';
+        return [
+          'Musical Essentials',
+          'Childhood Memories',
+          'Road Trip Vibes',
+          'Late Night Emotions',
+          'Summer Anthems',
+          'Workout Power',
+          'Study Soundtrack',
+          'Party Starters',
+          'Chill & Relax',
+          'Heartbreak & Healing'
+        ];
       case 'soundtrack':
-        return 'Epic Adventure';
+        return [
+          'Epic Adventure',
+          'Romantic Comedy',
+          'Thriller/Suspense',
+          'Sci-Fi Journey',
+          'Coming of Age',
+          'Heist Movie',
+          'Fantasy Quest',
+          'Horror Film',
+          'Documentary',
+          'Action Blockbuster'
+        ];
       case 'desert-island':
-        return 'Musical Essentials';
+        return [
+          'Musical Essentials',
+          'Emotional Journey',
+          'Life Soundtrack',
+          'Desert Island Classics',
+          'Personal Anthems'
+        ];
       default:
-        return 'Musical Essentials';
+        return ['Musical Essentials'];
     }
   };
 
   const handleGameModeClick = (gameType: string) => {
-    createGameMutation.mutate(gameType);
+    setSelectedGameType(gameType);
+    setSelectedTheme('');
+    setShowThemeDialog(true);
+  };
+
+  const handleCreateGame = () => {
+    if (selectedTheme) {
+      createGameMutation.mutate({ gameType: selectedGameType, theme: selectedTheme });
+      setShowThemeDialog(false);
+    }
   };
 
   return (
@@ -221,13 +262,12 @@ const LandingPage = () => {
               <CardContent className="pt-0">
                 <Button 
                   className="w-full gradient-bg text-white hover:opacity-90"
-                  disabled={createGameMutation.isPending}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleGameModeClick('mixtape');
                   }}
                 >
-                  {createGameMutation.isPending ? 'Creating...' : 'Start Mixtape Game'}
+                  Choose Theme & Start
                 </Button>
               </CardContent>
             </Card>
@@ -248,13 +288,12 @@ const LandingPage = () => {
               <CardContent className="pt-0">
                 <Button 
                   className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:opacity-90"
-                  disabled={createGameMutation.isPending}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleGameModeClick('soundtrack');
                   }}
                 >
-                  {createGameMutation.isPending ? 'Creating...' : 'Start Soundtrack Game'}
+                  Choose Theme & Start
                 </Button>
               </CardContent>
             </Card>
@@ -275,13 +314,12 @@ const LandingPage = () => {
               <CardContent className="pt-0">
                 <Button 
                   className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white hover:opacity-90"
-                  disabled={createGameMutation.isPending}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleGameModeClick('desert-island');
                   }}
                 >
-                  {createGameMutation.isPending ? 'Creating...' : 'Start Desert Island Game'}
+                  Choose Theme & Start
                 </Button>
               </CardContent>
             </Card>
