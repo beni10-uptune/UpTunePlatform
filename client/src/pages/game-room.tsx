@@ -79,6 +79,15 @@ const GAME_TYPES = {
       'Your guilty pleasure - a song you love but might be embarrassed to admit',
       'A song from your current favorite album'
     ]
+  },
+  'ai-host': {
+    title: 'AI Music Host',
+    description: 'Chat with an intelligent AI that asks engaging questions and suggests perfect songs',
+    icon: Sparkles,
+    color: 'from-blue-500 to-purple-500',
+    themes: ['AI Music Discovery'],
+    isGuided: false,
+    prompts: undefined
   }
 } as const;
 
