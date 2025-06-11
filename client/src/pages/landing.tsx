@@ -236,91 +236,150 @@ const LandingPage = () => {
                   </div>
                 </DialogContent>
               </Dialog>
+
+              {/* Theme Selection Dialog */}
+              <Dialog open={showThemeDialog} onOpenChange={setShowThemeDialog}>
+                <DialogContent className="max-w-md">
+                  <DialogHeader>
+                    <DialogTitle className="flex items-center gap-2 text-xl">
+                      <Sparkles className="w-5 h-5 text-purple-600" />
+                      Choose Your Theme
+                    </DialogTitle>
+                    <DialogDescription>
+                      Pick a theme that inspires your group's music choices
+                    </DialogDescription>
+                  </DialogHeader>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <Select value={selectedTheme} onValueChange={setSelectedTheme}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select a theme..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {getThemeOptions(selectedGameType).map((theme) => (
+                            <SelectItem key={theme} value={theme}>
+                              {theme}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <Button 
+                      onClick={handleCreateGame}
+                      disabled={!selectedTheme || createGameMutation.isPending}
+                      className="w-full gradient-bg text-white"
+                    >
+                      {createGameMutation.isPending ? 'Creating Game...' : 'Create Game'}
+                    </Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </motion.div>
           </div>
 
-          {/* Game Modes Preview */}
+          {/* Example Games Showcase */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="mt-20 grid md:grid-cols-3 gap-6 max-w-5xl mx-auto"
+            className="mt-20 space-y-8"
           >
-            <Card 
-              className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-purple-300"
-              onClick={() => handleGameModeClick('mixtape')}
-            >
-              <CardHeader className="pb-4">
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <Headphones className="w-5 h-5 text-purple-600" />
-                  Collaborative Mixtape
-                </CardTitle>
-                <CardDescription>
-                  Everyone adds their favorite songs with personal stories
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <Button 
-                  className="w-full gradient-bg text-white hover:opacity-90"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleGameModeClick('mixtape');
-                  }}
-                >
-                  Choose Theme & Start
-                </Button>
-              </CardContent>
-            </Card>
+            <div className="text-center">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Try These Popular Games</h2>
+              <p className="text-gray-600">Get inspired by what others are creating, then make your own</p>
+            </div>
 
-            <Card 
-              className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-blue-300"
-              onClick={() => handleGameModeClick('soundtrack')}
-            >
-              <CardHeader className="pb-4">
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <Play className="w-5 h-5 text-blue-600" />
-                  Movie Soundtrack
-                </CardTitle>
-                <CardDescription>
-                  Create the perfect soundtrack for any movie theme
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <Button 
-                  className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:opacity-90"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleGameModeClick('soundtrack');
-                  }}
-                >
-                  Choose Theme & Start
-                </Button>
-              </CardContent>
-            </Card>
+            <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+              <Card 
+                className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-purple-300"
+                onClick={() => createGameMutation.mutate({ gameType: 'mixtape', theme: 'Road Trip Vibes' })}
+              >
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <Headphones className="w-5 h-5 text-purple-600" />
+                    Road Trip Vibes
+                  </CardTitle>
+                  <Badge className="w-fit bg-purple-100 text-purple-700 text-xs">Collaborative Mixtape</Badge>
+                  <CardDescription className="text-sm">
+                    Songs that make the perfect road trip playlist - windows down, volume up!
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="text-xs text-gray-500 mb-3">Example songs: "Life is a Highway", "Don't Stop Believin'", "Mr. Blue Sky"</div>
+                  <Button 
+                    className="w-full gradient-bg text-white hover:opacity-90"
+                    disabled={createGameMutation.isPending}
+                  >
+                    {createGameMutation.isPending ? 'Creating...' : 'Join This Game'}
+                  </Button>
+                </CardContent>
+              </Card>
 
-            <Card 
-              className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-green-300"
-              onClick={() => handleGameModeClick('desert-island')}
-            >
-              <CardHeader className="pb-4">
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <Radio className="w-5 h-5 text-green-600" />
-                  Desert Island Discs
-                </CardTitle>
-                <CardDescription>
-                  5 essential songs: head, heart, feet, guilty pleasure, current obsession
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <Button 
-                  className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white hover:opacity-90"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleGameModeClick('desert-island');
-                  }}
-                >
-                  Choose Theme & Start
-                </Button>
+              <Card 
+                className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-blue-300"
+                onClick={() => createGameMutation.mutate({ gameType: 'soundtrack', theme: 'Heist Movie' })}
+              >
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <Play className="w-5 h-5 text-blue-600" />
+                    Heist Movie
+                  </CardTitle>
+                  <Badge className="w-fit bg-blue-100 text-blue-700 text-xs">Movie Soundtrack</Badge>
+                  <CardDescription className="text-sm">
+                    Intense, clever tracks for the ultimate heist film soundtrack
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="text-xs text-gray-500 mb-3">Example songs: "Seven Nation Army", "Pressure", "Thunderstruck"</div>
+                  <Button 
+                    className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:opacity-90"
+                    disabled={createGameMutation.isPending}
+                  >
+                    {createGameMutation.isPending ? 'Creating...' : 'Join This Game'}
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card 
+                className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-green-300"
+                onClick={() => createGameMutation.mutate({ gameType: 'desert-island', theme: 'Emotional Journey' })}
+              >
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2 text-lg">
+                    <Radio className="w-5 h-5 text-green-600" />
+                    Emotional Journey
+                  </CardTitle>
+                  <Badge className="w-fit bg-green-100 text-green-700 text-xs">Desert Island Discs</Badge>
+                  <CardDescription className="text-sm">
+                    5 songs that tell the story of your emotional highs and lows
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <div className="text-xs text-gray-500 mb-3">Categories: Joy, Sadness, Hope, Love, Growth</div>
+                  <Button 
+                    className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white hover:opacity-90"
+                    disabled={createGameMutation.isPending}
+                  >
+                    {createGameMutation.isPending ? 'Creating...' : 'Join This Game'}
+                  </Button>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Custom Game Creation CTA */}
+            <Card className="max-w-3xl mx-auto bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200">
+              <CardContent className="p-8 text-center">
+                <h3 className="text-xl font-semibold mb-2">Want Something Different?</h3>
+                <p className="text-gray-600 mb-4">
+                  Create your own custom mixtape, festival soundtrack, or personal music challenge
+                </p>
+                <Link href="/games">
+                  <Button size="lg" className="gradient-bg text-white hover:opacity-90">
+                    <Plus className="w-5 h-5 mr-2" />
+                    Create Custom Game
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           </motion.div>
