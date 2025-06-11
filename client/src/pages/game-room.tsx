@@ -240,6 +240,33 @@ export default function GameRoom() {
     }
   });
 
+  // AI-powered mutations
+  const analyzePlaylistMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest('POST', '/api/ai/analyze-playlist', {
+        gameRoomId: gameRoom?.id
+      });
+      return await response.json();
+    },
+    onSuccess: (analysis) => {
+      setPlaylistAnalysis(analysis);
+      setShowAiInsights(true);
+    }
+  });
+
+  const getRecommendationsMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiRequest('POST', '/api/ai/song-recommendations', {
+        gameRoomId: gameRoom?.id,
+        gameType: gameRoom?.gameType
+      });
+      return await response.json();
+    },
+    onSuccess: (data) => {
+      setAiRecommendations(data.recommendations);
+    }
+  });
+
   // Check for Spotify callback
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -723,6 +750,18 @@ export default function GameRoom() {
                       Share Your Creation
                     </Button>
                   )}
+                  
+                  {(songs as Song[]).length >= 2 && (
+                    <Button
+                      onClick={() => analyzePlaylistMutation.mutate()}
+                      disabled={analyzePlaylistMutation.isPending}
+                      className="w-full mt-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:opacity-90"
+                      size="sm"
+                    >
+                      <Zap className="w-4 h-4 mr-2" />
+                      {analyzePlaylistMutation.isPending ? 'Analyzing...' : 'AI Playlist Insights'}
+                    </Button>
+                  )}
                 </div>
               </CardContent>
             </Card>
@@ -1077,6 +1116,110 @@ export default function GameRoom() {
                 </Button>
               </div>
             </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* AI Insights Dialog */}
+        <Dialog open={showAiInsights} onOpenChange={setShowAiInsights}>
+          <DialogContent className="max-w-2xl w-[90vw] max-h-[85vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <Zap className="w-5 h-5 text-blue-600" />
+                AI Playlist Insights
+              </DialogTitle>
+              <DialogDescription>
+                Discover the musical DNA of your collaborative playlist
+              </DialogDescription>
+            </DialogHeader>
+            
+            {playlistAnalysis && (
+              <div className="space-y-6">
+                {/* Mood & Energy */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <Card className="p-4">
+                    <h3 className="font-semibold text-sm mb-2 text-blue-700">Playlist Mood</h3>
+                    <p className="text-lg font-medium">{playlistAnalysis.mood}</p>
+                    <div className="mt-2">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-gray-500">Energy:</span>
+                        <Badge className={
+                          playlistAnalysis.energy === 'high' ? 'bg-red-100 text-red-700' :
+                          playlistAnalysis.energy === 'medium' ? 'bg-yellow-100 text-yellow-700' :
+                          'bg-blue-100 text-blue-700'
+                        }>
+                          {playlistAnalysis.energy}
+                        </Badge>
+                      </div>
+                    </div>
+                  </Card>
+                  
+                  <Card className="p-4">
+                    <h3 className="font-semibold text-sm mb-2 text-purple-700">Genres</h3>
+                    <div className="flex flex-wrap gap-1">
+                      {playlistAnalysis.genres?.map((genre: string, index: number) => (
+                        <Badge key={index} variant="outline" className="text-xs">
+                          {genre}
+                        </Badge>
+                      ))}
+                    </div>
+                  </Card>
+                </div>
+
+                {/* Description */}
+                <Card className="p-4 bg-gradient-to-r from-blue-50 to-purple-50">
+                  <h3 className="font-semibold text-sm mb-2 text-gray-700">Playlist Vibe</h3>
+                  <p className="text-sm text-gray-600">{playlistAnalysis.description}</p>
+                </Card>
+
+                {/* Themes */}
+                {playlistAnalysis.themes && playlistAnalysis.themes.length > 0 && (
+                  <div>
+                    <h3 className="font-semibold text-sm mb-3 text-gray-700">Common Themes</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {playlistAnalysis.themes.map((theme: string, index: number) => (
+                        <Badge key={index} className="bg-purple-100 text-purple-700">
+                          {theme}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* AI Recommendations */}
+                {playlistAnalysis.recommendations && playlistAnalysis.recommendations.length > 0 && (
+                  <div>
+                    <h3 className="font-semibold text-sm mb-3 text-gray-700">AI Song Recommendations</h3>
+                    <div className="space-y-2">
+                      {playlistAnalysis.recommendations.slice(0, 5).map((rec: string, index: number) => (
+                        <div key={index} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                          <span className="text-sm font-medium">{rec}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Get More Recommendations */}
+                <div className="flex gap-3">
+                  <Button
+                    onClick={() => getRecommendationsMutation.mutate()}
+                    disabled={getRecommendationsMutation.isPending}
+                    variant="outline"
+                    className="flex-1"
+                  >
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    {getRecommendationsMutation.isPending ? 'Finding...' : 'Get More Suggestions'}
+                  </Button>
+                  <Button
+                    onClick={() => setShowAiInsights(false)}
+                    className="flex-1 gradient-bg text-white"
+                  >
+                    Close
+                  </Button>
+                </div>
+              </div>
+            )}
           </DialogContent>
         </Dialog>
       </div>
