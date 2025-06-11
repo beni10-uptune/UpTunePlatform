@@ -96,6 +96,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/weekly-challenge/submissions", async (req, res) => {
+    try {
+      const challenge = await storage.getCurrentChallenge();
+      if (!challenge) {
+        return res.status(404).json({ error: "No active challenge found" });
+      }
+      const submissions = await storage.getChallengeSubmissions(challenge.id);
+      res.json(submissions);
+    } catch (error) {
+      res.status(500).json({ error: "Failed to fetch submissions" });
+    }
+  });
+
   app.get("/api/weekly-challenge/:challengeId/submissions", async (req, res) => {
     try {
       const challengeId = parseInt(req.params.challengeId);
