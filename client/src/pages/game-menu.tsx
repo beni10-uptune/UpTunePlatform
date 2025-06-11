@@ -44,14 +44,7 @@ const GameMenu = () => {
       color: 'indigo',
       exampleThemes: ['My Musical DNA', 'Songs That Shaped Me', 'Life Through Music', 'Musical Autobiography', 'Desert Island Journey']
     },
-    {
-      id: 'ai-host',
-      title: 'Perfect Moment Playlist',
-      description: 'Work together to create the ideal soundtrack for your shared experiences and memories',
-      icon: Heart,
-      color: 'rose',
-      exampleThemes: ['Our First Date Songs', 'Road Trip Memories', 'Friendship Soundtrack', 'Party Vibes Together', 'Songs That Connect Us']
-    }
+
   ];
 
   // Create game room mutation
