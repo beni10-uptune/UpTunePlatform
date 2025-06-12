@@ -202,15 +202,16 @@ export const insertCommunityListSchema = createInsertSchema(communityLists, {
   createdAt: true,
 });
 
-export const insertListEntrySchema = createInsertSchema(listEntries, {
-  spotifyTrackId: z.string().min(1),
-  songTitle: z.string().min(1),
-  artistName: z.string().min(1),
-  contextReason: z.string().min(1),
-}).omit({
+export const insertListEntrySchema = createInsertSchema(listEntries).omit({
   id: true,
   voteScore: true,
   createdAt: true,
+}).extend({
+  spotifyTrackId: z.string().min(1),
+  songTitle: z.string().min(1),
+  artistName: z.string().min(1),
+  contextReason: z.string().nullable().optional(),
+  submitterName: z.string().nullable().optional(),
 });
 
 export const insertEntryVoteSchema = createInsertSchema(entryVotes, {

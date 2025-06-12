@@ -561,16 +561,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/community-lists/:listId/entries", async (req, res) => {
     try {
       const listId = parseInt(req.params.listId);
+      console.log("Submission data:", req.body);
+      
       const entryData = insertListEntrySchema.parse({
         ...req.body,
-        listId
+        listId,
+        contextReason: req.body.contextReason || null
       });
       
       const entry = await storage.submitToList(entryData);
       res.json(entry);
     } catch (error: any) {
       console.error("List entry submission error:", error);
-      res.status(400).json({ error: "Invalid entry data" });
+      console.error("Request body:", req.body);
+      if (error.issues) {
+        console.error("Validation issues:", error.issues);
+      }
+      res.status(400).json({ 
+        error: "Invalid entry data",
+        details: error.issues || error.message 
+      });
     }
   });
 
