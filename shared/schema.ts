@@ -174,7 +174,7 @@ export const listEntries = pgTable("list_entries", {
   artistName: varchar("artist_name", { length: 255 }).notNull(),
   albumName: varchar("album_name", { length: 255 }),
   imageUrl: text("image_url"),
-  contextReason: text("context_reason").notNull(),
+  contextReason: text("context_reason"),
   voteScore: integer("vote_score").notNull().default(1),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 }, (table) => ({
@@ -202,16 +202,14 @@ export const insertCommunityListSchema = createInsertSchema(communityLists, {
   createdAt: true,
 });
 
-export const insertListEntrySchema = createInsertSchema(listEntries).omit({
-  id: true,
-  voteScore: true,
-  createdAt: true,
-}).extend({
+export const insertListEntrySchema = createInsertSchema(listEntries, {
   spotifyTrackId: z.string().min(1),
   songTitle: z.string().min(1),
   artistName: z.string().min(1),
-  contextReason: z.string().nullable().optional(),
-  submitterName: z.string().nullable().optional(),
+}).omit({
+  id: true,
+  voteScore: true,
+  createdAt: true,
 });
 
 export const insertEntryVoteSchema = createInsertSchema(entryVotes, {
