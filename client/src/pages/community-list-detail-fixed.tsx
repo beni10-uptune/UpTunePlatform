@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { ChevronUp, ChevronDown, Plus, Music, ExternalLink, Share2, Vote } from "lucide-react";
+import { ChevronUp, ChevronDown, Plus, Music, ExternalLink, Share2, Vote, Users, ListMusic } from "lucide-react";
 import { SongSearch } from "@/components/song-search";
 import { useToast } from "@/hooks/use-toast";
 
@@ -245,13 +245,23 @@ export default function CommunityListDetail() {
           <p className="text-xl text-white/90 mb-6 max-w-2xl mx-auto">{list.description}</p>
           
           <div className="flex flex-col items-center gap-4">
-            <Dialog open={isSubmitDialogOpen} onOpenChange={setIsSubmitDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-white text-purple-600 hover:bg-white/90 text-lg px-8 py-3">
-                  <Plus className="w-5 h-5 mr-2" />
-                  Submit Your Song
+            <div className="flex flex-wrap justify-center gap-4">
+              <Dialog open={isSubmitDialogOpen} onOpenChange={setIsSubmitDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button className="bg-white text-purple-600 hover:bg-white/90 text-lg px-8 py-3">
+                    <Plus className="w-5 h-5 mr-2" />
+                    Submit Your Song
+                  </Button>
+                </DialogTrigger>
+              
+              <Link href={`/game-room?theme=${encodeURIComponent(list.title)}`}>
+                <Button variant="outline" className="border-white text-white hover:bg-white/20 text-lg px-6 py-3">
+                  <Users className="w-5 h-5 mr-2" />
+                  Create Private List with Friends
                 </Button>
-              </DialogTrigger>
+              </Link>
+            </div>
+            
               <DialogContent className="max-w-2xl mx-4 sm:mx-auto max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>Submit a Song to {list.title}</DialogTitle>
