@@ -991,52 +991,54 @@ export default function GameRoom() {
 
         {/* Add Song Dialog */}
         <Dialog open={showAddSong} onOpenChange={setShowAddSong}>
-          <DialogContent className="max-w-2xl w-[100vw] sm:w-[90vw] max-h-[90vh] overflow-y-auto p-3 sm:p-6 m-0 sm:mx-auto rounded-t-xl sm:rounded-lg border-0 sm:border inset-x-0 bottom-0 sm:inset-auto sm:top-[50%] sm:left-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] data-[state=open]:slide-in-from-bottom sm:data-[state=open]:slide-in-from-bottom-0">
-            <DialogHeader>
-              {gameRoom?.gameType === 'desert-island' ? (
-                <>
-                  <DialogTitle className="flex items-center gap-2">
-                    <Radio className="w-5 h-5 text-green-600" />
-                    Song #{currentPromptIndex + 1}/5
-                  </DialogTitle>
-                  <DialogDescription className="text-left space-y-3">
-                    <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
-                      <span className="block font-semibold text-green-800 mb-1">
-                        {(gameConfig as typeof GAME_TYPES['desert-island']).prompts?.[currentPromptIndex]}
-                      </span>
-                      <span className="block text-sm text-green-700">
-                        Share the story behind this song and why it's essential to your musical DNA.
-                      </span>
-                    </div>
-                    <div className="text-xs text-gray-500 space-y-1">
-                      <div>Progress: {(songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length}/5 songs added</div>
-                      <div className="flex gap-1">
-                        {[0,1,2,3,4].map(i => (
-                          <div 
-                            key={i} 
-                            className={`w-3 h-3 rounded-full ${
-                              i < (songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length 
-                                ? 'bg-green-500' 
-                                : i === currentPromptIndex 
-                                  ? 'bg-green-300 animate-pulse' 
-                                  : 'bg-gray-200'
-                            }`} 
-                          />
-                        ))}
+          <DialogContent className="max-w-2xl w-[100vw] sm:w-[90vw] max-h-[95vh] sm:max-h-[90vh] flex flex-col p-0 m-0 sm:mx-auto rounded-t-xl sm:rounded-lg border-0 sm:border inset-x-0 bottom-0 sm:inset-auto sm:top-[50%] sm:left-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] data-[state=open]:slide-in-from-bottom sm:data-[state=open]:slide-in-from-bottom-0">
+            <div className="p-4 sm:p-6 border-b bg-white">
+              <DialogHeader>
+                {gameRoom?.gameType === 'desert-island' ? (
+                  <>
+                    <DialogTitle className="flex items-center gap-2">
+                      <Radio className="w-5 h-5 text-green-600" />
+                      Song #{currentPromptIndex + 1}/5
+                    </DialogTitle>
+                    <DialogDescription className="text-left space-y-3">
+                      <div className="p-3 bg-green-50 border border-green-200 rounded-lg">
+                        <span className="block font-semibold text-green-800 mb-1">
+                          {(gameConfig as typeof GAME_TYPES['desert-island']).prompts?.[currentPromptIndex]}
+                        </span>
+                        <span className="block text-sm text-green-700">
+                          Share the story behind this song and why it's essential to your musical DNA.
+                        </span>
                       </div>
-                    </div>
-                  </DialogDescription>
-                </>
-              ) : (
-                <>
-                  <DialogTitle>Add a Song</DialogTitle>
-                  <DialogDescription>
-                    Search for a song and tell us why you chose it for this {gameConfig.title.toLowerCase()}.
-                  </DialogDescription>
-                </>
-              )}
-            </DialogHeader>
-            <div className="space-y-4">
+                      <div className="text-xs text-gray-500 space-y-1">
+                        <div>Progress: {(songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length}/5 songs added</div>
+                        <div className="flex gap-1">
+                          {[0,1,2,3,4].map(i => (
+                            <div 
+                              key={i} 
+                              className={`w-3 h-3 rounded-full ${
+                                i < (songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length 
+                                  ? 'bg-green-500' 
+                                  : i === currentPromptIndex 
+                                    ? 'bg-green-300 animate-pulse' 
+                                    : 'bg-gray-200'
+                              }`} 
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </DialogDescription>
+                  </>
+                ) : (
+                  <>
+                    <DialogTitle>Add a Song</DialogTitle>
+                    <DialogDescription>
+                      Search for a song and tell us why you chose it for this {gameConfig.title.toLowerCase()}.
+                    </DialogDescription>
+                  </>
+                )}
+              </DialogHeader>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
               <SongSearch
                 onSongSelect={setSelectedSong}
                 placeholder="Search for a song..."
@@ -1106,7 +1108,9 @@ export default function GameRoom() {
                 )}
               </div>
               
-              <div className="flex flex-col sm:flex-row gap-3 pt-4 sticky bottom-0 bg-white p-3 -mx-3 border-t sm:border-t-0 sm:bg-transparent sm:p-0 sm:mx-0 sm:static">
+            </div>
+            <div className="p-4 sm:p-6 border-t bg-white">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <Button
                   variant="outline"
                   onClick={() => setShowAddSong(false)}
