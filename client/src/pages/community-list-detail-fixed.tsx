@@ -14,7 +14,6 @@ import { z } from "zod";
 import { ChevronUp, ChevronDown, Plus, Music, ExternalLink, Share2, Vote } from "lucide-react";
 import { SongSearch } from "@/components/song-search";
 import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/lib/queryClient";
 
 interface CommunityList {
   id: number;
@@ -257,115 +256,116 @@ export default function CommunityListDetail() {
                 <DialogHeader>
                   <DialogTitle>Submit a Song to {list.title}</DialogTitle>
                 </DialogHeader>
-              
-              <div className="space-y-6">
-                {!selectedSong ? (
-                  <div>
-                    <h3 className="font-semibold mb-3">Step 1: Search for a song</h3>
-                    <SongSearch
-                      onSongSelect={handleSongSelect}
-                      placeholder="Search for the perfect song..."
-                    />
-                  </div>
-                ) : (
-                  <div>
-                    <h3 className="font-semibold mb-3">Selected Song:</h3>
-                    <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
-                      {selectedSong.imageUrl && (
-                        <img 
-                          src={selectedSong.imageUrl} 
-                          alt={selectedSong.title}
-                          className="w-16 h-16 rounded-lg object-cover"
-                        />
-                      )}
-                      <div className="flex-1">
-                        <h4 className="font-semibold">{selectedSong.title}</h4>
-                        <p className="text-gray-600">{selectedSong.artist}</p>
-                        <p className="text-sm text-gray-500">{selectedSong.album}</p>
-                      </div>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setSelectedSong(null)}
-                      >
-                        Change Song
-                      </Button>
+                
+                <div className="space-y-6">
+                  {!selectedSong ? (
+                    <div>
+                      <h3 className="font-semibold mb-3">Step 1: Search for a song</h3>
+                      <SongSearch
+                        onSongSelect={handleSongSelect}
+                        placeholder="Search for the perfect song..."
+                      />
                     </div>
-                    
-                    <Form {...form}>
-                      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-6">
-                        <FormField
-                          control={form.control}
-                          name="submitterName"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Your Name</FormLabel>
-                              <FormControl>
-                                <Input placeholder="Enter your name" {...field} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <FormField
-                          control={form.control}
-                          name="contextReason"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Why does this song fit?</FormLabel>
-                              <FormControl>
-                                <Textarea 
-                                  placeholder="Tell the community why this song belongs on this list..."
-                                  className="min-h-[100px]"
-                                  {...field} 
-                                />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        
-                        <div className="flex gap-3">
-                          <Button 
-                            type="submit" 
-                            className="flex-1"
-                            disabled={submitEntryMutation.isPending}
-                          >
-                            {submitEntryMutation.isPending ? "Submitting..." : "Submit Song"}
-                          </Button>
-                          <Button 
-                            type="button" 
-                            variant="outline"
-                            onClick={() => {
-                              setIsSubmitDialogOpen(false);
-                              setSelectedSong(null);
-                              form.reset();
-                            }}
-                          >
-                            Cancel
-                          </Button>
+                  ) : (
+                    <div>
+                      <h3 className="font-semibold mb-3">Selected Song:</h3>
+                      <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+                        {selectedSong.imageUrl && (
+                          <img 
+                            src={selectedSong.imageUrl} 
+                            alt={selectedSong.title}
+                            className="w-16 h-16 rounded-lg object-cover"
+                          />
+                        )}
+                        <div className="flex-1">
+                          <h4 className="font-semibold">{selectedSong.title}</h4>
+                          <p className="text-gray-600">{selectedSong.artist}</p>
+                          <p className="text-sm text-gray-500">{selectedSong.album}</p>
                         </div>
-                      </form>
-                    </Form>
-                  </div>
-                )}
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setSelectedSong(null)}
+                        >
+                          Change Song
+                        </Button>
+                      </div>
+                      
+                      <Form {...form}>
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 mt-6">
+                          <FormField
+                            control={form.control}
+                            name="submitterName"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Your Name</FormLabel>
+                                <FormControl>
+                                  <Input placeholder="Enter your name" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          
+                          <FormField
+                            control={form.control}
+                            name="contextReason"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Why does this song fit?</FormLabel>
+                                <FormControl>
+                                  <Textarea 
+                                    placeholder="Tell the community why this song belongs on this list..."
+                                    className="min-h-[100px]"
+                                    {...field} 
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          
+                          <div className="flex gap-3">
+                            <Button 
+                              type="submit" 
+                              className="flex-1"
+                              disabled={submitEntryMutation.isPending}
+                            >
+                              {submitEntryMutation.isPending ? "Submitting..." : "Submit Song"}
+                            </Button>
+                            <Button 
+                              type="button" 
+                              variant="outline"
+                              onClick={() => {
+                                setIsSubmitDialogOpen(false);
+                                setSelectedSong(null);
+                                form.reset();
+                              }}
+                            >
+                              Cancel
+                            </Button>
+                          </div>
+                        </form>
+                      </Form>
+                    </div>
+                  )}
+                </div>
+              </DialogContent>
+            </Dialog>
+            
+            <div className="flex items-center gap-6 text-white/80 text-sm justify-center mt-4">
+              <div className="flex items-center gap-2">
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                <span>Live voting</span>
               </div>
-            </DialogContent>
-          </Dialog>
-          
-          <div className="flex items-center gap-6 text-white/80 text-sm justify-center mt-4">
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span>Live voting</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Vote className="w-4 h-4" />
-              <span>Vote on every song</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Music className="w-4 h-4" />
-              <span>Real community picks</span>
+              <div className="flex items-center gap-2">
+                <Vote className="w-4 h-4" />
+                <span>Vote on every song</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Music className="w-4 h-4" />
+                <span>Real community picks</span>
+              </div>
             </div>
           </div>
         </div>
