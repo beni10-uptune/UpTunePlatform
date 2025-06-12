@@ -991,8 +991,7 @@ export default function GameRoom() {
 
         {/* Add Song Dialog */}
         <Dialog open={showAddSong} onOpenChange={setShowAddSong}>
-          <DialogContent className="max-w-2xl w-[100vw] sm:w-[90vw] max-h-[95vh] sm:max-h-[90vh] flex flex-col p-0 m-0 sm:mx-auto rounded-t-xl sm:rounded-lg border-0 sm:border inset-x-0 bottom-0 sm:inset-auto sm:top-[50%] sm:left-[50%] sm:translate-x-[-50%] sm:translate-y-[-50%] data-[state=open]:slide-in-from-bottom sm:data-[state=open]:slide-in-from-bottom-0">
-            <div className="p-4 sm:p-6 border-b bg-white">
+          <DialogContent className="max-w-2xl w-[calc(100vw-2rem)] sm:w-auto mx-auto max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 {gameRoom?.gameType === 'desert-island' ? (
                   <>
@@ -1037,12 +1036,12 @@ export default function GameRoom() {
                   </>
                 )}
               </DialogHeader>
-            </div>
-            <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
-              <SongSearch
-                onSongSelect={setSelectedSong}
-                placeholder="Search for a song..."
-              />
+              
+              <div className="space-y-4">
+                <SongSearch
+                  onSongSelect={setSelectedSong}
+                  placeholder="Search for a song..."
+                />
               
               {selectedSong && (
                 <div className="p-4 bg-green-50 border-2 border-green-200 rounded-lg">
@@ -1108,9 +1107,7 @@ export default function GameRoom() {
                 )}
               </div>
               
-            </div>
-            <div className="p-4 sm:p-6 border-t bg-white">
-              <div className="flex flex-col sm:flex-row gap-3">
+              <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t">
                 <Button
                   variant="outline"
                   onClick={() => setShowAddSong(false)}
@@ -1126,7 +1123,7 @@ export default function GameRoom() {
                   {addSongMutation.isPending ? 'Adding...' : 'Add Song'}
                 </Button>
               </div>
-            </div>
+              </div>
           </DialogContent>
         </Dialog>
 
