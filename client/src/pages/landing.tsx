@@ -392,35 +392,47 @@ const LandingPage = () => {
                     >
                       <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
                         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                        <span className="text-sm text-gray-700">Someone just created <strong>"Ultimate 80s Power Ballads"</strong></span>
+                        <span className="text-sm text-gray-700"><strong>Jones family</strong> desert island discs</span>
                       </div>
                       <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
                         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                        <span className="text-sm text-gray-700">Someone just created <strong>"Best Songs from a Movie"</strong></span>
+                        <span className="text-sm text-gray-700"><strong>Campsite</strong> festival classics</span>
                       </div>
                       <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
                         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                        <span className="text-sm text-gray-700">Someone just created <strong>"Songs That Remind Us of Summer"</strong></span>
+                        <span className="text-sm text-gray-700"><strong>Saturday's</strong> BBQ playlist</span>
                       </div>
                       <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
                         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                        <span className="text-sm text-gray-700">Someone just created <strong>"Guilty Pleasure Dance Floor"</strong></span>
+                        <span className="text-sm text-gray-700"><strong>Wedding</strong> dance floor hits</span>
                       </div>
                       <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
                         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                        <span className="text-sm text-gray-700">Someone just created <strong>"Road Trip Anthems"</strong></span>
+                        <span className="text-sm text-gray-700"><strong>Office party</strong> guilty pleasures</span>
                       </div>
                       <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
                         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                        <span className="text-sm text-gray-700">Someone just created <strong>"Heartbreak Recovery Playlist"</strong></span>
+                        <span className="text-sm text-gray-700"><strong>Book club</strong> wind-down songs</span>
                       </div>
                       <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
                         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                        <span className="text-sm text-gray-700">Someone just created <strong>"Epic Movie Soundtrack Vibes"</strong></span>
+                        <span className="text-sm text-gray-700"><strong>Sunday brunch</strong> easy listening</span>
                       </div>
                       <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
                         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                        <span className="text-sm text-gray-700">Someone just created <strong>"Childhood Memory Lane"</strong></span>
+                        <span className="text-sm text-gray-700"><strong>Gym buddies</strong> workout pumps</span>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="text-sm text-gray-700"><strong>Kitchen crew</strong> cooking soundtrack</span>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="text-sm text-gray-700"><strong>Carpool gang</strong> morning drive</span>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-100">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <span className="text-sm text-gray-700"><strong>Study group</strong> focus tracks</span>
                       </div>
                     </motion.div>
                   </div>
