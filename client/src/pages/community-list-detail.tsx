@@ -409,7 +409,7 @@ export default function CommunityListDetail() {
               </Dialog>
               
               <Link href={`/game-room?theme=${encodeURIComponent(list.title)}`}>
-                <Button variant="outline" className="border-white text-white hover:bg-white/20 text-lg px-6 py-3">
+                <Button className="bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 text-lg px-6 py-3">
                   <Users className="w-5 h-5 mr-2" />
                   Create Private List with Friends
                 </Button>
@@ -417,8 +417,7 @@ export default function CommunityListDetail() {
               
               {entries && entries.length > 0 && (
                 <Button 
-                  variant="outline" 
-                  className="border-white text-white hover:bg-white/20 text-lg px-6 py-3"
+                  className="bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 text-lg px-6 py-3"
                   onClick={createSpotifyPlaylist}
                   disabled={createPlaylistMutation.isPending}
                 >
@@ -428,8 +427,7 @@ export default function CommunityListDetail() {
               )}
               
               <Button 
-                variant="outline" 
-                className="border-white text-white hover:bg-white/20 text-lg px-6 py-3"
+                className="bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 text-lg px-6 py-3"
                 onClick={shareList}
               >
                 <Share2 className="w-5 h-5 mr-2" />
