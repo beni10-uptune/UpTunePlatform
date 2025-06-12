@@ -9,7 +9,7 @@ import GameRoom from "@/pages/game-room";
 import WeeklyChallenge from "@/pages/weekly-challenge";
 import TeamsWaitlist from "@/pages/teams-waitlist";
 import CommunityLists from "@/pages/community-lists";
-import CommunityListDetail from "@/pages/community-list-detail-fixed";
+import CommunityListDetail from "@/pages/community-list-detail";
 import NotFound from "@/pages/not-found";
 
 function Router() {

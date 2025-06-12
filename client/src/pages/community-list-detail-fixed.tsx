@@ -60,6 +60,49 @@ export default function CommunityListDetail() {
   const [selectedSong, setSelectedSong] = useState<SpotifyTrack | null>(null);
   const [guestSessionId] = useState(() => `guest_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`);
   const { toast } = useToast();
+
+  // Spotify playlist creation mutation
+  const createPlaylistMutation = useMutation({
+    mutationFn: async () => {
+      if (!entries || entries.length === 0) throw new Error("No songs to add to playlist");
+      if (!list) throw new Error("List not found");
+      
+      const trackIds = entries.map(entry => entry.spotifyTrackId);
+      const response = await fetch('/api/spotify/create-playlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: `${list.title} - Community Picks`,
+          description: `${list.description} - Created from Uptune community votes`,
+          trackIds
+        })
+      });
+      
+      if (!response.ok) throw new Error('Failed to create playlist');
+      return response.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Playlist Created!",
+        description: "Your Spotify playlist has been created successfully",
+      });
+      if (data.playlistUrl) {
+        window.open(data.playlistUrl, '_blank');
+      }
+    },
+    onError: () => {
+      toast({
+        title: "Playlist Creation Failed",
+        description: "Please connect your Spotify account and try again",
+        variant: "destructive",
+      });
+    }
+  });
+
+  const createSpotifyPlaylist = () => {
+    createPlaylistMutation.mutate();
+  };
+  
   const queryClient = useQueryClient();
   
   const form = useForm<z.infer<typeof submissionSchema>>({
@@ -260,9 +303,21 @@ export default function CommunityListDetail() {
                   Create Private List with Friends
                 </Button>
               </Link>
+              
+              {entries && entries.length > 0 && (
+                <Button 
+                  variant="outline" 
+                  className="border-white text-white hover:bg-white/20 text-lg px-6 py-3"
+                  onClick={createSpotifyPlaylist}
+                  disabled={createPlaylistMutation.isPending}
+                >
+                  <ListMusic className="w-5 h-5 mr-2" />
+                  {createPlaylistMutation.isPending ? "Creating..." : "Create Spotify Playlist"}
+                </Button>
+              )}
             </div>
             
-              <DialogContent className="max-w-2xl mx-4 sm:mx-auto max-h-[90vh] overflow-y-auto">
+            <DialogContent className="max-w-2xl mx-4 sm:mx-auto max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>Submit a Song to {list.title}</DialogTitle>
                 </DialogHeader>
