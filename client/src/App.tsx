@@ -8,6 +8,8 @@ import GameMenu from "@/pages/game-menu";
 import GameRoom from "@/pages/game-room";
 import WeeklyChallenge from "@/pages/weekly-challenge";
 import TeamsWaitlist from "@/pages/teams-waitlist";
+import CommunityLists from "@/pages/community-lists";
+import CommunityListDetail from "@/pages/community-list-detail";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -19,6 +21,8 @@ function Router() {
       <Route path="/room/:code" component={GameRoom} />
       <Route path="/challenge" component={WeeklyChallenge} />
       <Route path="/teams" component={TeamsWaitlist} />
+      <Route path="/community-lists" component={CommunityLists} />
+      <Route path="/community-lists/:slug" component={CommunityListDetail} />
       <Route component={NotFound} />
     </Switch>
   );

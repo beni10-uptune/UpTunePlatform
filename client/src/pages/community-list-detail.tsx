@@ -98,8 +98,9 @@ export default function CommunityListDetail() {
     mutationFn: async (data: z.infer<typeof submissionSchema>) => {
       if (!selectedSong || !list) throw new Error("Song and list required");
       
-      return apiRequest(`/api/community-lists/${list.id}/entries`, {
+      const response = await fetch(`/api/community-lists/${list.id}/entries`, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           spotifyTrackId: selectedSong.id,
           songTitle: selectedSong.title,
@@ -110,6 +111,9 @@ export default function CommunityListDetail() {
           contextReason: data.contextReason,
         }),
       });
+      
+      if (!response.ok) throw new Error("Failed to submit entry");
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/community-lists", list?.id, "entries"] });
@@ -133,13 +137,17 @@ export default function CommunityListDetail() {
   // Vote mutation
   const voteMutation = useMutation({
     mutationFn: async ({ entryId, direction }: { entryId: number; direction: number }) => {
-      return apiRequest(`/api/community-lists/entries/${entryId}/vote`, {
+      const response = await fetch(`/api/community-lists/entries/${entryId}/vote`, {
         method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           voteDirection: direction,
           guestSessionId,
         }),
       });
+      
+      if (!response.ok) throw new Error("Failed to cast vote");
+      return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/community-lists", list?.id, "entries"] });
@@ -160,8 +168,8 @@ export default function CommunityListDetail() {
 
   // Add Google Tag Manager tracking
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.gtag && list) {
-      window.gtag('event', 'page_view', {
+    if (typeof window !== 'undefined' && (window as any).gtag && list) {
+      (window as any).gtag('event', 'page_view', {
         page_title: `${list.title} - Community List`,
         page_location: window.location.href
       });
