@@ -181,8 +181,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const { spotifyService } = await import("./spotify");
       
-      // Use consistent redirect URI that matches Spotify app configuration
-      const redirectUri = 'https://uptune.xyz/api/spotify/callback';
+      // Use environment-appropriate redirect URI
+      const isDev = process.env.NODE_ENV === 'development';
+      const host = req.get('host');
+      const protocol = req.protocol;
+      
+      let redirectUri;
+      if (isDev && host?.includes('localhost')) {
+        redirectUri = `${protocol}://${host}/api/spotify/callback`;
+      } else {
+        redirectUri = 'https://uptune.xyz/api/spotify/callback';
+      }
       
       const state = Math.random().toString(36).substring(7);
       
@@ -207,8 +216,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const { spotifyService } = await import("./spotify");
       
-      // Use consistent redirect URI that matches Spotify app configuration
-      const redirectUri = 'https://uptune.xyz/api/spotify/callback';
+      // Use same redirect URI logic as auth endpoint
+      const isDev = process.env.NODE_ENV === 'development';
+      const host = req.get('host');
+      const protocol = req.protocol;
+      
+      let redirectUri;
+      if (isDev && host?.includes('localhost')) {
+        redirectUri = `${protocol}://${host}/api/spotify/callback`;
+      } else {
+        redirectUri = 'https://uptune.xyz/api/spotify/callback';
+      }
       
       const tokens = await spotifyService.exchangeCodeForToken(code as string, redirectUri);
       

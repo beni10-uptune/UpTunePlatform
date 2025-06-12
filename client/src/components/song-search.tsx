@@ -92,32 +92,30 @@ export function SongSearch({ onSongSelect, placeholder = "Search for a song...",
       )}
 
       {tracks.length > 0 && showResults && (
-        <div className="space-y-3 max-h-80 sm:max-h-96 overflow-y-auto">
+        <div className="space-y-3 max-h-64 sm:max-h-80 overflow-y-auto overscroll-contain">
           {tracks.map((track: SpotifyTrack) => (
             <Card key={track.id} className="transition-colors hover:bg-gray-50 cursor-pointer">
               <CardContent className="p-3 sm:p-4">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                  <div className="flex items-center space-x-3 min-w-0 flex-1">
-                    <div className="w-12 h-12 bg-gray-200 rounded flex items-center justify-center overflow-hidden flex-shrink-0">
-                      {track.imageUrl ? (
-                        <img 
-                          src={track.imageUrl} 
-                          alt={track.album}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <Music className="w-6 h-6 text-gray-400" />
-                      )}
-                    </div>
-                    
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-gray-900 truncate">{track.title}</h4>
-                      <p className="text-sm text-gray-600 truncate">{track.artist}</p>
-                      <p className="text-xs text-gray-500 truncate">{track.album}</p>
-                    </div>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-200 rounded flex items-center justify-center overflow-hidden flex-shrink-0">
+                    {track.imageUrl ? (
+                      <img 
+                        src={track.imageUrl} 
+                        alt={track.album}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <Music className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />
+                    )}
                   </div>
                   
-                  <div className="flex items-center justify-end space-x-2 flex-shrink-0">
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-medium text-gray-900 truncate text-sm sm:text-base">{track.title}</h4>
+                    <p className="text-xs sm:text-sm text-gray-600 truncate">{track.artist}</p>
+                    <p className="text-xs text-gray-500 truncate hidden sm:block">{track.album}</p>
+                  </div>
+                  
+                  <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
                     {track.previewUrl && (
                       <Button
                         variant="ghost"
@@ -129,9 +127,9 @@ export function SongSearch({ onSongSelect, placeholder = "Search for a song...",
                             // Handle play failure silently
                           });
                         }}
-                        className="text-gray-600 hover:text-gray-800 p-2"
+                        className="text-gray-600 hover:text-gray-800 p-1 sm:p-2 hidden sm:flex"
                       >
-                        <Play className="w-4 h-4" />
+                        <Play className="w-3 h-3 sm:w-4 sm:h-4" />
                       </Button>
                     )}
                     
@@ -143,9 +141,9 @@ export function SongSearch({ onSongSelect, placeholder = "Search for a song...",
                         setShowResults(false);
                       }}
                       size="sm"
-                      className="gradient-bg text-white hover:opacity-90 px-3 py-2"
+                      className="gradient-bg text-white hover:opacity-90 px-2 py-1 sm:px-3 sm:py-2 text-xs sm:text-sm"
                     >
-                      <Plus className="w-4 h-4 mr-1" />
+                      <Plus className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
                       Add
                     </Button>
                   </div>
