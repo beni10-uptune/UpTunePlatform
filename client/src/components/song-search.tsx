@@ -92,10 +92,10 @@ export function SongSearch({ onSongSelect, placeholder = "Search for a song...",
       )}
 
       {tracks.length > 0 && showResults && (
-        <div className="space-y-3 max-h-64 sm:max-h-80 overflow-y-auto overscroll-contain">
+        <div className="space-y-3 max-h-64 sm:max-h-80 overflow-y-auto overscroll-contain w-full max-w-full">
           {tracks.map((track: SpotifyTrack) => (
-            <Card key={track.id} className="transition-colors hover:bg-gray-50 cursor-pointer">
-              <CardContent className="p-3 sm:p-4">
+            <Card key={track.id} className="transition-colors hover:bg-gray-50 cursor-pointer w-full max-w-full overflow-hidden">
+              <CardContent className="p-3 sm:p-4 w-full max-w-full overflow-hidden">
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-200 rounded flex items-center justify-center overflow-hidden flex-shrink-0">
                     {track.imageUrl ? (

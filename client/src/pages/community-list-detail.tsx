@@ -50,7 +50,7 @@ interface SpotifyTrack {
 }
 
 const submissionSchema = z.object({
-  contextReason: z.string().min(10, "Please tell us why this song fits the theme (at least 10 characters)"),
+  contextReason: z.string().optional(),
   submitterName: z.string().optional()
 });
 
@@ -134,7 +134,7 @@ export default function CommunityListDetail() {
 
   // Submit entry mutation
   const submitEntryMutation = useMutation({
-    mutationFn: async (data: { contextReason: string; submitterName?: string }) => {
+    mutationFn: async (data: { contextReason?: string; submitterName?: string }) => {
       if (!selectedSong || !list) throw new Error("Missing song or list");
       
       const response = await fetch(`/api/community-lists/${list.id}/submit`, {
@@ -146,13 +146,17 @@ export default function CommunityListDetail() {
           artistName: selectedSong.artist,
           albumName: selectedSong.album,
           imageUrl: selectedSong.imageUrl,
-          contextReason: data.contextReason,
+          contextReason: data.contextReason || "",
           submitterName: data.submitterName || null,
           guestSessionId
         })
       });
       
-      if (!response.ok) throw new Error('Failed to submit entry');
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Submission error:', errorText);
+        throw new Error('Failed to submit entry');
+      }
       return response.json();
     },
     onSuccess: () => {
@@ -196,11 +200,43 @@ export default function CommunityListDetail() {
   };
 
   const onSubmit = (data: z.infer<typeof submissionSchema>) => {
-    submitEntryMutation.mutate(data);
+    submitEntryMutation.mutate({
+      contextReason: data.contextReason || "",
+      submitterName: data.submitterName || ""
+    });
   };
 
   const createSpotifyPlaylist = () => {
     createPlaylistMutation.mutate();
+  };
+
+  const shareList = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: `${list?.title} - Uptune Community`,
+        text: `Check out this community music list and add your opinion: ${list?.title}`,
+        url: window.location.href
+      }).catch(() => {
+        // Fallback to clipboard
+        copyToClipboard();
+      });
+    } else {
+      copyToClipboard();
+    }
+  };
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      toast({
+        title: "Link Copied!",
+        description: "Share this link to get your friends' opinions",
+      });
+    }).catch(() => {
+      toast({
+        title: "Share this list",
+        description: window.location.href,
+      });
+    });
   };
 
   if (listLoading) {
@@ -263,7 +299,7 @@ export default function CommunityListDetail() {
                   </Button>
                 </DialogTrigger>
                 
-                <DialogContent className="max-w-2xl w-[95vw] sm:w-auto mx-auto max-h-[90vh] overflow-y-auto">
+                <DialogContent className="max-w-2xl w-[calc(100vw-2rem)] sm:w-auto mx-auto max-h-[90vh] overflow-y-auto p-4 sm:p-6">
                   <DialogHeader>
                     <DialogTitle>Submit a Song to {list.title}</DialogTitle>
                   </DialogHeader>
@@ -309,10 +345,18 @@ export default function CommunityListDetail() {
                               name="contextReason"
                               render={({ field }) => (
                                 <FormItem>
-                                  <FormLabel>Why does this song fit "{list.title}"?</FormLabel>
+                                  <FormLabel>
+                                    {list.title.toLowerCase().includes('movie') || list.title.toLowerCase().includes('soundtrack') 
+                                      ? "What film was it from? (Optional)" 
+                                      : `Why does this song fit "${list.title}"? (Optional)`}
+                                  </FormLabel>
                                   <FormControl>
                                     <Textarea 
-                                      placeholder="Tell us why this song belongs on this list..."
+                                      placeholder={
+                                        list.title.toLowerCase().includes('movie') || list.title.toLowerCase().includes('soundtrack')
+                                          ? "e.g., Pulp Fiction, The Matrix, Top Gun..."
+                                          : "Tell us why this song belongs on this list..."
+                                      }
                                       className="min-h-[100px]"
                                       {...field}
                                     />
@@ -382,6 +426,15 @@ export default function CommunityListDetail() {
                   {createPlaylistMutation.isPending ? "Creating..." : "Create Spotify Playlist"}
                 </Button>
               )}
+              
+              <Button 
+                variant="outline" 
+                className="border-white text-white hover:bg-white/20 text-lg px-6 py-3"
+                onClick={shareList}
+              >
+                <Share2 className="w-5 h-5 mr-2" />
+                Get Your Friends' Opinion
+              </Button>
             </div>
             
             <div className="flex items-center gap-6 text-white/80 text-sm justify-center mt-4">
