@@ -480,7 +480,7 @@ const LandingPage = () => {
                   <span>🔥 Most voted: "Mr. Brightside"</span>
                   <span>⏰ 5 days left</span>
                 </div>
-                <Link href="/weekly-challenge">
+                <Link href="/challenge">
                   <Button size="lg" className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white hover:opacity-90">
                     <Heart className="w-4 h-4 mr-2" />
                     Share Your Power Song
