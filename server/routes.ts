@@ -199,7 +199,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       (req.session as any).spotifyState = state;
       
       const authUrl = spotifyService.generateAuthUrl(redirectUri, state);
-      res.json({ authUrl });
+      res.redirect(authUrl);
     } catch (error) {
       console.error("Spotify auth error:", error);
       res.status(500).json({ error: "Failed to generate auth URL" });
@@ -234,8 +234,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
       (req.session as any).spotifyAccessToken = tokens.access_token;
       (req.session as any).spotifyRefreshToken = tokens.refresh_token;
       
-      // Redirect to success page
-      res.redirect('/?spotify=connected');
+      // Redirect back to community lists with success indicator
+      res.redirect('/community-lists?spotify=connected');
     } catch (error) {
       console.error("Spotify callback error:", error);
       res.redirect('/?spotify=error');

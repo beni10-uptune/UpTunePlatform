@@ -111,7 +111,13 @@ export default function CommunityListDetail() {
         })
       });
       
-      if (!response.ok) throw new Error('Failed to create playlist');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        if (response.status === 401) {
+          throw new Error('NEED_AUTH');
+        }
+        throw new Error(errorData.error || 'Failed to create playlist');
+      }
       return response.json();
     },
     onSuccess: (data) => {
@@ -123,12 +129,17 @@ export default function CommunityListDetail() {
         window.open(data.playlistUrl, '_blank');
       }
     },
-    onError: () => {
-      toast({
-        title: "Playlist Creation Failed",
-        description: "Please connect your Spotify account and try again",
-        variant: "destructive",
-      });
+    onError: (error) => {
+      if (error.message === 'NEED_AUTH') {
+        // Redirect to Spotify auth
+        window.location.href = '/api/spotify/auth';
+      } else {
+        toast({
+          title: "Playlist Creation Failed",
+          description: "There was an issue creating your playlist. Please try again.",
+          variant: "destructive",
+        });
+      }
     }
   });
 
@@ -408,10 +419,10 @@ export default function CommunityListDetail() {
                 </DialogContent>
               </Dialog>
               
-              <Link href={`/game-room?theme=${encodeURIComponent(list.title)}`}>
+              <Link href={`/?gameType=mixtape&theme=${encodeURIComponent(list.title)}`}>
                 <Button className="bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 text-lg px-6 py-3">
                   <Users className="w-5 h-5 mr-2" />
-                  Create Private List with Friends
+                  Build This List with Friends
                 </Button>
               </Link>
               
