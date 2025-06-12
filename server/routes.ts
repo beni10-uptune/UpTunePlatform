@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertGameRoomSchema, insertPlayerSchema, insertSongSchema, insertChallengeSubmissionSchema, insertTeamsWaitlistSchema, type AiConversation } from "@shared/schema";
+import { insertGameRoomSchema, insertPlayerSchema, insertSongSchema, insertChallengeSubmissionSchema, insertTeamsWaitlistSchema, insertListEntrySchema, insertEntryVoteSchema, type AiConversation } from "@shared/schema";
 import { sendTeamContactEmail } from "./email";
 import { analyzePlaylist, enhanceStory, generateSongRecommendations, suggestGameMode, generateAiHostQuestion, generateSongSuggestionsFromResponse } from "./ai";
 
@@ -517,6 +517,98 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("AI game suggestion error:", error);
       res.status(500).json({ error: "Failed to suggest game mode" });
+    }
+  });
+
+  // Community Lists API
+  app.get("/api/community-lists", async (req, res) => {
+    try {
+      const lists = await storage.getAllCommunityLists();
+      res.json(lists);
+    } catch (error) {
+      console.error("Community lists fetch error:", error);
+      res.status(500).json({ error: "Failed to fetch community lists" });
+    }
+  });
+
+  app.get("/api/community-lists/:slug", async (req, res) => {
+    try {
+      const { slug } = req.params;
+      const list = await storage.getCommunityListBySlug(slug);
+      
+      if (!list) {
+        return res.status(404).json({ error: "List not found" });
+      }
+      
+      res.json(list);
+    } catch (error) {
+      console.error("Community list fetch error:", error);
+      res.status(500).json({ error: "Failed to fetch community list" });
+    }
+  });
+
+  app.get("/api/community-lists/:listId/entries", async (req, res) => {
+    try {
+      const listId = parseInt(req.params.listId);
+      const entries = await storage.getListEntries(listId);
+      res.json(entries);
+    } catch (error) {
+      console.error("List entries fetch error:", error);
+      res.status(500).json({ error: "Failed to fetch list entries" });
+    }
+  });
+
+  app.post("/api/community-lists/:listId/entries", async (req, res) => {
+    try {
+      const listId = parseInt(req.params.listId);
+      const entryData = insertListEntrySchema.parse({
+        ...req.body,
+        listId
+      });
+      
+      const entry = await storage.submitToList(entryData);
+      res.json(entry);
+    } catch (error: any) {
+      console.error("List entry submission error:", error);
+      res.status(400).json({ error: "Invalid entry data" });
+    }
+  });
+
+  app.post("/api/community-lists/entries/:entryId/vote", async (req, res) => {
+    try {
+      const entryId = parseInt(req.params.entryId);
+      const { voteDirection, userId, guestSessionId } = req.body;
+      
+      const voteData = insertEntryVoteSchema.parse({
+        entryId,
+        voteDirection,
+        userId,
+        guestSessionId
+      });
+      
+      await storage.castVote(voteData);
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error("Vote casting error:", error);
+      res.status(400).json({ error: "Invalid vote data" });
+    }
+  });
+
+  app.get("/api/community-lists/entries/:entryId/vote", async (req, res) => {
+    try {
+      const entryId = parseInt(req.params.entryId);
+      const { userId, guestSessionId } = req.query;
+      
+      const vote = await storage.getUserVote(
+        entryId, 
+        userId ? parseInt(userId as string) : undefined, 
+        guestSessionId as string
+      );
+      
+      res.json(vote || null);
+    } catch (error) {
+      console.error("Vote fetch error:", error);
+      res.status(500).json({ error: "Failed to fetch vote" });
     }
   });
 

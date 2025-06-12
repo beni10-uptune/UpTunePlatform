@@ -33,7 +33,7 @@ import {
   entryVotes
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, and, lte, gte, lt, gt } from "drizzle-orm";
+import { eq, desc, and, lte, gte, lt, gt, sql } from "drizzle-orm";
 
 export interface IStorage {
   // Game Rooms
@@ -246,6 +246,87 @@ export class DatabaseStorage implements IStorage {
       .update(aiConversations)
       .set(updates)
       .where(eq(aiConversations.id, id));
+  }
+
+  // Community Lists methods
+  async getAllCommunityLists(): Promise<CommunityList[]> {
+    return await db
+      .select()
+      .from(communityLists)
+      .where(eq(communityLists.isActive, true))
+      .orderBy(communityLists.createdAt);
+  }
+
+  async getCommunityListBySlug(slug: string): Promise<CommunityList | undefined> {
+    const [list] = await db
+      .select()
+      .from(communityLists)
+      .where(and(eq(communityLists.slug, slug), eq(communityLists.isActive, true)));
+    return list || undefined;
+  }
+
+  async submitToList(entry: InsertListEntry): Promise<ListEntry> {
+    const [newEntry] = await db
+      .insert(listEntries)
+      .values(entry)
+      .returning();
+    return newEntry;
+  }
+
+  async getListEntries(listId: number): Promise<ListEntry[]> {
+    return await db
+      .select()
+      .from(listEntries)
+      .where(eq(listEntries.listId, listId))
+      .orderBy(desc(listEntries.voteScore), desc(listEntries.createdAt));
+  }
+
+  async castVote(vote: InsertEntryVote): Promise<void> {
+    await db.transaction(async (tx) => {
+      // Insert or update the vote
+      await tx
+        .insert(entryVotes)
+        .values(vote)
+        .onConflictDoUpdate({
+          target: [entryVotes.entryId, entryVotes.userId, entryVotes.guestSessionId],
+          set: {
+            voteDirection: vote.voteDirection,
+            votedAt: new Date(),
+          },
+        });
+
+      // Recalculate vote score for the entry
+      const voteSum = await tx
+        .select({ sum: sql`SUM(${entryVotes.voteDirection})` })
+        .from(entryVotes)
+        .where(eq(entryVotes.entryId, vote.entryId));
+
+      const newScore = Number(voteSum[0]?.sum) || 0;
+
+      await tx
+        .update(listEntries)
+        .set({ voteScore: newScore })
+        .where(eq(listEntries.id, vote.entryId));
+    });
+  }
+
+  async getUserVote(entryId: number, userId?: number, guestSessionId?: string): Promise<EntryVote | undefined> {
+    const conditions = [eq(entryVotes.entryId, entryId)];
+    
+    if (userId) {
+      conditions.push(eq(entryVotes.userId, userId));
+    } else if (guestSessionId) {
+      conditions.push(eq(entryVotes.guestSessionId, guestSessionId));
+    } else {
+      return undefined;
+    }
+
+    const [vote] = await db
+      .select()
+      .from(entryVotes)
+      .where(and(...conditions));
+    
+    return vote || undefined;
   }
 }
 
