@@ -92,19 +92,12 @@ export function SongSearch({ onSongSelect, placeholder = "Search for a song...",
       )}
 
       {tracks.length > 0 && showResults && (
-        <div className="space-y-2 max-h-60 overflow-y-auto overscroll-contain border rounded-md bg-white shadow-sm">
+        <div className="space-y-3 max-h-64 sm:max-h-80 overflow-y-auto overscroll-contain">
           {tracks.map((track: SpotifyTrack) => (
-            <div 
-              key={track.id} 
-              className="p-3 border-b last:border-b-0 hover:bg-gray-50 cursor-pointer transition-colors"
-              onClick={() => {
-                onSongSelect(track);
-                setShowResults(false);
-                setQuery('');
-              }}
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-gray-200 rounded flex items-center justify-center overflow-hidden flex-shrink-0">
+            <Card key={track.id} className="transition-colors hover:bg-gray-50 cursor-pointer">
+              <CardContent className="p-3 sm:p-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-200 rounded flex items-center justify-center overflow-hidden flex-shrink-0">
                     {track.imageUrl ? (
                       <img 
                         src={track.imageUrl} 
@@ -122,17 +115,32 @@ export function SongSearch({ onSongSelect, placeholder = "Search for a song...",
                     <p className="text-xs text-gray-500 truncate hidden sm:block">{track.album}</p>
                   </div>
                   
-                  <div className="flex items-center flex-shrink-0">
+                  <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+                    {track.previewUrl && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const audio = new Audio(track.previewUrl!);
+                          audio.play().catch(() => {
+                            // Handle play failure silently
+                          });
+                        }}
+                        className="text-gray-600 hover:text-gray-800 p-1 sm:p-2 hidden sm:flex"
+                      >
+                        <Play className="w-3 h-3 sm:w-4 sm:h-4" />
+                      </Button>
+                    )}
+                    
                     <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
+                      onClick={() => {
                         onSongSelect(track);
                         setQuery('');
                         setDebouncedQuery('');
                         setShowResults(false);
                       }}
+                      size="sm"
                       className="gradient-bg text-white hover:opacity-90 px-2 py-1 sm:px-3 sm:py-2 text-xs sm:text-sm"
                     >
                       <Plus className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
@@ -148,12 +156,10 @@ export function SongSearch({ onSongSelect, placeholder = "Search for a song...",
 
       {debouncedQuery && !isLoading && tracks.length === 0 && !error && (
         <Card className="border-gray-200">
-          <CardContent className="p-8 text-center">
-            <Music className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="font-medium text-gray-900 mb-2">No songs found</h3>
-            <p className="text-gray-600 text-sm">
-              Try searching with different keywords or check the spelling.
-            </p>
+          <CardContent className="p-6 text-center">
+            <Music className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+            <p className="text-gray-600 text-sm">No songs found for "{debouncedQuery}"</p>
+            <p className="text-gray-500 text-xs mt-1">Try a different search term</p>
           </CardContent>
         </Card>
       )}
