@@ -83,12 +83,12 @@ export default function CommunityListDetail() {
   });
 
   // Fetch list entries
-  const { data: entries, isLoading: entriesLoading } = useQuery({
+  const { data: entries, isLoading: entriesLoading } = useQuery<ListEntry[]>({
     queryKey: ["/api/community-lists", list?.id, "entries"],
     queryFn: async () => {
       const response = await fetch(`/api/community-lists/${list!.id}/entries`);
       if (!response.ok) throw new Error("Failed to fetch entries");
-      return response.json() as ListEntry[];
+      return response.json();
     },
     enabled: !!list?.id,
     refetchInterval: 5000,
@@ -100,7 +100,7 @@ export default function CommunityListDetail() {
       if (!entries || entries.length === 0) throw new Error("No songs to add to playlist");
       if (!list) throw new Error("List not found");
       
-      const trackIds = entries.map(entry => entry.spotifyTrackId);
+      const trackIds = entries.map((entry: ListEntry) => entry.spotifyTrackId);
       const response = await fetch('/api/spotify/create-playlist', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -410,8 +410,8 @@ export default function CommunityListDetail() {
             </div>
           ) : entries && entries.length > 0 ? (
             entries
-              .sort((a, b) => b.voteScore - a.voteScore)
-              .map((entry, index) => (
+              .sort((a: ListEntry, b: ListEntry) => b.voteScore - a.voteScore)
+              .map((entry: ListEntry, index: number) => (
                 <Card key={entry.id} className="bg-white/95 backdrop-blur-sm hover:bg-white transition-all duration-300">
                   <CardContent className="p-6">
                     <div className="flex items-center gap-4">
