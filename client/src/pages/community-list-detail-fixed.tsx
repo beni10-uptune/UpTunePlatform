@@ -12,7 +12,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { ChevronUp, ChevronDown, Plus, Music, ExternalLink, Share2, Vote } from "lucide-react";
-import { SongSearch } from "@/components/song-search";
+import { SongSearch } from "@/components/song-search-fixed";
 import { useToast } from "@/hooks/use-toast";
 
 interface CommunityList {
