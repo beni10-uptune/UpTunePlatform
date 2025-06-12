@@ -137,7 +137,7 @@ export default function CommunityListDetail() {
     mutationFn: async (data: { contextReason?: string; submitterName?: string }) => {
       if (!selectedSong || !list) throw new Error("Missing song or list");
       
-      const response = await fetch(`/api/community-lists/${list.id}/submit`, {
+      const response = await fetch(`/api/community-lists/${list.id}/entries`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -184,7 +184,7 @@ export default function CommunityListDetail() {
       const response = await fetch(`/api/community-lists/entries/${entryId}/vote`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ voteType, guestSessionId })
+        body: JSON.stringify({ voteDirection: voteType, guestSessionId })
       });
       
       if (!response.ok) throw new Error('Failed to vote');
