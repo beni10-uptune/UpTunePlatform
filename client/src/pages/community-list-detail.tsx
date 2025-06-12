@@ -263,7 +263,7 @@ export default function CommunityListDetail() {
                   </Button>
                 </DialogTrigger>
                 
-                <DialogContent className="max-w-2xl mx-4 sm:mx-auto max-h-[90vh] overflow-y-auto">
+                <DialogContent className="max-w-2xl w-[95vw] sm:w-auto mx-auto max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
                     <DialogTitle>Submit a Song to {list.title}</DialogTitle>
                   </DialogHeader>
