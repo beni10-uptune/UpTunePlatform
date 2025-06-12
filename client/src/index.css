@@ -299,18 +299,27 @@
 
 /* Mobile dialog enhancements */
 @media (max-width: 768px) {
-  /* Full-width mobile dialog */
+  /* Centered mobile dialog */
   [data-radix-dialog-content] {
     position: fixed !important;
-    bottom: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    top: auto !important;
-    transform: none !important;
-    border-radius: 1rem 1rem 0 0 !important;
-    max-height: 85vh !important;
-    width: 100vw !important;
+    top: 50% !important;
+    left: 50% !important;
+    right: auto !important;
+    bottom: auto !important;
+    transform: translate(-50%, -50%) !important;
+    width: calc(100vw - 2rem) !important;
+    max-width: calc(100vw - 2rem) !important;
+    max-height: 90vh !important;
     margin: 0 !important;
+    border-radius: 0.75rem !important;
+    overflow-y: auto !important;
+  }
+  
+  /* Ensure dialog overlay covers full screen */
+  [data-radix-dialog-overlay] {
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 50 !important;
   }
 
   /* Sticky button container */

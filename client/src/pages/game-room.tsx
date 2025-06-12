@@ -992,7 +992,7 @@ export default function GameRoom() {
         {/* Add Song Dialog */}
         <Dialog open={showAddSong} onOpenChange={setShowAddSong}>
           <DialogContent className="max-w-2xl w-[calc(100vw-2rem)] sm:w-auto mx-auto max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
+            <DialogHeader>
                 {gameRoom?.gameType === 'desert-island' ? (
                   <>
                     <DialogTitle className="flex items-center gap-2">
@@ -1042,9 +1042,9 @@ export default function GameRoom() {
                   onSongSelect={setSelectedSong}
                   placeholder="Search for a song..."
                 />
-              
-              {selectedSong && (
-                <div className="p-4 bg-green-50 border-2 border-green-200 rounded-lg">
+                
+                {selectedSong && (
+                  <div className="p-4 bg-green-50 border-2 border-green-200 rounded-lg">
                   <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div className="flex items-center space-x-3 min-w-0">
                       {selectedSong.imageUrl && (
@@ -1074,11 +1074,11 @@ export default function GameRoom() {
                       </Button>
                     </div>
                   </div>
-                </div>
-              )}
-              
-              <div>
-                {gameRoom?.gameType === 'desert-island' ? (
+                  </div>
+                )}
+                
+                <div>
+                  {gameRoom?.gameType === 'desert-island' ? (
                   <>
                     <label className="block text-sm font-medium mb-2 text-green-700">
                       Tell us your story - Why is this song essential to who you are?
