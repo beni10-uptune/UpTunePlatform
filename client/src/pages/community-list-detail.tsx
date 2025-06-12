@@ -184,7 +184,7 @@ export default function CommunityListDetail() {
       const response = await fetch(`/api/community-lists/entries/${entryId}/vote`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ voteDirection: voteType, guestSessionId })
+        body: JSON.stringify({ voteDirection: voteType === 'up' ? 1 : -1, guestSessionId })
       });
       
       if (!response.ok) throw new Error('Failed to vote');
