@@ -21,6 +21,7 @@ import {
   ArrowRight,
   Trophy
 } from 'lucide-react';
+import { CommunityListsPreview } from '@/components/community-lists-preview';
 
 const LandingPage = () => {
   const [isHovered, setIsHovered] = useState(false);
@@ -464,43 +465,7 @@ const LandingPage = () => {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="mt-20"
           >
-            <Card className="max-w-4xl mx-auto text-center p-8 bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 border-purple-200">
-              <CardHeader>
-                <CardTitle className="flex items-center justify-center gap-2 text-2xl">
-                  <Users className="w-6 h-6 text-purple-600" />
-                  🎵 Community Lists - Join the Conversation
-                </CardTitle>
-                <CardDescription className="text-lg leading-relaxed">
-                  Submit your favorite songs to viral community lists and discover what everyone's really listening to. Vote on the best picks and watch the rankings change in real-time.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                  <div className="p-4 bg-white/70 rounded-lg border border-purple-100">
-                    <div className="text-2xl mb-2">🚗</div>
-                    <div className="font-semibold">Road Trip Essentials</div>
-                    <div className="text-gray-600">23 submissions</div>
-                  </div>
-                  <div className="p-4 bg-white/70 rounded-lg border border-purple-100">
-                    <div className="text-2xl mb-2">💪</div>
-                    <div className="font-semibold">Workout Motivation</div>
-                    <div className="text-gray-600">31 submissions</div>
-                  </div>
-                  <div className="p-4 bg-white/70 rounded-lg border border-purple-100">
-                    <div className="text-2xl mb-2">🌧️</div>
-                    <div className="font-semibold">Rainy Day Vibes</div>
-                    <div className="text-gray-600">18 submissions</div>
-                  </div>
-                </div>
-                <Link href="/community-lists">
-                  <Button size="lg" className="bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:opacity-90">
-                    <Heart className="w-4 h-4 mr-2" />
-                    Browse Community Lists
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
+            <CommunityListsPreview />
           </motion.div>
 
           {/* Weekly Challenge Section */}

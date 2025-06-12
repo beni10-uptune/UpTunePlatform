@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { ChevronUp, ChevronDown, Plus, Music, ExternalLink, Share2 } from "lucide-react";
+import { ChevronUp, ChevronDown, Plus, Music, ExternalLink, Share2, Vote } from "lucide-react";
 import { SongSearch } from "@/components/song-search";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
@@ -388,28 +388,31 @@ export default function CommunityListDetail() {
                           )}
                         </div>
                         
-                        <div className="flex items-center gap-2">
-                          <div className="flex flex-col items-center">
+                        <div className="flex items-center gap-3">
+                          <div className="flex flex-col items-center bg-gray-50 rounded-lg p-2">
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-8 w-8 p-0 hover:bg-green-100"
+                              className="h-10 w-10 p-0 hover:bg-green-100 hover:scale-110 transition-all"
                               onClick={() => handleVote(entry.id, 1)}
                               disabled={voteMutation.isPending}
                             >
-                              <ChevronUp className="w-4 h-4 text-green-600" />
+                              <ChevronUp className="w-5 h-5 text-green-600" />
                             </Button>
-                            <span className="font-bold text-lg px-2">
-                              {entry.voteScore}
-                            </span>
+                            <div className="text-center py-1">
+                              <div className="font-bold text-xl text-gray-800">
+                                {entry.voteScore}
+                              </div>
+                              <div className="text-xs text-gray-500">votes</div>
+                            </div>
                             <Button
                               variant="ghost"
                               size="sm"
-                              className="h-8 w-8 p-0 hover:bg-red-100"
+                              className="h-10 w-10 p-0 hover:bg-red-100 hover:scale-110 transition-all"
                               onClick={() => handleVote(entry.id, -1)}
                               disabled={voteMutation.isPending}
                             >
-                              <ChevronDown className="w-4 h-4 text-red-600" />
+                              <ChevronDown className="w-5 h-5 text-red-600" />
                             </Button>
                           </div>
                         </div>
