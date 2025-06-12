@@ -92,11 +92,11 @@ export function SongSearch({ onSongSelect, placeholder = "Search for a song...",
       )}
 
       {tracks.length > 0 && showResults && (
-        <div className="space-y-3 max-h-64 sm:max-h-80 overflow-y-auto overscroll-contain w-full max-w-full">
+        <div className="space-y-3 max-h-64 sm:max-h-80 overflow-y-auto overscroll-contain w-full">
           {tracks.map((track: SpotifyTrack) => (
-            <Card key={track.id} className="transition-colors hover:bg-gray-50 cursor-pointer w-full max-w-full overflow-hidden">
-              <CardContent className="p-3 sm:p-4 w-full max-w-full overflow-hidden">
-                <div className="flex items-center gap-3">
+            <Card key={track.id} className="transition-colors hover:bg-gray-50 cursor-pointer w-full overflow-hidden">
+              <CardContent className="p-3 sm:p-4 w-full overflow-hidden">
+                <div className="flex items-center gap-2 sm:gap-3 w-full min-w-0">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gray-200 rounded flex items-center justify-center overflow-hidden flex-shrink-0">
                     {track.imageUrl ? (
                       <img 
@@ -109,13 +109,13 @@ export function SongSearch({ onSongSelect, placeholder = "Search for a song...",
                     )}
                   </div>
                   
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-gray-900 truncate text-sm sm:text-base">{track.title}</h4>
+                  <div className="flex-1 min-w-0 pr-2">
+                    <h4 className="font-medium text-gray-900 truncate text-sm sm:text-base leading-tight">{track.title}</h4>
                     <p className="text-xs sm:text-sm text-gray-600 truncate">{track.artist}</p>
                     <p className="text-xs text-gray-500 truncate hidden sm:block">{track.album}</p>
                   </div>
                   
-                  <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+                  <div className="flex items-center gap-1 flex-shrink-0">
                     {track.previewUrl && (
                       <Button
                         variant="ghost"
@@ -127,9 +127,9 @@ export function SongSearch({ onSongSelect, placeholder = "Search for a song...",
                             // Handle play failure silently
                           });
                         }}
-                        className="text-gray-600 hover:text-gray-800 p-1 sm:p-2 hidden sm:flex"
+                        className="text-gray-600 hover:text-gray-800 p-1 hidden sm:flex h-8 w-8"
                       >
-                        <Play className="w-3 h-3 sm:w-4 sm:h-4" />
+                        <Play className="w-3 h-3" />
                       </Button>
                     )}
                     
@@ -141,10 +141,9 @@ export function SongSearch({ onSongSelect, placeholder = "Search for a song...",
                         setShowResults(false);
                       }}
                       size="sm"
-                      className="gradient-bg text-white hover:opacity-90 px-2 py-1 sm:px-3 sm:py-2 text-xs sm:text-sm"
+                      className="gradient-bg text-white hover:opacity-90 px-2 py-1 text-xs h-8 w-12 flex-shrink-0"
                     >
-                      <Plus className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                      Add
+                      <Plus className="w-3 h-3" />
                     </Button>
                   </div>
                 </div>
