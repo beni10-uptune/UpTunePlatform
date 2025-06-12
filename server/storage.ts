@@ -14,6 +14,12 @@ import {
   type InsertContactSubmission,
   type AiConversation,
   type InsertAiConversation,
+  type CommunityList,
+  type InsertCommunityList,
+  type ListEntry,
+  type InsertListEntry,
+  type EntryVote,
+  type InsertEntryVote,
   gameRooms,
   players,
   songs,
@@ -21,7 +27,10 @@ import {
   teamsWaitlist,
   weeklyChallenge,
   contactSubmissions,
-  aiConversations
+  aiConversations,
+  communityLists,
+  listEntries,
+  entryVotes
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, and, lte, gte, lt, gt } from "drizzle-orm";
@@ -59,6 +68,14 @@ export interface IStorage {
   addAiConversation(conversation: InsertAiConversation): Promise<AiConversation>;
   getAiConversations(gameRoomId: number, playerId: number): Promise<AiConversation[]>;
   updateAiConversation(id: number, updates: Partial<Pick<AiConversation, 'response' | 'suggestions' | 'reasoning'>>): Promise<void>;
+  
+  // Community Lists
+  getAllCommunityLists(): Promise<CommunityList[]>;
+  getCommunityListBySlug(slug: string): Promise<CommunityList | undefined>;
+  submitToList(entry: InsertListEntry): Promise<ListEntry>;
+  getListEntries(listId: number): Promise<ListEntry[]>;
+  castVote(vote: InsertEntryVote): Promise<void>;
+  getUserVote(entryId: number, userId?: number, guestSessionId?: string): Promise<EntryVote | undefined>;
 }
 
 export class DatabaseStorage implements IStorage {

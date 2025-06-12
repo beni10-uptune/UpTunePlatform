@@ -1,0 +1,93 @@
+Feature Specification: Uptune "Community Lists"
+Project: Uptune
+Version: 1.0
+1.0 Feature Vision & Goal
+1.1 The Vision
+To create a public "Hall of Fame" within Uptune where our entire community can collaboratively build and vote on definitive "best ever" music lists. This feature will transform the app from just a private game tool into a public square for musical debate and discovery.
+1.2 The Goal
+ * Increase Engagement: Give users a reason to return to the app even when not playing a private game.
+ * Build Community: Create a sense of shared ownership and collective taste-making.
+ * Drive Viral Growth: Generate highly shareable, opinionated content (e.g., "The Top 10 Greatest Guitar Riffs of All Time, According to Uptune Users") that can be shared on social media to attract new users.
+2.0 The User Experience
+This feature will exist as a new, primary section within the app.
+2.1 Main Navigation
+ * A new item, "Lists," will be added to the app's main navigation bar.
+2.2 The "Lists" Index Page
+ * This page will be a visually engaging grid of different "Best Ever" list topics. Each topic will be a card with a title and a relevant icon.
+ * MVP List Topics:
+   * 🌟 The Greatest Songs of All Time
+   * 🎬 The Best Movie Soundtrack Moments
+   * 🎸 The Most Epic Guitar Riffs
+   * 🎤 The Best Live Performances
+   * ❤️ The Ultimate Love Songs
+2.3 The List Detail Page
+This is where the main interaction happens. When a user clicks on a list topic:
+ * The View: They see a ranked, numbered list of songs, sorted by vote count.
+ * Each Entry Contains:
+   * Rank Number (#1, #2, etc.)
+   * Upvote/Downvote buttons.
+   * Album Art, Song Title, and Artist Name.
+   * The Context: A short, user-submitted quote explaining why this entry is legendary. (e.g., "For the final scene in 'The Shawshank Redemption'" or "The guitar solo still gives me chills.")
+   * The nickname of the user who submitted it.
+ * Call to Action: A prominent button at the top: [+ Add a Song to the List].
+2.4 The Submission Flow
+ * When a user clicks [+ Add a Song], a modal appears.
+ * Required Fields:
+   * A Spotify search bar to find the song.
+   * A text area for the "Context/Reason" (e.g., "Why does this song belong on this list? What film/scene/moment is it from?"). This field is mandatory to ensure high-quality, story-driven submissions.
+ * Users can participate as guests (submitting with a nickname) or as logged-in users.
+3.0 Technical & Database Implementation (PostgreSQL)
+This feature requires new database tables and backend logic.
+3.1 New Database Tables
+Table: community_lists
+ * Purpose: Stores the different "best ever" list topics.
+ * Schema:
+   CREATE TABLE community_lists (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) UNIQUE NOT NULL,
+    description TEXT,
+    slug VARCHAR(255) UNIQUE NOT NULL, -- For clean URLs, e.g., 'best-movie-moments'
+    is_active BOOLEAN DEFAULT TRUE
+);
+
+Table: list_entries
+ * Purpose: Stores every individual song submitted to a specific community list.
+ * Schema:
+   CREATE TABLE list_entries (
+    id SERIAL PRIMARY KEY,
+    list_id INTEGER NOT NULL REFERENCES community_lists(id),
+    user_id INTEGER REFERENCES users(id), -- Nullable for guests
+    guest_session_id TEXT, -- To track guest submissions
+    spotify_track_id VARCHAR(255) NOT NULL,
+    context_reason TEXT NOT NULL, -- The user's story about the song/moment
+    vote_score INTEGER NOT NULL DEFAULT 1, -- Starts at 1 for the submitter's implicit upvote
+    created_at TIMESTAMPTZ DEFAULT NOW(),
+    UNIQUE (list_id, spotify_track_id) -- Prevents the same song from being added twice to the same list
+);
+
+Table: entry_votes
+ * Purpose: Tracks all upvotes/downvotes to prevent spam and allow users to change their vote.
+ * Schema:
+   CREATE TABLE entry_votes (
+    entry_id INTEGER NOT NULL REFERENCES list_entries(id) ON DELETE CASCADE,
+    user_id INTEGER REFERENCES users(id), -- The voter
+    guest_session_id TEXT, -- The voter if they are a guest
+    vote_direction SMALLINT NOT NULL, -- 1 for upvote, -1 for downvote
+    voted_at TIMESTAMPTZ DEFAULT NOW(),
+    PRIMARY KEY (entry_id, user_id, guest_session_id)
+);
+
+3.2 Required Backend Logic
+The backend needs three new core functions:
+ * submitToList(listId, trackId, context, submitterId)
+   * Creates a new record in the list_entries table.
+   * Checks for duplicates to ensure the track isn't already on the list.
+ * castVote(entryId, voterId, direction)
+   * Adds or updates a record in the entry_votes table.
+   * This must trigger a recalculation of the vote_score on the corresponding list_entries record. This should be handled in a transaction to ensure data consistency.
+ * getListDetails(listSlug)
+   * Fetches the list information from community_lists.
+   * Fetches all associated entries from list_entries.
+   * Sorts the entries by vote_score in descending order.
+   * Returns the complete, ranked list to the frontend for display.
+This new feature will create a powerful engine for community engagement and provide a wealth of unique, shareable content that will be key to Uptune's viral growth.
