@@ -80,6 +80,15 @@ const GAME_TYPES = {
       'A song from your current favorite album'
     ]
   },
+  'guess-who': {
+    title: 'Guess Who',
+    description: 'Anonymous music sharing with reveals',
+    icon: Heart,
+    color: 'from-amber-500 to-orange-500',
+    themes: ['Guilty Pleasures', 'Decade Mix', 'Anonymous Mix', 'Musical Secrets', 'Custom Theme'],
+    isGuided: false,
+    prompts: undefined
+  }
 
 } as const;
 
