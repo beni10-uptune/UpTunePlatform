@@ -92,9 +92,14 @@ const LandingPage = () => {
   };
 
   const handleGameModeClick = (gameType: string) => {
-    setSelectedGameType(gameType);
-    setSelectedTheme('');
-    setShowThemeDialog(true);
+    if (gameType === 'desert-island') {
+      // Desert Island Discs starts immediately with default theme
+      createGameMutation.mutate({ gameType, theme: 'Musical Essentials' });
+    } else {
+      setSelectedGameType(gameType);
+      setSelectedTheme('');
+      setShowThemeDialog(true);
+    }
   };
 
   const handleCreateGame = () => {

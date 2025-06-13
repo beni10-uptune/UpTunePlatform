@@ -939,14 +939,22 @@ export default function GameRoom() {
                                 </div>
                               )}
                               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-3">
-                                <div className="flex items-center justify-center sm:justify-start space-x-2">
-                                  <span className="text-xs sm:text-sm text-gray-500 text-center sm:text-left">
-                                    Added by <span className="font-medium text-purple-600">{player?.nickname}</span>
-                                  </span>
-                                  {player?.id === currentPlayer?.id && (
-                                    <Badge className="bg-purple-100 text-purple-700 text-xs">You</Badge>
-                                  )}
-                                </div>
+                                {gameRoom?.gameType === 'guess-who' ? (
+                                  <div className="flex items-center justify-center sm:justify-start space-x-2">
+                                    <span className="text-xs sm:text-sm text-gray-500 text-center sm:text-left">
+                                      Anonymous submission
+                                    </span>
+                                  </div>
+                                ) : (
+                                  <div className="flex items-center justify-center sm:justify-start space-x-2">
+                                    <span className="text-xs sm:text-sm text-gray-500 text-center sm:text-left">
+                                      Added by <span className="font-medium text-purple-600">{player?.nickname}</span>
+                                    </span>
+                                    {player?.id === currentPlayer?.id && (
+                                      <Badge className="bg-purple-100 text-purple-700 text-xs">You</Badge>
+                                    )}
+                                  </div>
+                                )}
                                 
                                 {/* Quick Reactions */}
                                 <div className="flex items-center justify-center sm:justify-end space-x-1">

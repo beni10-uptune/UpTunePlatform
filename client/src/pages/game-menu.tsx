@@ -21,28 +21,28 @@ const GameMenu = () => {
 
   const games = [
     {
-      id: 'mixtape',
-      title: 'The Mixtape',
-      description: 'Everyone adds their favorite songs with personal stories to create the perfect collaborative playlist',
-      icon: Music,
-      color: 'purple',
-      exampleThemes: ['Guilty Pleasures', 'Road Trip Classics', '90s Nostalgia', 'Songs That Make You Dance', 'Late Night Vibes']
-    },
-    {
       id: 'soundtrack',
-      title: 'Soundtrack Session',
+      title: 'Soundtrack',
       description: 'Build the perfect soundtrack for any movie, moment, or mood you can imagine',
       icon: Headphones,
-      color: 'pink',
-      exampleThemes: ['Epic Adventure Movie', 'Romantic Comedy', 'Workout Motivation', 'Study Focus', 'Dinner Party Vibes']
+      color: 'blue',
+      exampleThemes: ['Road Trip Vibes', 'Epic Adventure', 'Romantic Comedy', 'Workout Power', 'Summer Anthems']
     },
     {
       id: 'desert-island',
       title: 'Desert Island Discs',
       description: 'Share your 5 essential songs: one for your head, heart, feet, guilty pleasure, and current obsession',
       icon: Radio,
-      color: 'indigo',
+      color: 'green',
       exampleThemes: ['Musical Essentials', 'Life Soundtrack', 'Songs That Define Me', 'Desert Island Classics', 'Personal Anthems']
+    },
+    {
+      id: 'guess-who',
+      title: 'Guess Who',
+      description: 'Anonymous music sharing with reveals - guess who picked what, then reveal for hilarious surprises',
+      icon: Heart,
+      color: 'amber',
+      exampleThemes: ['Guilty Pleasures', 'Decade Mix', 'Anonymous Mix', 'Musical Secrets', 'Custom Theme']
     }
   ];
 
