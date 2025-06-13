@@ -326,7 +326,7 @@ const LandingPage = () => {
                     Soundtrack
                   </CardTitle>
                   <CardDescription className="text-sm leading-relaxed">
-                    "Build the perfect soundtrack together. Road trip, movie scene, or any vibe you can imagine."
+                    "Build the perfect soundtrack for any event or vibe. Export directly to Spotify when you're done."
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="pt-0">
