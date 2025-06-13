@@ -19,7 +19,7 @@ function Router() {
       <Route path="/games" component={GameMenu} />
       <Route path="/game/:gameType" component={GameRoom} />
       <Route path="/room/:code" component={GameRoom} />
-      <Route path="/challenge" component={WeeklyChallenge} />
+      <Route path="/have-your-say" component={CommunityLists} />
       <Route path="/teams" component={TeamsWaitlist} />
       <Route path="/community-lists" component={CommunityLists} />
       <Route path="/community-lists/:slug" component={CommunityListDetail} />

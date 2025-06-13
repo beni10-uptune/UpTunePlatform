@@ -14,8 +14,7 @@ export function Navigation({ variant = "header", className = "" }: NavigationPro
 
   const navItems = [
     { href: "/", label: "Home", icon: Home },
-    { href: "/community-lists", label: "Community", icon: Music },
-    { href: "/challenge", label: "Weekly Challenge", icon: Trophy },
+    { href: "/community-lists", label: "Have Your Say", icon: Music },
     { href: "/teams", label: "Teams", icon: Users },
   ];
 
