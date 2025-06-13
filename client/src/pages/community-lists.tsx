@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Music, Users, TrendingUp, ArrowRight } from "lucide-react";
+import { Navigation } from "@/components/navigation";
 
 interface CommunityList {
   id: number;
@@ -56,13 +57,10 @@ export default function CommunityLists() {
       {/* Header */}
       <div className="bg-white/10 backdrop-blur-sm border-b border-white/20">
         <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <Link href="/">
-              <Button variant="ghost" className="text-white hover:bg-white/20">
-                ← Back to Home
-              </Button>
-            </Link>
+          <div className="flex items-center justify-between relative">
             <div className="text-white font-bold text-xl">Uptune Community</div>
+            <Navigation variant="header" />
+            <Navigation variant="mobile" />
           </div>
         </div>
       </div>

@@ -14,6 +14,7 @@ import { z } from "zod";
 import { ChevronUp, ChevronDown, Plus, Music, ExternalLink, Share2, Vote, Users, ListMusic } from "lucide-react";
 import { SongSearch } from "@/components/song-search";
 import { useToast } from "@/hooks/use-toast";
+import { Navigation } from "@/components/navigation";
 
 interface CommunityList {
   id: number;
@@ -282,13 +283,14 @@ export default function CommunityListDetail() {
       {/* Header */}
       <div className="bg-white/10 backdrop-blur-sm border-b border-white/20">
         <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between relative">
             <Link href="/community-lists">
               <Button variant="ghost" className="text-white hover:bg-white/20">
                 ← Back to Lists
               </Button>
             </Link>
             <div className="text-white font-bold text-xl">Uptune Community</div>
+            <Navigation variant="minimal" />
           </div>
         </div>
       </div>
