@@ -135,9 +135,9 @@ const LandingPage = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <Link href="/community-lists">
+            <Link href="/teams-waitlist">
               <Button variant="outline" className="border-purple-200 text-purple-700 hover:bg-purple-50">
-                Have Your Say
+                For Teams
               </Button>
             </Link>
           </motion.div>

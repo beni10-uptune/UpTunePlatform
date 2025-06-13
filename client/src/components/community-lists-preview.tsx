@@ -14,6 +14,7 @@ interface CommunityList {
   slug: string;
   emoji: string;
   isActive: boolean;
+  isWeeklyChallenge: boolean;
   createdAt: string;
 }
 
@@ -153,9 +154,15 @@ export function CommunityListsPreview() {
                         </div>
                       </div>
                     </div>
-                    <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                      Active
-                    </Badge>
+                    {list.isWeeklyChallenge ? (
+                      <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+                        This Week
+                      </Badge>
+                    ) : (
+                      <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                        Active
+                      </Badge>
+                    )}
                   </div>
                 </CardHeader>
                 
