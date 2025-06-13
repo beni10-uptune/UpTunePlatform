@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'wouter';
 import { useMutation } from '@tanstack/react-query';
@@ -38,6 +38,11 @@ const TeamsWaitlist = () => {
     message: ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  // Scroll to top when component mounts
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const submitMutation = useMutation({
     mutationFn: async (data: typeof formData) => {
