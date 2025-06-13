@@ -574,6 +574,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error: any) {
       console.error("List entry submission error:", error);
       console.error("Request body:", req.body);
+      
+      // Handle duplicate song submission
+      if (error.code === '23505' && error.constraint === 'list_entries_list_id_spotify_track_id_key') {
+        try {
+          // Find the existing entry and add a vote
+          const existingEntry = await storage.findExistingEntry(parseInt(req.params.listId), req.body.spotifyTrackId);
+          if (existingEntry) {
+            await storage.castVote({
+              entryId: existingEntry.id,
+              userId: req.body.userId || null,
+              guestSessionId: req.body.guestSessionId || null,
+              voteDirection: 1
+            });
+            
+            return res.status(200).json({
+              success: true,
+              message: "Wow, you've got a musical twin! Someone else added this song. We've given it an extra vote. Would you like to add another choice?",
+              isDuplicate: true,
+              existingEntry
+            });
+          }
+        } catch (voteError) {
+          console.error("Error adding vote to duplicate:", voteError);
+        }
+      }
+      
       if (error.issues) {
         console.error("Validation issues:", error.issues);
       }

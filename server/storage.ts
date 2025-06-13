@@ -73,6 +73,7 @@ export interface IStorage {
   getAllCommunityLists(): Promise<CommunityList[]>;
   getCommunityListBySlug(slug: string): Promise<CommunityList | undefined>;
   submitToList(entry: InsertListEntry): Promise<ListEntry>;
+  findExistingEntry(listId: number, spotifyTrackId: string): Promise<ListEntry | undefined>;
   getListEntries(listId: number): Promise<ListEntry[]>;
   castVote(vote: InsertEntryVote): Promise<void>;
   getUserVote(entryId: number, userId?: number, guestSessionId?: string): Promise<EntryVote | undefined>;
@@ -301,6 +302,14 @@ export class DatabaseStorage implements IStorage {
     return newEntry;
   }
 
+  async findExistingEntry(listId: number, spotifyTrackId: string): Promise<ListEntry | undefined> {
+    const [entry] = await db
+      .select()
+      .from(listEntries)
+      .where(and(eq(listEntries.listId, listId), eq(listEntries.spotifyTrackId, spotifyTrackId)));
+    return entry || undefined;
+  }
+
   async getListEntries(listId: number): Promise<ListEntry[]> {
     return await db
       .select()
@@ -311,17 +320,24 @@ export class DatabaseStorage implements IStorage {
 
   async castVote(vote: InsertEntryVote): Promise<void> {
     await db.transaction(async (tx) => {
-      // Insert or update the vote
+      // Check if user has already voted for this entry
+      const existingVote = await tx
+        .select()
+        .from(entryVotes)
+        .where(and(
+          eq(entryVotes.entryId, vote.entryId),
+          vote.userId ? eq(entryVotes.userId, vote.userId) : eq(entryVotes.guestSessionId, vote.guestSessionId!)
+        ));
+
+      if (existingVote.length > 0) {
+        // User has already voted, don't allow duplicate votes
+        throw new Error('You have already voted for this song');
+      }
+
+      // Insert the vote
       await tx
         .insert(entryVotes)
-        .values(vote)
-        .onConflictDoUpdate({
-          target: [entryVotes.entryId, entryVotes.userId, entryVotes.guestSessionId],
-          set: {
-            voteDirection: vote.voteDirection,
-            votedAt: new Date(),
-          },
-        });
+        .values(vote);
 
       // Recalculate vote score for the entry
       const voteSum = await tx

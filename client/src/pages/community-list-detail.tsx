@@ -165,28 +165,46 @@ export default function CommunityListDetail() {
       });
       
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Submission error:', errorText);
-        throw new Error('Failed to submit entry');
+        const errorData = await response.json().catch(() => ({ error: 'Failed to submit entry' }));
+        console.error('Submission error:', errorData);
+        throw errorData;
       }
       return response.json();
     },
-    onSuccess: () => {
-      toast({
-        title: "Song Submitted!",
-        description: "Your song has been added to the community list",
-      });
+    onSuccess: (data) => {
+      if (data.isDuplicate) {
+        toast({
+          title: "Musical Twin Found!",
+          description: data.message,
+        });
+      } else {
+        toast({
+          title: "Song Submitted!",
+          description: "Your song has been added to the community list",
+        });
+      }
       queryClient.invalidateQueries({ queryKey: ["/api/community-lists", list?.id, "entries"] });
       setIsSubmitDialogOpen(false);
       setSelectedSong(null);
       form.reset();
     },
-    onError: () => {
-      toast({
-        title: "Submission Failed",
-        description: "Please try again",
-        variant: "destructive",
-      });
+    onError: (error: any) => {
+      if (error.isDuplicate) {
+        toast({
+          title: "Musical Twin Found!",
+          description: error.message,
+        });
+        queryClient.invalidateQueries({ queryKey: ["/api/community-lists", list?.id, "entries"] });
+        setIsSubmitDialogOpen(false);
+        setSelectedSong(null);
+        form.reset();
+      } else {
+        toast({
+          title: "Submission Failed",
+          description: error.message || "Please try again",
+          variant: "destructive",
+        });
+      }
     }
   });
 
