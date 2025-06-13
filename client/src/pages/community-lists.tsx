@@ -69,10 +69,10 @@ export default function CommunityLists() {
       <div className="max-w-6xl mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-white mb-4">
-            🎵 Community Lists
+            🗣️ Have Your Say
           </h1>
           <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto">
-            Join the conversation! Submit your favorite songs to our viral community lists and discover what everyone's really listening to.
+            What's the best song ever? The perfect driving tune? Share your picks and see what the community thinks.
           </p>
           <div className="flex flex-wrap justify-center gap-4 text-white/80">
             <div className="flex items-center gap-2">

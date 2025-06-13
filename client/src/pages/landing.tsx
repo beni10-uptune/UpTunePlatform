@@ -55,31 +55,20 @@ const LandingPage = () => {
 
   const getThemeOptions = (gameType: string) => {
     switch (gameType) {
-      case 'mixtape':
-        return [
-          'Musical Essentials',
-          'Childhood Memories',
-          'Road Trip Vibes',
-          'Late Night Emotions',
-          'Summer Anthems',
-          'Workout Power',
-          'Study Soundtrack',
-          'Party Starters',
-          'Chill & Relax',
-          'Heartbreak & Healing'
-        ];
       case 'soundtrack':
         return [
+          'Road Trip Vibes',
           'Epic Adventure',
           'Romantic Comedy',
+          'Workout Power',
           'Thriller/Suspense',
           'Sci-Fi Journey',
           'Coming of Age',
-          'Heist Movie',
-          'Fantasy Quest',
-          'Horror Film',
-          'Documentary',
-          'Action Blockbuster'
+          'Party Starters',
+          'Chill & Relax',
+          'Action Blockbuster',
+          'Summer Anthems',
+          'Late Night Emotions'
         ];
       case 'desert-island':
         return [
@@ -88,6 +77,14 @@ const LandingPage = () => {
           'Life Soundtrack',
           'Desert Island Classics',
           'Personal Anthems'
+        ];
+      case 'guess-who':
+        return [
+          'Mystery Playlist',
+          'Secret Favorites',
+          'Hidden Gems',
+          'Surprise Selections',
+          'Anonymous Picks'
         ];
       default:
         return ['Musical Essentials'];
@@ -293,17 +290,17 @@ const LandingPage = () => {
             <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
               <Card 
                 className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-purple-300 relative overflow-hidden"
-                onClick={() => createGameMutation.mutate({ gameType: 'mixtape', theme: 'Road Trip Vibes' })}
+                onClick={() => handleGameModeClick('soundtrack')}
               >
                 <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-purple-500 to-pink-500"></div>
                 <CardHeader className="pb-3">
-                  <div className="text-sm font-medium text-purple-600 mb-1">For a Fun Collaboration</div>
+                  <div className="text-sm font-medium text-purple-600 mb-1">For Creative Collaboration</div>
                   <CardTitle className="flex items-center gap-2 text-xl">
                     <Headphones className="w-6 h-6 text-purple-600" />
-                    The Mixtape
+                    Soundtrack
                   </CardTitle>
                   <CardDescription className="text-sm leading-relaxed">
-                    "Pick a theme, like 'Road Trip Classics'. Everyone adds a song. Get a shared Spotify playlist instantly."
+                    "Build the perfect soundtrack together. Road trip, movie scene, or any vibe you can imagine."
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="pt-0">
@@ -311,49 +308,24 @@ const LandingPage = () => {
                     className="w-full gradient-bg text-white hover:opacity-90"
                     disabled={createGameMutation.isPending}
                   >
-                    {createGameMutation.isPending ? 'Creating...' : 'Start Mixtape'}
-                  </Button>
-                </CardContent>
-              </Card>
-
-              <Card 
-                className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-amber-300 relative overflow-hidden"
-                onClick={() => createGameMutation.mutate({ gameType: 'mixtape', theme: 'Guilty Pleasures' })}
-              >
-                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-amber-500 to-orange-500"></div>
-                <CardHeader className="pb-3">
-                  <div className="text-sm font-medium text-amber-600 mb-1">For a Hilarious Reveal</div>
-                  <CardTitle className="flex items-center gap-2 text-xl">
-                    <Heart className="w-6 h-6 text-amber-600" />
-                    Guilty Pleasures
-                  </CardTitle>
-                  <CardDescription className="text-sm leading-relaxed">
-                    "Everyone anonymously adds a cheesy song they love. Guess who picked what, then reveal all for a hilarious surprise."
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <Button 
-                    className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:opacity-90"
-                    disabled={createGameMutation.isPending}
-                  >
-                    {createGameMutation.isPending ? 'Creating...' : 'Start Guilty Pleasures'}
+                    {createGameMutation.isPending ? 'Creating...' : 'Start Soundtrack'}
                   </Button>
                 </CardContent>
               </Card>
 
               <Card 
                 className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-emerald-300 relative overflow-hidden"
-                onClick={() => createGameMutation.mutate({ gameType: 'desert-island', theme: 'Musical Essentials' })}
+                onClick={() => handleGameModeClick('desert-island')}
               >
                 <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-emerald-500 to-teal-500"></div>
                 <CardHeader className="pb-3">
-                  <div className="text-sm font-medium text-emerald-600 mb-1">For a Deeper Connection</div>
+                  <div className="text-sm font-medium text-emerald-600 mb-1">For Deeper Connection</div>
                   <CardTitle className="flex items-center gap-2 text-xl">
                     <Radio className="w-6 h-6 text-emerald-600" />
                     Desert Island Discs
                   </CardTitle>
                   <CardDescription className="text-sm leading-relaxed">
-                    "What are the songs that define you? Share your all-time essentials and discover what makes your friends tick."
+                    "Share your essential songs that define you. Discover what makes your friends tick musically."
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="pt-0">
@@ -362,6 +334,31 @@ const LandingPage = () => {
                     disabled={createGameMutation.isPending}
                   >
                     {createGameMutation.isPending ? 'Creating...' : 'Start Desert Island'}
+                  </Button>
+                </CardContent>
+              </Card>
+
+              <Card 
+                className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-amber-300 relative overflow-hidden"
+                onClick={() => handleGameModeClick('guess-who')}
+              >
+                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-amber-500 to-orange-500"></div>
+                <CardHeader className="pb-3">
+                  <div className="text-sm font-medium text-amber-600 mb-1">For Hilarious Reveals</div>
+                  <CardTitle className="flex items-center gap-2 text-xl">
+                    <Heart className="w-6 h-6 text-amber-600" />
+                    Guess Who
+                  </CardTitle>
+                  <CardDescription className="text-sm leading-relaxed">
+                    "Everyone adds songs anonymously. Guess who picked what, then reveal for hilarious surprises."
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <Button 
+                    className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:opacity-90"
+                    disabled={createGameMutation.isPending}
+                  >
+                    {createGameMutation.isPending ? 'Creating...' : 'Start Guess Who'}
                   </Button>
                 </CardContent>
               </Card>
