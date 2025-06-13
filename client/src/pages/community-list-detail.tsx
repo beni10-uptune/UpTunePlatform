@@ -217,11 +217,21 @@ export default function CommunityListDetail() {
         body: JSON.stringify({ voteDirection: voteType === 'up' ? 1 : -1, guestSessionId })
       });
       
-      if (!response.ok) throw new Error('Failed to vote');
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Failed to vote' }));
+        throw errorData;
+      }
       return response.json();
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/community-lists", list?.id, "entries"] });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Vote Not Counted",
+        description: error.error || "You've already voted for this song",
+        variant: "destructive",
+      });
     }
   });
 
