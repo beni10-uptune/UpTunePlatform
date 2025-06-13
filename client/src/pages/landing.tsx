@@ -474,7 +474,7 @@ const LandingPage = () => {
                   </div>
                   <div className="flex items-center gap-2 justify-center">
                     <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
-                    <span>Team challenges & competitions</span>
+                    <span>Creating connections</span>
                   </div>
                   <div className="flex items-center gap-2 justify-center">
                     <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>

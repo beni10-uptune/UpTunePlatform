@@ -122,7 +122,7 @@ export function CommunityListsPreview() {
           Have Your Say
         </CardTitle>
         <p className="text-gray-600 text-lg">
-          Vote for your favourite songs and share the tracks that matter to you. See what the community thinks.
+          Vote for your favourite songs and share the tracks that matter to you. See what the world thinks.
         </p>
       </CardHeader>
       
@@ -156,7 +156,7 @@ export function CommunityListsPreview() {
                     </div>
                     {list.isWeeklyChallenge ? (
                       <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
-                        This Week
+                        Weekly Challenge
                       </Badge>
                     ) : (
                       <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
