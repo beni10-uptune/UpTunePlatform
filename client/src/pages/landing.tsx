@@ -135,9 +135,9 @@ const LandingPage = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <Link href="/teams">
+            <Link href="/community-lists">
               <Button variant="outline" className="border-purple-200 text-purple-700 hover:bg-purple-50">
-                For Teams
+                Have Your Say
               </Button>
             </Link>
           </motion.div>
@@ -455,6 +455,49 @@ const LandingPage = () => {
             className="mt-20"
           >
             <CommunityListsPreview />
+          </motion.div>
+
+          {/* Teams Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.8 }}
+            className="mt-20"
+          >
+            <Card className="max-w-4xl mx-auto bg-gradient-to-r from-indigo-50 to-blue-50 border-indigo-200">
+              <CardHeader className="text-center">
+                <CardTitle className="flex items-center justify-center gap-2 text-2xl">
+                  <Users className="w-6 h-6 text-indigo-600" />
+                  Ready for Your Team?
+                </CardTitle>
+                <CardDescription className="text-lg leading-relaxed">
+                  Transform your workplace culture with music. Perfect for team building, onboarding, and breaking the ice.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="text-center space-y-6">
+                <div className="grid md:grid-cols-3 gap-4 text-sm">
+                  <div className="flex items-center gap-2 justify-center">
+                    <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
+                    <span>Custom company playlists</span>
+                  </div>
+                  <div className="flex items-center gap-2 justify-center">
+                    <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
+                    <span>Team challenges & competitions</span>
+                  </div>
+                  <div className="flex items-center gap-2 justify-center">
+                    <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
+                    <span>Analytics & insights</span>
+                  </div>
+                </div>
+                <Link href="/teams-waitlist">
+                  <Button size="lg" className="bg-gradient-to-r from-indigo-500 to-blue-500 text-white hover:opacity-90">
+                    <Users className="w-5 h-5 mr-2" />
+                    Get Early Access for Teams
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
           </motion.div>
         </div>
       </main>
