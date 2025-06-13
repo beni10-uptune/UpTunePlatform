@@ -250,11 +250,39 @@ export class DatabaseStorage implements IStorage {
 
   // Community Lists methods
   async getAllCommunityLists(): Promise<CommunityList[]> {
-    return await db
-      .select()
+    // Get all lists with vote counts
+    const listsWithVotes = await db
+      .select({
+        id: communityLists.id,
+        title: communityLists.title,
+        description: communityLists.description,
+        slug: communityLists.slug,
+        emoji: communityLists.emoji,
+        isActive: communityLists.isActive,
+        isWeeklyChallenge: communityLists.isWeeklyChallenge,
+        createdAt: communityLists.createdAt,
+        totalVotes: sql<number>`COALESCE(SUM(${listEntries.voteScore}), 0)`.as('totalVotes')
+      })
       .from(communityLists)
+      .leftJoin(listEntries, eq(communityLists.id, listEntries.listId))
       .where(eq(communityLists.isActive, true))
-      .orderBy(desc(communityLists.createdAt));
+      .groupBy(communityLists.id)
+      .orderBy(
+        desc(communityLists.isWeeklyChallenge),
+        desc(sql`COALESCE(SUM(${listEntries.voteScore}), 0)`),
+        desc(communityLists.createdAt)
+      );
+
+    return listsWithVotes.map(list => ({
+      id: list.id,
+      title: list.title,
+      description: list.description,
+      slug: list.slug,
+      emoji: list.emoji,
+      isActive: list.isActive,
+      isWeeklyChallenge: list.isWeeklyChallenge,
+      createdAt: list.createdAt
+    }));
   }
 
   async getCommunityListBySlug(slug: string): Promise<CommunityList | undefined> {

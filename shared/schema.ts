@@ -161,6 +161,7 @@ export const communityLists = pgTable("community_lists", {
   slug: varchar("slug", { length: 255 }).notNull().unique(),
   emoji: varchar("emoji", { length: 10 }).notNull().default("🎵"),
   isActive: boolean("is_active").default(true),
+  isWeeklyChallenge: boolean("is_weekly_challenge").default(false),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

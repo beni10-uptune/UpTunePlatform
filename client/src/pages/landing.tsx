@@ -354,6 +354,14 @@ const LandingPage = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="pt-0">
+                  <div className="space-y-2 mb-4">
+                    <div className="text-xs text-gray-600">Quick Start Options:</div>
+                    <div className="flex flex-wrap gap-1">
+                      <Badge variant="outline" className="text-xs">Guilty Pleasures</Badge>
+                      <Badge variant="outline" className="text-xs">Decade Mix</Badge>
+                      <Badge variant="outline" className="text-xs">Custom</Badge>
+                    </div>
+                  </div>
                   <Button 
                     className="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white hover:opacity-90"
                     disabled={createGameMutation.isPending}
