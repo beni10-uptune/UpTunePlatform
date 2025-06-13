@@ -11,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { SongSearch } from '@/components/song-search';
+import { Navigation } from '@/components/navigation';
 import { 
   ArrowLeft,
   Calendar,
@@ -182,21 +183,15 @@ const WeeklyChallenge = () => {
       {/* Header */}
       <header className="px-6 py-4">
         <nav className="max-w-6xl mx-auto flex items-center justify-between">
-          <Link href="/">
-            <Button
-              variant="ghost"
-              className="flex items-center space-x-2 text-gray-600 hover:text-gray-800"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span>Back to Home</span>
-            </Button>
-          </Link>
-          
           <div className="flex items-center space-x-2">
             <div className="w-8 h-8 gradient-bg rounded-lg flex items-center justify-center">
               <Music className="w-5 h-5 text-white" />
             </div>
             <span className="text-2xl font-bold gradient-text">Uptune</span>
+          </div>
+          
+          <Navigation variant="header" className="text-gray-600" />
+          <Navigation variant="mobile" className="text-gray-600" />
           </div>
           
           <Link href="/teams">

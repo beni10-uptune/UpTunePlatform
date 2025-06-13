@@ -13,7 +13,6 @@ import { apiRequest } from '@/lib/queryClient';
 import { Navigation } from '@/components/navigation';
 import { 
   Music, 
-  ArrowLeft,
   Building2,
   Users,
   Zap,
@@ -35,9 +34,37 @@ const TeamsWaitlist = () => {
     email: '',
     phone: '',
     teamSize: '',
+    role: '',
     message: ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const submitMutation = useMutation({
+    mutationFn: async (data: typeof formData) => {
+      const response = await fetch('/api/teams-waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      });
+      if (!response.ok) throw new Error('Failed to submit');
+      return response.json();
+    },
+    onSuccess: () => {
+      setIsSubmitted(true);
+      toast({
+        title: "Success!",
+        description: "Thanks for your interest! We'll be in touch soon.",
+      });
+    },
+    onError: (error) => {
+      console.error('Submit error:', error);
+      toast({
+        title: "Submission failed",
+        description: "Please try again or contact us directly.",
+        variant: "destructive",
+      });
+    }
+  });
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({
@@ -46,38 +73,19 @@ const TeamsWaitlist = () => {
     }));
   };
 
-  const submitMutation = useMutation({
-    mutationFn: async (data: typeof formData) => {
-      const response = await apiRequest('POST', '/api/teams/contact', data);
-      return response.json();
-    },
-    onSuccess: () => {
-      setIsSubmitted(true);
-      toast({
-        title: "Thank you for your interest!",
-        description: "We'll be in touch soon to discuss how UpTune for Teams can help your organization.",
-      });
-    },
-    onError: () => {
-      toast({
-        title: "Submission Failed",
-        description: "Please try again later.",
-        variant: "destructive",
-      });
-    }
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (formData.companyName && formData.contactName && formData.email && formData.teamSize && formData.message) {
-      submitMutation.mutate(formData);
-    } else {
+    
+    if (!formData.companyName || !formData.contactName || !formData.email || !formData.teamSize) {
       toast({
-        title: "Missing Information",
+        title: "Missing information",
         description: "Please fill in all required fields.",
         variant: "destructive",
       });
+      return;
     }
+
+    submitMutation.mutate(formData);
   };
 
   const teamSizes = [
@@ -118,15 +126,8 @@ const TeamsWaitlist = () => {
               </div>
               
               <div className="space-y-3">
-                <Link href="/games">
-                  <Button className="w-full gradient-bg text-white">
-                    <Music className="w-4 h-4 mr-2" />
-                    Try Uptune Now (Free)
-                  </Button>
-                </Link>
-                
                 <Link href="/">
-                  <Button variant="outline" className="w-full">
+                  <Button className="w-full gradient-bg text-white">
                     Back to Home
                   </Button>
                 </Link>
@@ -178,182 +179,86 @@ const TeamsWaitlist = () => {
             
             <h1 className="text-5xl lg:text-6xl font-bold mb-6">
               Uptune for{' '}
-              <span className="gradient-text">
-                Teams
-              </span>
+              <span className="gradient-text">Teams</span>
             </h1>
             
-            <p className="text-xl text-gray-600 max-w-4xl mx-auto mb-8">
-              Transform your workplace culture with the power of music. Build stronger teams, 
-              boost engagement, and create lasting connections through collaborative musical experiences.
+            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+              Transform your workplace culture with music-powered team building experiences. 
+              Create deeper connections, boost morale, and spark conversations that matter.
             </p>
-            
-            <div className="flex items-center justify-center space-x-8 text-sm text-gray-600">
-              <div className="flex items-center space-x-2">
-                <Shield className="w-4 h-4" />
-                <span>Private & Secure</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <Zap className="w-4 h-4" />
-                <span>Slack Integration</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <BarChart3 className="w-4 h-4" />
-                <span>Analytics Dashboard</span>
-              </div>
-            </div>
           </motion.div>
 
+          {/* Form Section */}
           <div className="grid lg:grid-cols-2 gap-12 items-start">
-            {/* Left Column - Features */}
+            {/* Left Column - Form */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="space-y-8"
+              transition={{ duration: 0.8, delay: 0.2 }}
             >
-              <div className="space-y-6">
-                <h2 className="text-3xl font-bold">
-                  Everything you love about Uptune,{' '}
-                  <span className="gradient-text">
-                    supercharged for work
-                  </span>
-                </h2>
-                
-                <div className="space-y-6">
-                  {[
-                    {
-                      icon: Building2,
-                      title: 'Private Company Environment',
-                      description: 'All games and challenges stay within your organization. Create a safe, internal "watercooler" for your team.',
-                      color: 'purple'
-                    },
-                    {
-                      icon: MessageSquare,
-                      title: 'Workplace Integrations',
-                      description: 'Start games directly from Slack, Microsoft Teams, or Google Chat with simple commands.',
-                      color: 'pink'
-                    },
-                    {
-                      icon: Sparkles,
-                      title: 'Advanced Game Library',
-                      description: 'Access exclusive workplace games like "Meeting Icebreakers" and productivity-focused Soundtrack Sessions.',
-                      color: 'indigo'
-                    },
-                    {
-                      icon: Rocket,
-                      title: 'AI-Powered Connection',
-                      description: 'Get proactive suggestions for icebreakers and team activities based on shared musical tastes.',
-                      color: 'purple'
-                    },
-                    {
-                      icon: Calendar,
-                      title: 'Company-Wide Adventures',
-                      description: 'Run large-scale, structured musical events quarterly or annually to bring the whole company together.',
-                      color: 'pink'
-                    },
-                    {
-                      icon: BarChart3,
-                      title: 'Analytics & Insights',
-                      description: 'Track team engagement, participation rates, and measure the impact on company culture.',
-                      color: 'indigo'
-                    }
-                  ].map((feature, index) => (
-                    <motion.div
-                      key={feature.title}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-                      className="flex space-x-4"
-                    >
-                      <div className={`w-12 h-12 bg-${feature.color}-100 rounded-lg flex items-center justify-center flex-shrink-0`}>
-                        <feature.icon className={`w-6 h-6 text-${feature.color}-600`} />
-                      </div>
-                      <div>
-                        <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
-                        <p className="text-gray-600">{feature.description}</p>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Right Column - Waitlist Form */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="sticky top-8"
-            >
-              <Card className="game-card p-8">
-                <CardHeader className="text-center pb-6">
-                  <CardTitle className="text-2xl">Join the Waitlist</CardTitle>
-                  <CardDescription className="text-base">
-                    Be among the first to transform your workplace culture with music
+              <Card className="game-card">
+                <CardHeader>
+                  <CardTitle className="text-2xl flex items-center">
+                    <Rocket className="w-6 h-6 mr-3 text-purple-600" />
+                    Join the Waitlist
+                  </CardTitle>
+                  <CardDescription>
+                    Be among the first to experience the future of team building
                   </CardDescription>
                 </CardHeader>
                 
                 <CardContent>
                   <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">
-                        Company Name *
-                      </label>
-                      <Input
-                        placeholder="Your Company"
-                        value={formData.companyName}
-                        onChange={(e) => handleInputChange('companyName', e.target.value)}
-                        required
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700">
-                          Your Name *
-                        </label>
+                        <label className="text-sm font-medium">Company Name *</label>
                         <Input
-                          placeholder="John Smith"
-                          value={formData.contactName}
-                          onChange={(e) => handleInputChange('contactName', e.target.value)}
+                          value={formData.companyName}
+                          onChange={(e) => handleInputChange('companyName', e.target.value)}
+                          placeholder="Your company"
                           required
                         />
                       </div>
                       
                       <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700">
-                          Work Email *
-                        </label>
+                        <label className="text-sm font-medium">Your Name *</label>
                         <Input
-                          type="email"
-                          placeholder="john@company.com"
-                          value={formData.email}
-                          onChange={(e) => handleInputChange('email', e.target.value)}
+                          value={formData.contactName}
+                          onChange={(e) => handleInputChange('contactName', e.target.value)}
+                          placeholder="Your full name"
                           required
                         />
                       </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">
-                        Phone Number (optional)
-                      </label>
-                      <Input
-                        type="tel"
-                        placeholder="+1 (555) 123-4567"
-                        value={formData.phone}
-                        onChange={(e) => handleInputChange('phone', e.target.value)}
-                      />
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Email *</label>
+                        <Input
+                          type="email"
+                          value={formData.email}
+                          onChange={(e) => handleInputChange('email', e.target.value)}
+                          placeholder="your@company.com"
+                          required
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Phone</label>
+                        <Input
+                          type="tel"
+                          value={formData.phone}
+                          onChange={(e) => handleInputChange('phone', e.target.value)}
+                          placeholder="+1 (555) 123-4567"
+                        />
+                      </div>
                     </div>
-                    
+
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">
-                        Team Size *
-                      </label>
+                      <label className="text-sm font-medium">Team Size *</label>
                       <Select value={formData.teamSize} onValueChange={(value) => handleInputChange('teamSize', value)}>
                         <SelectTrigger>
-                          <SelectValue placeholder="Select team size" />
+                          <SelectValue placeholder="Select your team size" />
                         </SelectTrigger>
                         <SelectContent>
                           {teamSizes.map((size) => (
@@ -364,35 +269,109 @@ const TeamsWaitlist = () => {
                         </SelectContent>
                       </Select>
                     </div>
-                    
+
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">
-                        Tell us about your team's needs *
-                      </label>
+                      <label className="text-sm font-medium">Your Role</label>
+                      <Select value={formData.role} onValueChange={(value) => handleInputChange('role', value)}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select your role" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {roles.map((role) => (
+                            <SelectItem key={role} value={role}>
+                              {role}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">What are you hoping to achieve?</label>
                       <Textarea
-                        placeholder="Tell us about your team's current challenges with collaboration, team building, or culture. What would you like to achieve with UpTune for Teams?"
                         value={formData.message}
                         onChange={(e) => handleInputChange('message', e.target.value)}
-                        rows={4}
-                        required
+                        placeholder="Tell us about your team building goals..."
+                        className="h-24"
                       />
                     </div>
-                    
+
                     <Button 
-                      type="submit" 
+                      type="submit"
+                      className="w-full gradient-bg text-white"
                       disabled={submitMutation.isPending}
-                      className="w-full gradient-bg text-white py-4 text-lg font-medium"
                     >
-                      <Rocket className="w-5 h-5 mr-2" />
-                      Join Waitlist
+                      {submitMutation.isPending ? 'Submitting...' : 'Join Waitlist'}
                     </Button>
-                    
-                    <p className="text-xs text-gray-500 text-center">
-                      We'll be in touch within 48 hours with early access details
-                    </p>
                   </form>
                 </CardContent>
               </Card>
+            </motion.div>
+
+            {/* Right Column - Features */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="space-y-6"
+            >
+              <div className="space-y-6">
+                <Card className="game-card p-6">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 gradient-bg rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Users className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-lg mb-2">Team Building Games</h3>
+                      <p className="text-gray-600">
+                        Collaborative music experiences that break down barriers and create authentic connections
+                      </p>
+                    </div>
+                  </div>
+                </Card>
+
+                <Card className="game-card p-6">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 gradient-bg rounded-lg flex items-center justify-center flex-shrink-0">
+                      <BarChart3 className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-lg mb-2">Analytics & Insights</h3>
+                      <p className="text-gray-600">
+                        Track engagement, participation, and team dynamics with detailed reporting
+                      </p>
+                    </div>
+                  </div>
+                </Card>
+
+                <Card className="game-card p-6">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 gradient-bg rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Shield className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-lg mb-2">Enterprise Security</h3>
+                      <p className="text-gray-600">
+                        SOC 2 compliance, SSO integration, and enterprise-grade privacy controls
+                      </p>
+                    </div>
+                  </div>
+                </Card>
+
+                <Card className="game-card p-6">
+                  <div className="flex items-start space-x-4">
+                    <div className="w-12 h-12 gradient-bg rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Calendar className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-lg mb-2">Flexible Scheduling</h3>
+                      <p className="text-gray-600">
+                        Run sessions during meetings, events, or as standalone team activities
+                      </p>
+                    </div>
+                  </div>
+                </Card>
+              </div>
             </motion.div>
           </div>
         </div>
