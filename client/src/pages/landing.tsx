@@ -448,8 +448,6 @@ const LandingPage = () => {
           >
             <CommunityListsPreview />
           </motion.div>
-
-
         </div>
       </main>
     </div>
