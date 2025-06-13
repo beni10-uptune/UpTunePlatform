@@ -57,18 +57,11 @@ const LandingPage = () => {
     switch (gameType) {
       case 'soundtrack':
         return [
-          'Road Trip Vibes',
-          'Epic Adventure',
-          'Romantic Comedy',
-          'Workout Power',
-          'Thriller/Suspense',
-          'Sci-Fi Journey',
-          'Coming of Age',
-          'Party Starters',
-          'Chill & Relax',
-          'Action Blockbuster',
-          'Summer Anthems',
-          'Late Night Emotions'
+          'Road trip',
+          'Festival campsite',
+          '90s dance anthems',
+          'Guilty pleasures',
+          'Sunday morning chillers'
         ];
       case 'desert-island':
         return [
@@ -248,32 +241,60 @@ const LandingPage = () => {
                       Choose Your Theme
                     </DialogTitle>
                     <DialogDescription>
-                      Pick a theme that inspires your group's music choices
+                      {selectedGameType === 'soundtrack' 
+                        ? "Soundtrack: What's the vibe for your playlist?"
+                        : selectedGameType === 'guess-who'
+                        ? "Guess Who: Pick a theme for anonymous sharing"
+                        : "Pick a theme that inspires your group's music choices"
+                      }
                     </DialogDescription>
                   </DialogHeader>
                   
                   <div className="space-y-4">
                     <div>
-                      <Select value={selectedTheme} onValueChange={setSelectedTheme}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a theme..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {getThemeOptions(selectedGameType).map((theme) => (
-                            <SelectItem key={theme} value={theme}>
-                              {theme}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <label className="text-sm font-medium text-gray-700 mb-3 block">
+                        Create your own theme or pick from examples
+                      </label>
+                      <Input
+                        placeholder="Enter your theme (e.g., 'Songs for a Road Trip to the Beach')"
+                        value={selectedTheme}
+                        onChange={(e) => setSelectedTheme(e.target.value)}
+                        className="mb-4"
+                      />
                     </div>
-                    <Button 
-                      onClick={handleCreateGame}
-                      disabled={!selectedTheme || createGameMutation.isPending}
-                      className="w-full gradient-bg text-white"
-                    >
-                      {createGameMutation.isPending ? 'Creating Game...' : 'Create Game'}
-                    </Button>
+                    
+                    <div>
+                      <p className="text-sm text-gray-600 mb-2">Or choose from these examples:</p>
+                      <div className="space-y-2">
+                        {getThemeOptions(selectedGameType).map((theme) => (
+                          <button
+                            key={theme}
+                            onClick={() => setSelectedTheme(theme)}
+                            className="w-full text-left p-3 rounded-lg border border-gray-200 hover:bg-purple-50 hover:border-purple-300 transition-colors flex items-center gap-2"
+                          >
+                            <ArrowRight className="w-4 h-4 text-purple-600" />
+                            {theme}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    <div className="flex gap-3 pt-4">
+                      <Button 
+                        variant="outline"
+                        onClick={() => setShowThemeDialog(false)}
+                        className="flex-1"
+                      >
+                        Cancel
+                      </Button>
+                      <Button 
+                        onClick={handleCreateGame}
+                        disabled={!selectedTheme.trim() || createGameMutation.isPending}
+                        className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:opacity-90"
+                      >
+                        {createGameMutation.isPending ? 'Creating...' : 'Create Game'}
+                      </Button>
+                    </div>
                   </div>
                 </DialogContent>
               </Dialog>
