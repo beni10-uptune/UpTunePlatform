@@ -192,16 +192,6 @@ const WeeklyChallenge = () => {
           
           <Navigation variant="header" className="text-gray-600" />
           <Navigation variant="mobile" className="text-gray-600" />
-          </div>
-          
-          <Link href="/teams">
-            <Button 
-              variant="outline" 
-              className="border-purple-200 text-purple-700 hover:bg-purple-50"
-            >
-              Uptune for Teams
-            </Button>
-          </Link>
         </nav>
       </header>
 
