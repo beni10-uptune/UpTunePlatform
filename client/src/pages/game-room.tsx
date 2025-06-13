@@ -812,6 +812,27 @@ export default function GameRoom() {
                             : `Add Song ${Math.min((songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length + 1, 5)}/5`}
                         </span>
                       </Button>
+                    ) : gameRoom?.gameType === 'guess-who' ? (
+                      <div className="flex gap-3 w-full">
+                        <Button
+                          onClick={() => setShowAddSong(true)}
+                          size="lg"
+                          className="bg-gradient-to-r from-amber-500 to-orange-500 text-white w-full sm:flex-1 py-4 sm:py-3 text-base sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all animate-pulse"
+                        >
+                          <Plus className="w-5 h-5 sm:w-4 sm:h-4 mr-2" />
+                          Add Anonymous Song
+                        </Button>
+                        {isHost && (songs as Song[]).length > 0 && (
+                          <Button
+                            size="lg"
+                            variant="outline"
+                            className="border-amber-200 text-amber-700 hover:bg-amber-50 py-4 sm:py-3 text-base sm:text-sm font-semibold"
+                          >
+                            <Heart className="w-5 h-5 sm:w-4 sm:h-4 mr-2" />
+                            Reveal All
+                          </Button>
+                        )}
+                      </div>
                     ) : (
                       <Button
                         onClick={() => setShowAddSong(true)}

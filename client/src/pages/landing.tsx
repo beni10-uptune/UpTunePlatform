@@ -294,14 +294,14 @@ const LandingPage = () => {
 
             <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
               <Card 
-                className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-purple-300 relative overflow-hidden"
+                className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-blue-300 relative overflow-hidden"
                 onClick={() => handleGameModeClick('soundtrack')}
               >
-                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-purple-500 to-pink-500"></div>
+                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
                 <CardHeader className="pb-3">
-                  <div className="text-sm font-medium text-purple-600 mb-1">For Creative Collaboration</div>
+                  <div className="text-sm font-medium text-blue-600 mb-1">For Creative Collaboration</div>
                   <CardTitle className="flex items-center gap-2 text-xl">
-                    <Headphones className="w-6 h-6 text-purple-600" />
+                    <Headphones className="w-6 h-6 text-blue-600" />
                     Soundtrack
                   </CardTitle>
                   <CardDescription className="text-sm leading-relaxed">
