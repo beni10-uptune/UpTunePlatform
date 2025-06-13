@@ -75,7 +75,7 @@ const LandingPage = () => {
         return [
           'Guilty Pleasures',
           'Decade Mix',
-          'Anonymous Mix',
+          'Hidden Gems',
           'Musical Secrets',
           'Custom Theme'
         ];
@@ -492,19 +492,19 @@ const LandingPage = () => {
                   Transform your workplace culture with music. Perfect for team building, onboarding, and breaking the ice.
                 </CardDescription>
               </CardHeader>
-              <CardContent className="text-center space-y-6">
+              <CardContent className="text-center space-y-8">
                 <div className="grid md:grid-cols-3 gap-4 text-sm">
                   <div className="flex items-center gap-2 justify-center">
                     <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
-                    <span>Custom company playlists</span>
+                    <span>Seamless Slack & Teams Integration</span>
                   </div>
                   <div className="flex items-center gap-2 justify-center">
                     <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
-                    <span>Creating connections</span>
+                    <span>Spark Authentic Connections</span>
                   </div>
                   <div className="flex items-center gap-2 justify-center">
                     <div className="w-2 h-2 bg-indigo-500 rounded-full"></div>
-                    <span>Analytics & insights</span>
+                    <span>Fun for Everyone (Not Just Music Experts)</span>
                   </div>
                 </div>
                 <Link href="/teams">
