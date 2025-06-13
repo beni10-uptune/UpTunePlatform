@@ -77,7 +77,7 @@ const GAME_TYPES = {
       'A song for your heart - something that moves you emotionally',
       'A song for your feet - something that makes you want to move',
       'Your guilty pleasure - a song you love but might be embarrassed to admit',
-      'A song from your current favorite album'
+      'Your current obsession - a song you can\'t stop playing'
     ]
   },
   'guess-who': {

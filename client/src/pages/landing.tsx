@@ -140,7 +140,7 @@ const LandingPage = () => {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <Link href="/teams-waitlist">
+            <Link href="/teams">
               <Button variant="outline" className="border-purple-200 text-purple-700 hover:bg-purple-50">
                 For Teams
               </Button>
@@ -486,7 +486,7 @@ const LandingPage = () => {
                     <span>Analytics & insights</span>
                   </div>
                 </div>
-                <Link href="/teams-waitlist">
+                <Link href="/teams">
                   <Button size="lg" className="bg-gradient-to-r from-indigo-500 to-blue-500 text-white hover:opacity-90">
                     <Users className="w-5 h-5 mr-2" />
                     Get Early Access for Teams
