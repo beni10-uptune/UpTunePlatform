@@ -437,22 +437,6 @@ const LandingPage = () => {
                 </CardContent>
               </Card>
             </motion.div>
-
-            {/* Custom Game Creation CTA */}
-            <Card className="max-w-3xl mx-auto bg-gradient-to-r from-purple-50 to-pink-50 border-purple-200 mt-12">
-              <CardContent className="p-8 text-center">
-                <h3 className="text-xl font-semibold mb-2">Want Something Different?</h3>
-                <p className="text-gray-600 mb-4">
-                  Create your own custom game with any theme you can imagine
-                </p>
-                <Link href="/games">
-                  <Button size="lg" className="gradient-bg text-white hover:opacity-90">
-                    <Plus className="w-5 h-5 mr-2" />
-                    Create Custom Game
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
           </motion.div>
 
           {/* Community Lists Section */}
@@ -465,39 +449,7 @@ const LandingPage = () => {
             <CommunityListsPreview />
           </motion.div>
 
-          {/* Weekly Challenge Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.7 }}
-            className="mt-16"
-          >
-            <Card className="max-w-3xl mx-auto text-center p-8 bg-gradient-to-br from-yellow-50 via-orange-50 to-red-50 border-yellow-200">
-              <CardHeader>
-                <CardTitle className="flex items-center justify-center gap-2 text-2xl">
-                  <Trophy className="w-6 h-6 text-yellow-600" />
-                  💪 This Week: "Songs That Make You Invincible"
-                </CardTitle>
-                <CardDescription className="text-lg leading-relaxed">
-                  What song makes you feel like you can conquer the world? Share the track that turns you into your most confident, unstoppable self.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex justify-center gap-4 text-sm text-gray-600">
-                  <span>🎵 11 songs submitted</span>
-                  <span>🔥 Most voted: "Mr. Brightside"</span>
-                  <span>⏰ 5 days left</span>
-                </div>
-                <Link href="/challenge">
-                  <Button size="lg" className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white hover:opacity-90">
-                    <Heart className="w-4 h-4 mr-2" />
-                    Share Your Power Song
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-          </motion.div>
+
         </div>
       </main>
     </div>

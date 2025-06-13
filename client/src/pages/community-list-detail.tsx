@@ -421,7 +421,7 @@ export default function CommunityListDetail() {
                 </DialogContent>
               </Dialog>
               
-              <Link href={`/?gameType=mixtape&theme=${encodeURIComponent(list.title)}`}>
+              <Link href={`/?gameType=soundtrack&theme=${encodeURIComponent(list.title)}`}>
                 <Button className="bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 text-lg px-6 py-3">
                   <Users className="w-5 h-5 mr-2" />
                   Build This List with Friends

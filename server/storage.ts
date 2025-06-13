@@ -33,7 +33,7 @@ import {
   entryVotes
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, and, lte, gte, lt, gt, sql } from "drizzle-orm";
+import { eq, desc, asc, and, lte, gte, lt, gt, sql } from "drizzle-orm";
 
 export interface IStorage {
   // Game Rooms
@@ -251,25 +251,10 @@ export class DatabaseStorage implements IStorage {
   // Community Lists methods
   async getAllCommunityLists(): Promise<CommunityList[]> {
     return await db
-      .select({
-        id: communityLists.id,
-        title: communityLists.title,
-        description: communityLists.description,
-        slug: communityLists.slug,
-        emoji: communityLists.emoji,
-        isActive: communityLists.isActive,
-        isWeeklyChallenge: communityLists.isWeeklyChallenge,
-        endDate: communityLists.endDate,
-        displayOrder: communityLists.displayOrder,
-        createdAt: communityLists.createdAt,
-      })
+      .select()
       .from(communityLists)
       .where(eq(communityLists.isActive, true))
-      .orderBy(
-        desc(communityLists.isWeeklyChallenge),
-        asc(communityLists.displayOrder),
-        desc(communityLists.createdAt)
-      );
+      .orderBy(desc(communityLists.createdAt));
   }
 
   async getCommunityListBySlug(slug: string): Promise<CommunityList | undefined> {
