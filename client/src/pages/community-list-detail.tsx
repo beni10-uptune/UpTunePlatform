@@ -348,7 +348,12 @@ export default function CommunityListDetail() {
                   <div className="space-y-6">
                     {!selectedSong ? (
                       <div>
-                        <h3 className="font-semibold mb-3">Step 1: Search for a song</h3>
+                        <h3 className="font-semibold mb-3">
+                          {list.title.toLowerCase().includes('favourite album') 
+                            ? "Step 1: Search for an album"
+                            : "Step 1: Search for a song"
+                          }
+                        </h3>
                         <SongSearch
                           onSongSelect={handleSongSelect}
                           placeholder={
@@ -365,7 +370,12 @@ export default function CommunityListDetail() {
                       </div>
                     ) : (
                       <div>
-                        <h3 className="font-semibold mb-3">Selected Song:</h3>
+                        <h3 className="font-semibold mb-3">
+                          {list.title.toLowerCase().includes('favourite album') 
+                            ? "Selected Album:"
+                            : "Selected Song:"
+                          }
+                        </h3>
                         <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
                           {selectedSong.imageUrl && (
                             <img 
@@ -384,7 +394,10 @@ export default function CommunityListDetail() {
                             size="sm"
                             onClick={() => setSelectedSong(null)}
                           >
-                            Change Song
+                            {list.title.toLowerCase().includes('favourite album') 
+                              ? "Change Album"
+                              : "Change Song"
+                            }
                           </Button>
                         </div>
 
@@ -398,6 +411,8 @@ export default function CommunityListDetail() {
                                   <FormLabel>
                                     {list.title.toLowerCase().includes('movie') || list.title.toLowerCase().includes('soundtrack') 
                                       ? "What film was it from? (Optional)" 
+                                      : list.title.toLowerCase().includes('favourite album')
+                                      ? `Why is this your favourite album? (Optional)`
                                       : `Why does this song fit "${list.title}"? (Optional)`}
                                   </FormLabel>
                                   <FormControl>
@@ -405,6 +420,8 @@ export default function CommunityListDetail() {
                                       placeholder={
                                         list.title.toLowerCase().includes('movie') || list.title.toLowerCase().includes('soundtrack')
                                           ? "e.g., Pulp Fiction, The Matrix, Top Gun..."
+                                          : list.title.toLowerCase().includes('favourite album')
+                                          ? "Tell us what makes this album special to you..."
                                           : "Tell us why this song belongs on this list..."
                                       }
                                       className="min-h-[100px]"
