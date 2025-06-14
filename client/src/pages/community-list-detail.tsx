@@ -351,7 +351,16 @@ export default function CommunityListDetail() {
                         <h3 className="font-semibold mb-3">Step 1: Search for a song</h3>
                         <SongSearch
                           onSongSelect={handleSongSelect}
-                          placeholder="Search for the perfect song..."
+                          placeholder={
+                            list.title.toLowerCase().includes('favourite album') 
+                              ? "Search for your favourite album..."
+                              : "Search for the perfect song..."
+                          }
+                          searchMode={
+                            list.title.toLowerCase().includes('favourite album') 
+                              ? 'albums' 
+                              : 'songs'
+                          }
                         />
                       </div>
                     ) : (

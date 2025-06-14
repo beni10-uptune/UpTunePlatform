@@ -25,6 +25,25 @@ interface SpotifySearchResponse {
   };
 }
 
+interface SpotifyAlbum {
+  id: string;
+  name: string;
+  artists: Array<{ name: string }>;
+  images: Array<{ url: string; height: number; width: number }>;
+  external_urls: {
+    spotify: string;
+  };
+  release_date: string;
+  total_tracks: number;
+}
+
+interface SpotifyAlbumSearchResponse {
+  albums: {
+    items: SpotifyAlbum[];
+    total: number;
+  };
+}
+
 export class SpotifyService {
   private clientId: string;
   private clientSecret: string;
@@ -90,6 +109,30 @@ export class SpotifyService {
     return data.tracks.items;
   }
 
+  async searchAlbums(query: string, limit: number = 20): Promise<SpotifyAlbum[]> {
+    const accessToken = await this.getAccessToken();
+    
+    const searchParams = new URLSearchParams({
+      q: query,
+      type: 'album',
+      limit: limit.toString(),
+      market: 'US'
+    });
+
+    const response = await fetch(`https://api.spotify.com/v1/search?${searchParams}`, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Spotify album search failed: ${response.statusText}`);
+    }
+
+    const data: SpotifyAlbumSearchResponse = await response.json();
+    return data.albums.items;
+  }
+
   async getTrack(trackId: string): Promise<SpotifyTrack | null> {
     const accessToken = await this.getAccessToken();
     
@@ -118,6 +161,18 @@ export class SpotifyService {
       imageUrl: track.album.images[0]?.url || null,
       spotifyUrl: track.external_urls.spotify,
       previewUrl: track.preview_url
+    };
+  }
+
+  formatAlbumForClient(album: SpotifyAlbum) {
+    return {
+      id: album.id,
+      title: album.name,
+      artist: album.artists.map(artist => artist.name).join(', '),
+      album: album.name,
+      imageUrl: album.images[0]?.url || null,
+      spotifyUrl: album.external_urls.spotify,
+      previewUrl: null // Albums don't have preview URLs
     };
   }
 

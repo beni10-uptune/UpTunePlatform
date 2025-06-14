@@ -160,6 +160,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/spotify/search-albums", async (req, res) => {
+    try {
+      const query = req.query.q as string;
+      if (!query) {
+        return res.status(400).json({ error: "Query parameter required" });
+      }
+
+      const { spotifyService } = await import("./spotify");
+      const albums = await spotifyService.searchAlbums(query);
+      const formattedAlbums = albums.map(album => spotifyService.formatAlbumForClient(album));
+      
+      res.json(formattedAlbums);
+    } catch (error) {
+      console.error("Spotify album search error:", error);
+      res.status(500).json({ error: "Failed to search albums" });
+    }
+  });
+
   app.get("/api/spotify/track/:id", async (req, res) => {
     try {
       const { spotifyService } = await import("./spotify");
