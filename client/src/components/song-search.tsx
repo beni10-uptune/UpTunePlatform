@@ -22,9 +22,10 @@ interface SongSearchProps {
   onSongSelect: (song: SpotifyTrack) => void;
   placeholder?: string;
   className?: string;
+  searchMode?: 'songs' | 'albums';
 }
 
-export function SongSearch({ onSongSelect, placeholder = "Search for a song...", className }: SongSearchProps) {
+export function SongSearch({ onSongSelect, placeholder = "Search for a song...", className, searchMode = 'songs' }: SongSearchProps) {
   const [query, setQuery] = useState('');
   const [debouncedQuery, setDebouncedQuery] = useState('');
   const [showResults, setShowResults] = useState(true);
@@ -39,10 +40,11 @@ export function SongSearch({ onSongSelect, placeholder = "Search for a song...",
   }, [query]);
 
   const { data: tracks = [], isLoading, error } = useQuery({
-    queryKey: ['/api/spotify/search', debouncedQuery],
+    queryKey: ['/api/spotify/search', debouncedQuery, searchMode],
     queryFn: async () => {
       if (!debouncedQuery.trim()) return [];
-      const response = await fetch(`/api/spotify/search?q=${encodeURIComponent(debouncedQuery)}`);
+      const endpoint = searchMode === 'albums' ? '/api/spotify/search-albums' : '/api/spotify/search';
+      const response = await fetch(`${endpoint}?q=${encodeURIComponent(debouncedQuery)}`);
       if (!response.ok) throw new Error('Search failed');
       return response.json();
     },
