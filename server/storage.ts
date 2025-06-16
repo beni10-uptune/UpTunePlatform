@@ -153,7 +153,7 @@ export class DatabaseStorage implements IStorage {
     // Use the automated challenge manager for consistent challenge rotation
     const { challengeManager } = await import("./weekly-challenge-manager.js");
     const challenge = await challengeManager.getCurrentChallenge();
-    return challenge || undefined;
+    return challenge ? challenge : undefined;
   }
 
   async addChallengeSubmission(submission: InsertChallengeSubmission): Promise<ChallengeSubmission> {
