@@ -150,18 +150,9 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getCurrentChallenge(): Promise<WeeklyChallenge | undefined> {
-    const now = new Date();
-    const [challenge] = await db
-      .select()
-      .from(weeklyChallenge)
-      .where(
-        and(
-          lte(weeklyChallenge.startDate, now),
-          gte(weeklyChallenge.endDate, now)
-        )
-      )
-      .orderBy(desc(weeklyChallenge.startDate))
-      .limit(1);
+    // Use the automated challenge manager for consistent challenge rotation
+    const { challengeManager } = await import("./weekly-challenge-manager.js");
+    const challenge = await challengeManager.getCurrentChallenge();
     return challenge || undefined;
   }
 

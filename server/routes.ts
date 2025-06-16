@@ -86,6 +86,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Admin endpoint to force refresh weekly challenge
+  app.post("/api/admin/weekly-challenge/refresh", async (req, res) => {
+    try {
+      const { challengeManager } = await import("./weekly-challenge-manager.js");
+      const updatedChallenge = await challengeManager.forceRefresh();
+      if (updatedChallenge) {
+        res.json({ success: true, challenge: updatedChallenge });
+      } else {
+        res.json({ success: false, message: "No challenge available for current date" });
+      }
+    } catch (error) {
+      console.error("Challenge refresh error:", error);
+      res.status(500).json({ error: "Failed to refresh challenge" });
+    }
+  });
+
+  // Admin endpoint to get challenge stats
+  app.get("/api/admin/weekly-challenge/stats", async (req, res) => {
+    try {
+      const { challengeManager } = await import("./weekly-challenge-manager.js");
+      const stats = await challengeManager.getChallengeStats();
+      res.json(stats);
+    } catch (error) {
+      console.error("Challenge stats error:", error);
+      res.status(500).json({ error: "Failed to fetch challenge stats" });
+    }
+  });
+
   // Challenge Submissions
   app.post("/api/challenge-submissions", async (req, res) => {
     try {

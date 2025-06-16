@@ -72,11 +72,11 @@ export class WeeklyChallengeManager {
         return currentChallenge[0];
       } else {
         console.log("No weekly challenge found for current date");
-        return null;
+        return undefined;
       }
     } catch (error) {
       console.error("Error updating active challenge:", error);
-      return null;
+      return undefined;
     }
   }
 
@@ -98,7 +98,7 @@ export class WeeklyChallengeManager {
       return activeChallenge[0];
     } catch (error) {
       console.error("Error fetching current challenge:", error);
-      return null;
+      return undefined;
     }
   }
 
