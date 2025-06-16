@@ -116,6 +116,7 @@ export default function GameRoom() {
   const [playlistAnalysis, setPlaylistAnalysis] = useState<any>(null);
   const [aiRecommendations, setAiRecommendations] = useState<string[]>([]);
   const [showAiInsights, setShowAiInsights] = useState(false);
+  const [revealAllPlayers, setRevealAllPlayers] = useState(false);
   
 
 
@@ -824,6 +825,7 @@ export default function GameRoom() {
                         </Button>
                         {isHost && (songs as Song[]).length > 0 && (
                           <Button
+                            onClick={() => setRevealAllPlayers(true)}
                             size="lg"
                             variant="outline"
                             className="border-amber-200 text-amber-700 hover:bg-amber-50 py-4 sm:py-3 text-base sm:text-sm font-semibold"
@@ -962,9 +964,18 @@ export default function GameRoom() {
                               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mt-3">
                                 {gameRoom?.gameType === 'guess-who' ? (
                                   <div className="flex items-center justify-center sm:justify-start space-x-2">
-                                    <span className="text-xs sm:text-sm text-gray-500 text-center sm:text-left">
-                                      Anonymous submission
-                                    </span>
+                                    {revealAllPlayers ? (
+                                      <span className="text-xs sm:text-sm text-gray-500 text-center sm:text-left">
+                                        Added by <span className="font-medium text-amber-600">{player?.nickname}</span>
+                                        {player?.id === currentPlayer?.id && (
+                                          <Badge className="bg-amber-100 text-amber-700 text-xs ml-2">You</Badge>
+                                        )}
+                                      </span>
+                                    ) : (
+                                      <span className="text-xs sm:text-sm text-gray-500 text-center sm:text-left">
+                                        Anonymous submission
+                                      </span>
+                                    )}
                                   </div>
                                 ) : (
                                   <div className="flex items-center justify-center sm:justify-start space-x-2">
