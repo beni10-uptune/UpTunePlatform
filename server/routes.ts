@@ -114,6 +114,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get upcoming challenges
+  app.get("/api/weekly-challenge/upcoming", async (req, res) => {
+    try {
+      const { WeeklyChallengeScheduler } = await import("./weekly-challenge-scheduler.js");
+      const limit = parseInt(req.query.limit as string) || 5;
+      const upcoming = await WeeklyChallengeScheduler.getUpcomingChallenges(limit);
+      res.json(upcoming);
+    } catch (error) {
+      console.error("Upcoming challenges error:", error);
+      res.status(500).json({ error: "Failed to fetch upcoming challenges" });
+    }
+  });
+
   // Challenge Submissions
   app.post("/api/challenge-submissions", async (req, res) => {
     try {

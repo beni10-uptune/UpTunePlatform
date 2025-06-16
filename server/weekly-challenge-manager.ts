@@ -1,6 +1,7 @@
 import { db } from "./db.js";
 import { weeklyChallenge } from "../shared/schema.js";
 import { eq, and, lte, gte } from "drizzle-orm";
+import { WeeklyChallengeScheduler } from "./weekly-challenge-scheduler.js";
 
 export class WeeklyChallengeManager {
   private static instance: WeeklyChallengeManager;
@@ -19,12 +20,15 @@ export class WeeklyChallengeManager {
    * Initialize the weekly challenge rotation system
    */
   async initialize() {
+    // Initialize the complete challenge schedule first
+    await WeeklyChallengeScheduler.initializeChallengeSchedule();
+    
     // Check and update challenges immediately
     await this.updateActiveChallenge();
     
     // Set up automatic rotation every hour
     this.intervalId = setInterval(async () => {
-      await this.updateActiveChallenge();
+      await WeeklyChallengeScheduler.checkAndRotateChallenge();
     }, 60 * 60 * 1000); // Check every hour
 
     console.log("Weekly challenge rotation system initialized");
@@ -106,7 +110,7 @@ export class WeeklyChallengeManager {
    * Force refresh the current challenge (useful for manual updates)
    */
   async forceRefresh() {
-    return await this.updateActiveChallenge();
+    return await WeeklyChallengeScheduler.checkAndRotateChallenge();
   }
 
   /**
