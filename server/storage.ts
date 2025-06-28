@@ -46,6 +46,7 @@ import {
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, asc, and, lte, gte, lt, gt, sql } from "drizzle-orm";
+import { count } from "drizzle-orm";
 
 export interface IStorage {
   // Game Rooms
@@ -89,6 +90,30 @@ export interface IStorage {
   getListEntries(listId: number): Promise<ListEntry[]>;
   castVote(vote: InsertEntryVote): Promise<void>;
   getUserVote(entryId: number, userId?: number, guestSessionId?: string): Promise<EntryVote | undefined>;
+  
+  // Musical Journeys
+  getAllJourneys(): Promise<Journey[]>;
+  getPublishedJourneys(): Promise<Journey[]>;
+  getJourneyBySlug(slug: string): Promise<Journey | undefined>;
+  createJourney(journey: InsertJourney): Promise<Journey>;
+  updateJourney(id: number, updates: Partial<InsertJourney>): Promise<Journey>;
+  publishJourney(id: number): Promise<void>;
+  
+  // Community Mixtapes
+  getJourneyMixtapes(journeyId: number): Promise<CommunityMixtape[]>;
+  createCommunityMixtape(mixtape: InsertCommunityMixtape): Promise<CommunityMixtape>;
+  getCommunityMixtapeById(id: number): Promise<CommunityMixtape | undefined>;
+  
+  // Mixtape Submissions
+  submitToMixtape(submission: InsertMixtapeSubmission): Promise<MixtapeSubmission>;
+  getMixtapeSubmissions(mixtapeId: number): Promise<MixtapeSubmission[]>;
+  findExistingMixtapeEntry(mixtapeId: number, spotifyTrackId: string): Promise<MixtapeSubmission | undefined>;
+  voteForMixtapeSubmission(submissionId: number): Promise<void>;
+  
+  // Poll Votes
+  castPollVote(vote: InsertPollVote): Promise<void>;
+  getPollResults(pollId: string): Promise<{ option: string; count: number }[]>;
+  getUserPollVote(pollId: string, userId?: number, guestSessionId?: string): Promise<PollVote | undefined>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -374,6 +399,145 @@ export class DatabaseStorage implements IStorage {
       .where(and(...conditions));
     
     return vote || undefined;
+  }
+
+  // Musical Journeys implementation
+  async getAllJourneys(): Promise<Journey[]> {
+    return await db.select().from(journeys).orderBy(desc(journeys.createdAt));
+  }
+
+  async getPublishedJourneys(): Promise<Journey[]> {
+    return await db.select()
+      .from(journeys)
+      .where(eq(journeys.isPublished, true))
+      .orderBy(desc(journeys.createdAt));
+  }
+
+  async getJourneyBySlug(slug: string): Promise<Journey | undefined> {
+    const [journey] = await db.select()
+      .from(journeys)
+      .where(eq(journeys.slug, slug))
+      .limit(1);
+    return journey;
+  }
+
+  async createJourney(journey: InsertJourney): Promise<Journey> {
+    const [newJourney] = await db.insert(journeys)
+      .values(journey)
+      .returning();
+    return newJourney;
+  }
+
+  async updateJourney(id: number, updates: Partial<InsertJourney>): Promise<Journey> {
+    const [updatedJourney] = await db.update(journeys)
+      .set(updates)
+      .where(eq(journeys.id, id))
+      .returning();
+    return updatedJourney;
+  }
+
+  async publishJourney(id: number): Promise<void> {
+    await db.update(journeys)
+      .set({ isPublished: true })
+      .where(eq(journeys.id, id));
+  }
+
+  // Community Mixtapes implementation
+  async getJourneyMixtapes(journeyId: number): Promise<CommunityMixtape[]> {
+    return await db.select()
+      .from(communityMixtapes)
+      .where(eq(communityMixtapes.journeyId, journeyId))
+      .orderBy(desc(communityMixtapes.createdAt));
+  }
+
+  async createCommunityMixtape(mixtape: InsertCommunityMixtape): Promise<CommunityMixtape> {
+    const [newMixtape] = await db.insert(communityMixtapes)
+      .values(mixtape)
+      .returning();
+    return newMixtape;
+  }
+
+  async getCommunityMixtapeById(id: number): Promise<CommunityMixtape | undefined> {
+    const [mixtape] = await db.select()
+      .from(communityMixtapes)
+      .where(eq(communityMixtapes.id, id))
+      .limit(1);
+    return mixtape;
+  }
+
+  // Mixtape Submissions implementation
+  async submitToMixtape(submission: InsertMixtapeSubmission): Promise<MixtapeSubmission> {
+    const [newSubmission] = await db.insert(mixtapeSubmissions)
+      .values(submission)
+      .returning();
+    return newSubmission;
+  }
+
+  async getMixtapeSubmissions(mixtapeId: number): Promise<MixtapeSubmission[]> {
+    return await db.select()
+      .from(mixtapeSubmissions)
+      .where(eq(mixtapeSubmissions.mixtapeId, mixtapeId))
+      .orderBy(desc(mixtapeSubmissions.voteScore), desc(mixtapeSubmissions.createdAt));
+  }
+
+  async findExistingMixtapeEntry(mixtapeId: number, spotifyTrackId: string): Promise<MixtapeSubmission | undefined> {
+    const [entry] = await db.select()
+      .from(mixtapeSubmissions)
+      .where(and(
+        eq(mixtapeSubmissions.mixtapeId, mixtapeId),
+        eq(mixtapeSubmissions.spotifyTrackId, spotifyTrackId)
+      ))
+      .limit(1);
+    return entry;
+  }
+
+  async voteForMixtapeSubmission(submissionId: number): Promise<void> {
+    await db.update(mixtapeSubmissions)
+      .set({ 
+        voteScore: sql`${mixtapeSubmissions.voteScore} + 1`
+      })
+      .where(eq(mixtapeSubmissions.id, submissionId));
+  }
+
+  // Poll Votes implementation
+  async castPollVote(vote: InsertPollVote): Promise<void> {
+    await db.insert(pollVotes)
+      .values(vote)
+      .onConflictDoUpdate({
+        target: [pollVotes.pollId, pollVotes.userId, pollVotes.guestSessionId],
+        set: { chosenOption: vote.chosenOption }
+      });
+  }
+
+  async getPollResults(pollId: string): Promise<{ option: string; count: number }[]> {
+    const results = await db.select({
+      option: pollVotes.chosenOption,
+      count: count(pollVotes.chosenOption)
+    })
+    .from(pollVotes)
+    .where(eq(pollVotes.pollId, pollId))
+    .groupBy(pollVotes.chosenOption);
+
+    return results.map(r => ({ option: r.option, count: Number(r.count) }));
+  }
+
+  async getUserPollVote(pollId: string, userId?: number, guestSessionId?: string): Promise<PollVote | undefined> {
+    const conditions = [eq(pollVotes.pollId, pollId)];
+    
+    if (userId) {
+      conditions.push(eq(pollVotes.userId, userId));
+    } else if (guestSessionId) {
+      conditions.push(eq(pollVotes.guestSessionId, guestSessionId));
+    } else {
+      return undefined;
+    }
+
+    const [vote] = await db.select()
+      .from(pollVotes)
+      .where(and(...conditions))
+      .limit(1);
+    
+    return vote;
   }
 }
 

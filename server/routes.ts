@@ -1,7 +1,20 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertGameRoomSchema, insertPlayerSchema, insertSongSchema, insertChallengeSubmissionSchema, insertTeamsWaitlistSchema, insertListEntrySchema, insertEntryVoteSchema, type AiConversation } from "@shared/schema";
+import { 
+  insertGameRoomSchema, 
+  insertPlayerSchema, 
+  insertSongSchema, 
+  insertChallengeSubmissionSchema, 
+  insertTeamsWaitlistSchema, 
+  insertListEntrySchema, 
+  insertEntryVoteSchema, 
+  insertJourneySchema,
+  insertCommunityMixtapeSchema,
+  insertMixtapeSubmissionSchema,
+  insertPollVoteSchema,
+  type AiConversation 
+} from "@shared/schema";
 import { sendTeamContactEmail } from "./email";
 import { analyzePlaylist, enhanceStory, generateSongRecommendations, suggestGameMode, generateAiHostQuestion, generateSongSuggestionsFromResponse } from "./ai";
 
