@@ -10,6 +10,8 @@ import WeeklyChallenge from "@/pages/weekly-challenge";
 import TeamsWaitlist from "@/pages/teams-waitlist";
 import CommunityLists from "@/pages/community-lists";
 import CommunityListDetail from "@/pages/community-list-detail";
+import JourneysPage from "@/pages/journeys";
+import JourneyPage from "@/pages/journey";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -23,6 +25,8 @@ function Router() {
       <Route path="/teams" component={TeamsWaitlist} />
       <Route path="/community-lists" component={CommunityLists} />
       <Route path="/community-lists/:slug" component={CommunityListDetail} />
+      <Route path="/journeys" component={JourneysPage} />
+      <Route path="/journeys/:slug" component={JourneyPage} />
       <Route component={NotFound} />
     </Switch>
   );
