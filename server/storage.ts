@@ -20,6 +20,14 @@ import {
   type InsertListEntry,
   type EntryVote,
   type InsertEntryVote,
+  type Journey,
+  type InsertJourney,
+  type CommunityMixtape,
+  type InsertCommunityMixtape,
+  type MixtapeSubmission,
+  type InsertMixtapeSubmission,
+  type PollVote,
+  type InsertPollVote,
   gameRooms,
   players,
   songs,
@@ -30,7 +38,11 @@ import {
   aiConversations,
   communityLists,
   listEntries,
-  entryVotes
+  entryVotes,
+  journeys,
+  communityMixtapes,
+  mixtapeSubmissions,
+  pollVotes
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, asc, and, lte, gte, lt, gt, sql } from "drizzle-orm";
