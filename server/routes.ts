@@ -720,6 +720,205 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Musical Journeys API
+  app.get("/api/journeys", async (req, res) => {
+    try {
+      const { published } = req.query;
+      const journeys = published === 'true' 
+        ? await storage.getPublishedJourneys()
+        : await storage.getAllJourneys();
+      res.json(journeys);
+    } catch (error) {
+      console.error("Journey fetch error:", error);
+      res.status(500).json({ error: "Failed to fetch journeys" });
+    }
+  });
+
+  app.get("/api/journeys/:slug", async (req, res) => {
+    try {
+      const journey = await storage.getJourneyBySlug(req.params.slug);
+      if (!journey) {
+        return res.status(404).json({ error: "Journey not found" });
+      }
+      res.json(journey);
+    } catch (error) {
+      console.error("Journey fetch error:", error);
+      res.status(500).json({ error: "Failed to fetch journey" });
+    }
+  });
+
+  app.post("/api/journeys", async (req, res) => {
+    try {
+      const journeyData = insertJourneySchema.parse(req.body);
+      const journey = await storage.createJourney(journeyData);
+      res.json(journey);
+    } catch (error: any) {
+      console.error("Journey creation error:", error);
+      res.status(400).json({ error: "Invalid journey data" });
+    }
+  });
+
+  app.patch("/api/journeys/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const updates = insertJourneySchema.partial().parse(req.body);
+      const journey = await storage.updateJourney(id, updates);
+      res.json(journey);
+    } catch (error: any) {
+      console.error("Journey update error:", error);
+      res.status(400).json({ error: "Invalid journey data" });
+    }
+  });
+
+  app.post("/api/journeys/:id/publish", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      await storage.publishJourney(id);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Journey publish error:", error);
+      res.status(500).json({ error: "Failed to publish journey" });
+    }
+  });
+
+  // Community Mixtapes API
+  app.get("/api/journeys/:journeyId/mixtapes", async (req, res) => {
+    try {
+      const journeyId = parseInt(req.params.journeyId);
+      const mixtapes = await storage.getJourneyMixtapes(journeyId);
+      res.json(mixtapes);
+    } catch (error) {
+      console.error("Mixtapes fetch error:", error);
+      res.status(500).json({ error: "Failed to fetch mixtapes" });
+    }
+  });
+
+  app.post("/api/journeys/:journeyId/mixtapes", async (req, res) => {
+    try {
+      const journeyId = parseInt(req.params.journeyId);
+      const mixtapeData = insertCommunityMixtapeSchema.parse({
+        ...req.body,
+        journeyId
+      });
+      const mixtape = await storage.createCommunityMixtape(mixtapeData);
+      res.json(mixtape);
+    } catch (error: any) {
+      console.error("Mixtape creation error:", error);
+      res.status(400).json({ error: "Invalid mixtape data" });
+    }
+  });
+
+  app.get("/api/mixtapes/:id", async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      const mixtape = await storage.getCommunityMixtapeById(id);
+      if (!mixtape) {
+        return res.status(404).json({ error: "Mixtape not found" });
+      }
+      res.json(mixtape);
+    } catch (error) {
+      console.error("Mixtape fetch error:", error);
+      res.status(500).json({ error: "Failed to fetch mixtape" });
+    }
+  });
+
+  // Mixtape Submissions API
+  app.get("/api/mixtapes/:mixtapeId/submissions", async (req, res) => {
+    try {
+      const mixtapeId = parseInt(req.params.mixtapeId);
+      const submissions = await storage.getMixtapeSubmissions(mixtapeId);
+      res.json(submissions);
+    } catch (error) {
+      console.error("Submissions fetch error:", error);
+      res.status(500).json({ error: "Failed to fetch submissions" });
+    }
+  });
+
+  app.post("/api/mixtapes/:mixtapeId/submissions", async (req, res) => {
+    try {
+      const mixtapeId = parseInt(req.params.mixtapeId);
+      const submissionData = insertMixtapeSubmissionSchema.parse({
+        ...req.body,
+        mixtapeId
+      });
+      
+      // Check for existing submission
+      const existingEntry = await storage.findExistingMixtapeEntry(mixtapeId, req.body.spotifyTrackId);
+      if (existingEntry) {
+        await storage.voteForMixtapeSubmission(existingEntry.id);
+        return res.status(200).json({
+          success: true,
+          message: "This song is already in the mixtape! We've added your vote.",
+          isDuplicate: true,
+          existingEntry
+        });
+      }
+      
+      const submission = await storage.submitToMixtape(submissionData);
+      res.json(submission);
+    } catch (error: any) {
+      console.error("Submission creation error:", error);
+      res.status(400).json({ error: "Invalid submission data" });
+    }
+  });
+
+  app.post("/api/mixtapes/submissions/:submissionId/vote", async (req, res) => {
+    try {
+      const submissionId = parseInt(req.params.submissionId);
+      await storage.voteForMixtapeSubmission(submissionId);
+      res.json({ success: true });
+    } catch (error) {
+      console.error("Vote error:", error);
+      res.status(500).json({ error: "Failed to vote" });
+    }
+  });
+
+  // Poll Votes API
+  app.post("/api/polls/:pollId/vote", async (req, res) => {
+    try {
+      const pollId = req.params.pollId;
+      const voteData = insertPollVoteSchema.parse({
+        ...req.body,
+        pollId
+      });
+      
+      await storage.castPollVote(voteData);
+      res.json({ success: true });
+    } catch (error: any) {
+      console.error("Poll vote error:", error);
+      res.status(400).json({ error: "Invalid vote data" });
+    }
+  });
+
+  app.get("/api/polls/:pollId/results", async (req, res) => {
+    try {
+      const pollId = req.params.pollId;
+      const results = await storage.getPollResults(pollId);
+      res.json(results);
+    } catch (error) {
+      console.error("Poll results error:", error);
+      res.status(500).json({ error: "Failed to fetch poll results" });
+    }
+  });
+
+  app.get("/api/polls/:pollId/vote", async (req, res) => {
+    try {
+      const pollId = req.params.pollId;
+      const { userId, guestSessionId } = req.query;
+      
+      const vote = await storage.getUserPollVote(
+        pollId,
+        userId ? parseInt(userId as string) : undefined,
+        guestSessionId as string
+      );
+      
+      res.json(vote || null);
+    } catch (error) {
+      console.error("User poll vote fetch error:", error);
+      res.status(500).json({ error: "Failed to fetch user vote" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
