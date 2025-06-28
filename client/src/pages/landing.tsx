@@ -427,10 +427,10 @@ const LandingPage = () => {
                       </Badge>
                     </div>
                     <Link href="/journeys">
-                      <Button size="lg" className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:opacity-90 mt-4">
-                        <Play className="w-5 h-5 mr-2" />
-                        Start Your Journey
-                        <ArrowRight className="w-5 h-5 ml-2" />
+                      <Button size="lg" className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:opacity-90 mt-4 w-full sm:w-auto">
+                        <Play className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
+                        <span className="truncate">Start Your Journey</span>
+                        <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
                       </Button>
                     </Link>
                   </div>
