@@ -1,6 +1,6 @@
 import { useParams, Link } from "wouter";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -9,165 +9,97 @@ import { Separator } from "@/components/ui/separator";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { ArrowLeft, Play, Pause, Heart, Share2, ExternalLink } from "lucide-react";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Textarea } from "@/components/ui/textarea";
+import { ArrowLeft, Play, Pause, Heart, Share2, ExternalLink, Music, Youtube, ChevronDown, Users, Headphones } from "lucide-react";
+import { SiSpotify } from "react-icons/si";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { motion, useScroll, useTransform } from "framer-motion";
 import type { Journey, CommunityMixtape, MixtapeSubmission, PollVote } from "@shared/schema";
 
-interface JourneyContent {
-  sections: Array<{
-    type: 'intro' | 'content' | 'spotify_preview' | 'poll' | 'community_mixtape';
-    title?: string;
-    content?: string;
-    track_id?: string;
-    artist?: string;
-    context?: string;
-    id?: string;
-    question?: string;
-    options?: string[];
-    description?: string;
-    prompt?: string;
-  }>;
-}
-
-interface SpotifyTrack {
-  id: string;
-  name: string;
-  artists: Array<{ name: string }>;
-  external_urls: { spotify: string };
-  preview_url: string | null;
-}
-
 export default function JourneyPage() {
-  const params = useParams();
-  const slug = params.slug as string;
+  const { slug } = useParams();
+  const [currentAudio, setCurrentAudio] = useState<HTMLAudioElement | null>(null);
+  const [playingTrack, setPlayingTrack] = useState<string | null>(null);
+  const [pollAnswers, setPollAnswers] = useState<Record<string, string>>({});
+  const [mixtapeEntries, setMixtapeEntries] = useState<Record<number, { track: any; reasoning: string }>>({});
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const containerRef = useRef<HTMLDivElement>(null);
   
-  const [currentSection, setCurrentSection] = useState(0);
-  const [pollVotes, setPollVotes] = useState<Record<string, string>>({});
-  const [audioPlaying, setAudioPlaying] = useState<string | null>(null);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedTrack, setSelectedTrack] = useState<SpotifyTrack | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"]
+  });
 
-  // Fetch journey data
+  const headerOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0.8]);
+  const heroScale = useTransform(scrollYProgress, [0, 0.5], [1, 1.1]);
+
   const { data: journey, isLoading } = useQuery({
-    queryKey: ['/api/journeys', slug],
-    queryFn: async () => {
-      const response = await fetch(`/api/journeys/${slug}`);
-      if (!response.ok) throw new Error('Journey not found');
-      return response.json() as Promise<Journey>;
-    }
+    queryKey: [`/api/journeys/${slug}`],
+    enabled: !!slug,
   });
 
-  // Parse journey content
-  const content: JourneyContent = journey?.content ? JSON.parse(journey.content) : { sections: [] };
-  const totalSections = content.sections.length;
-  const progress = totalSections > 0 ? ((currentSection + 1) / totalSections) * 100 : 0;
-
-  // Fetch mixtapes for this journey
-  const { data: mixtapes } = useQuery({
-    queryKey: ['/api/journeys', journey?.id, 'mixtapes'],
-    queryFn: async () => {
-      if (!journey?.id) return [];
-      const response = await fetch(`/api/journeys/${journey.id}/mixtapes`);
-      return response.json() as Promise<CommunityMixtape[]>;
-    },
-    enabled: !!journey?.id
+  const { data: mixtapes = [] } = useQuery({
+    queryKey: [`/api/journeys/${journey?.id}/mixtapes`],
+    enabled: !!journey?.id,
   });
 
-  // Search Spotify tracks
-  const { data: searchResults } = useQuery({
-    queryKey: ['/api/spotify/search', searchTerm],
-    queryFn: async () => {
-      if (!searchTerm.trim()) return [];
-      const response = await fetch(`/api/spotify/search?q=${encodeURIComponent(searchTerm)}&limit=10`);
-      return response.json() as Promise<SpotifyTrack[]>;
-    },
-    enabled: searchTerm.length > 2
-  });
-
-  // Submit to mixtape mutation
-  const submitToMixtape = useMutation({
-    mutationFn: async ({ mixtapeId, track }: { mixtapeId: number, track: SpotifyTrack }) => {
-      const response = await fetch(`/api/mixtapes/${mixtapeId}/submissions`, {
+  // Mutations for interactions
+  const pollVoteMutation = useMutation({
+    mutationFn: async (vote: { pollId: string; option: string; guestSessionId: string }) => {
+      return apiRequest(`/api/poll-votes`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          spotifyTrackId: track.id,
-          trackTitle: track.name,
-          trackArtist: track.artists?.[0]?.name || 'Unknown Artist',
-          spotifyUrl: track.external_urls?.spotify || '',
-          reason: `Added from "${journey?.title}" journey`
-        })
+        body: JSON.stringify(vote),
       });
-      return response.json();
     },
     onSuccess: () => {
-      toast({ title: "Song added to mixtape!", description: "Your contribution has been added." });
-      setSelectedTrack(null);
-      setSearchTerm("");
-      queryClient.invalidateQueries({ queryKey: ['/api/mixtapes'] });
+      toast({ title: "Vote recorded!", description: "Thanks for participating in the poll." });
     },
-    onError: (error: any) => {
-      toast({ 
-        title: "Failed to add song", 
-        description: error.message || "Something went wrong",
-        variant: "destructive"
-      });
-    }
   });
 
-  // Poll vote mutation
-  const votePoll = useMutation({
-    mutationFn: async ({ pollId, option }: { pollId: string, option: string }) => {
-      const response = await fetch(`/api/polls/${pollId}/vote`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          chosenOption: option,
-          guestSessionId: `guest_${Date.now()}_${Math.random()}`
-        })
-      });
-      return response.json();
-    },
-    onSuccess: () => {
-      toast({ title: "Vote recorded!", description: "Thank you for participating." });
+  const playTrack = (trackId: string, previewUrl: string) => {
+    if (currentAudio) {
+      currentAudio.pause();
     }
-  });
 
-  const handlePollVote = (pollId: string, option: string) => {
-    setPollVotes(prev => ({ ...prev, [pollId]: option }));
-    votePoll.mutate({ pollId, option });
-  };
-
-  const handleAudioToggle = (trackId: string, previewUrl: string | null) => {
-    if (!previewUrl) {
-      toast({ title: "No preview available", description: "This track doesn't have a preview.", variant: "destructive" });
+    if (playingTrack === trackId) {
+      setPlayingTrack(null);
+      setCurrentAudio(null);
       return;
     }
 
-    if (audioPlaying === trackId) {
-      setAudioPlaying(null);
-    } else {
-      setAudioPlaying(trackId);
-      // In a real implementation, you'd play the audio here
-      setTimeout(() => setAudioPlaying(null), 30000); // Auto-stop after 30 seconds
-    }
+    const audio = new Audio(previewUrl);
+    audio.play();
+    setCurrentAudio(audio);
+    setPlayingTrack(trackId);
+
+    audio.onended = () => {
+      setPlayingTrack(null);
+      setCurrentAudio(null);
+    };
+  };
+
+  const handlePollVote = (pollId: string, option: string) => {
+    setPollAnswers({ ...pollAnswers, [pollId]: option });
+    pollVoteMutation.mutate({
+      pollId,
+      option,
+      guestSessionId: `guest_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+    });
   };
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-6">
-        <div className="container mx-auto max-w-4xl">
-          <div className="animate-pulse space-y-6">
-            <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded w-1/4"></div>
-            <div className="h-64 bg-gray-200 dark:bg-gray-700 rounded"></div>
-          </div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+        <div className="text-center">
+          <motion.div 
+            animate={{ rotate: 360 }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full mx-auto mb-6"
+          />
+          <p className="text-white/80 text-xl">Loading your musical journey...</p>
         </div>
       </div>
     );
@@ -175,233 +107,367 @@ export default function JourneyPage() {
 
   if (!journey) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-6">
-        <div className="container mx-auto max-w-4xl text-center py-12">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Journey Not Found</h1>
-          <p className="text-gray-600 dark:text-gray-300 mb-6">The musical journey you're looking for doesn't exist.</p>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+        <div className="text-center text-white">
+          <h1 className="text-4xl font-bold mb-4">Journey Not Found</h1>
+          <p className="text-white/80 mb-8 text-xl">The musical journey you're looking for doesn't exist.</p>
           <Link href="/journeys">
-            <Button>Back to Journeys</Button>
+            <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100">
+              <ArrowLeft className="w-5 h-5 mr-2" />
+              Back to Journeys
+            </Button>
           </Link>
         </div>
       </div>
     );
   }
 
-  const currentSectionData = content.sections[currentSection];
+  const content = JSON.parse(journey.content);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 p-6">
-      <div className="container mx-auto max-w-4xl">
-        {/* Header */}
-        <div className="mb-6">
-          <Link href="/journeys">
-            <Button variant="ghost" className="mb-4 text-purple-700 dark:text-purple-300">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Journeys
-            </Button>
-          </Link>
-          
-          <div className="mb-4">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">
-              {journey.title}
-            </h1>
-            <div className="flex flex-wrap gap-2">
-              <Button size="sm" variant="outline" className="flex-1 sm:flex-none">
+    <div ref={containerRef} className="relative">
+      {/* Fixed Navigation */}
+      <motion.div 
+        style={{ opacity: headerOpacity }}
+        className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-lg border-b border-white/10"
+      >
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <Link href="/journeys">
+              <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Back to Journeys
+              </Button>
+            </Link>
+            <div className="flex items-center gap-3">
+              <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
                 <Heart className="w-4 h-4 mr-2" />
                 Save
               </Button>
-              <Button size="sm" variant="outline" className="flex-1 sm:flex-none">
+              <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
                 <Share2 className="w-4 h-4 mr-2" />
                 Share
               </Button>
             </div>
           </div>
-          
-          <p className="text-gray-600 dark:text-gray-300 mb-4">
-            {journey.introduction}
-          </p>
-          
-          {/* Progress */}
-          <div className="mb-6">
-            <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
-              <span>Progress</span>
-              <span>{currentSection + 1} of {totalSections}</span>
-            </div>
-            <Progress value={progress} className="h-2" />
-          </div>
+        </div>
+      </motion.div>
+
+      {/* Immersive Hero Section */}
+      <motion.section 
+        style={{ scale: heroScale }}
+        className="relative h-screen overflow-hidden"
+      >
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-fixed"
+          style={{ backgroundImage: `url(${journey.headlineImageUrl})` }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80" />
+        
+        <div className="relative h-full flex items-center justify-center text-center text-white px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 0.5 }}
+            className="max-w-4xl"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8 }}
+              className="mb-6"
+            >
+              <Badge className="mb-6 bg-white/20 text-white border-white/30 text-lg px-4 py-2">
+                <Music className="w-5 h-5 mr-2" />
+                Musical Journey
+              </Badge>
+            </motion.div>
+            
+            <motion.h1 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="text-5xl md:text-7xl font-bold mb-8 leading-tight"
+            >
+              {journey.title}
+            </motion.h1>
+            
+            <motion.p 
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="text-xl md:text-2xl text-white/90 leading-relaxed mb-12"
+            >
+              {journey.introduction}
+            </motion.p>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="flex flex-col sm:flex-row gap-4 justify-center"
+            >
+              <Button size="lg" className="bg-white text-black hover:bg-gray-100 text-lg px-8 py-4">
+                <Play className="w-5 h-5 mr-2" />
+                Start Journey
+              </Button>
+              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10 text-lg px-8 py-4">
+                <SiSpotify className="w-5 h-5 mr-2" />
+                Open Playlist
+              </Button>
+            </motion.div>
+          </motion.div>
         </div>
 
-        {/* Current Section Content */}
-        {currentSectionData && (
-          <Card className="mb-6 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-            <CardContent className="p-8">
-              {/* Intro/Content Section */}
-              {(currentSectionData.type === 'intro' || currentSectionData.type === 'content') && (
-                <div>
-                  {currentSectionData.title && (
-                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                      {currentSectionData.title}
-                    </h2>
-                  )}
-                  <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-lg">
-                    {currentSectionData.content}
-                  </p>
+        {/* Scroll indicator */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 2, duration: 1 }}
+          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white"
+        >
+          <motion.div
+            animate={{ y: [0, 10, 0] }}
+            transition={{ duration: 2, repeat: Infinity }}
+            className="flex flex-col items-center"
+          >
+            <span className="text-sm mb-2">Scroll to explore</span>
+            <ChevronDown className="w-6 h-6" />
+          </motion.div>
+        </motion.div>
+      </motion.section>
+
+      {/* Ultimate Playlist Section */}
+      <section className="py-20 bg-gradient-to-r from-green-900 via-green-800 to-emerald-900 text-white">
+        <div className="max-w-6xl mx-auto px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-16"
+          >
+            <Badge className="mb-6 bg-green-400 text-green-900 text-lg px-4 py-2">
+              <SiSpotify className="w-5 h-5 mr-2" />
+              Curated by Uptune
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">The Ultimate {journey.title} Playlist</h2>
+            <p className="text-xl text-green-100 mb-8 max-w-3xl mx-auto">
+              Our music experts have curated the definitive collection of tracks that tell this story. 
+              Listen on Spotify and follow for updates.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="bg-green-400 text-green-900 hover:bg-green-300 text-lg px-8 py-4">
+                <SiSpotify className="w-5 h-5 mr-2" />
+                Listen on Spotify
+              </Button>
+              <Button size="lg" variant="outline" className="border-green-400 text-green-400 hover:bg-green-400/10 text-lg px-8 py-4">
+                <Heart className="w-5 h-5 mr-2" />
+                Follow Playlist
+              </Button>
+            </div>
+          </motion.div>
+
+          {/* Sample tracks preview */}
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <motion.div
+                key={i}
+                whileHover={{ scale: 1.05 }}
+                className="bg-white/10 backdrop-blur rounded-xl p-6 hover:bg-white/20 transition-all duration-300"
+              >
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-12 h-12 bg-green-400 rounded-lg flex items-center justify-center">
+                    <Music className="w-6 h-6 text-green-900" />
+                  </div>
+                  <Button size="sm" variant="ghost" className="text-white hover:bg-white/10">
+                    <Play className="w-4 h-4" />
+                  </Button>
+                </div>
+                <h4 className="font-semibold mb-1">Track Title {i}</h4>
+                <p className="text-green-200 text-sm">Artist Name</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Content Sections */}
+      <div className="bg-gradient-to-b from-gray-50 to-white">
+        {content.sections?.map((section: any, index: number) => (
+          <motion.section
+            key={index}
+            initial={{ opacity: 0, y: 100 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: index * 0.1 }}
+            className="py-16 border-b border-gray-100 last:border-b-0"
+          >
+            <div className="max-w-6xl mx-auto px-6">
+              {section.type === 'intro' && (
+                <div className="text-center max-w-4xl mx-auto">
+                  <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8">{section.title}</h2>
+                  <p className="text-xl text-gray-700 leading-relaxed">{section.content}</p>
                 </div>
               )}
 
-              {/* Spotify Preview Section */}
-              {currentSectionData.type === 'spotify_preview' && (
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                    Featured Track
-                  </h2>
-                  <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 p-4 sm:p-6 rounded-lg border border-green-200 dark:border-green-700">
-                    <div className="mb-4">
-                      <div className="mb-3">
-                        <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
-                          {currentSectionData.title}
-                        </h3>
-                        <p className="text-gray-600 dark:text-gray-300">
-                          by {currentSectionData.artist}
-                        </p>
-                      </div>
-                      <div className="flex flex-col sm:flex-row gap-2">
-                        <Button
-                          onClick={() => handleAudioToggle(currentSectionData.track_id!, null)}
-                          className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white"
-                        >
-                          {audioPlaying === currentSectionData.track_id ? (
-                            <Pause className="w-4 h-4 mr-2" />
-                          ) : (
-                            <Play className="w-4 h-4 mr-2" />
-                          )}
-                          {audioPlaying === currentSectionData.track_id ? 'Pause' : 'Preview'}
-                        </Button>
-                        <Button variant="outline" asChild className="w-full sm:w-auto">
-                          <a 
-                            href={`https://open.spotify.com/track/${currentSectionData.track_id}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <ExternalLink className="w-4 h-4 mr-2" />
-                            Spotify
-                          </a>
-                        </Button>
-                      </div>
-                    </div>
-                    <p className="text-gray-700 dark:text-gray-300">
-                      {currentSectionData.context}
-                    </p>
+              {section.type === 'content' && (
+                <div className="text-center max-w-4xl mx-auto">
+                  <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-8">{section.title}</h2>
+                  <p className="text-xl text-gray-700 leading-relaxed">{section.content}</p>
+                </div>
+              )}
+
+              {section.type === 'youtube_video' && (
+                <div className="max-w-4xl mx-auto">
+                  <div className="text-center mb-8">
+                    <Badge className="mb-4 bg-red-100 text-red-800 text-lg px-4 py-2">
+                      <Youtube className="w-5 h-5 mr-2" />
+                      Featured Video
+                    </Badge>
+                    <h3 className="text-3xl font-bold text-gray-900 mb-4">{section.title}</h3>
+                    <p className="text-gray-600">{section.description}</p>
+                  </div>
+                  <div className="relative w-full aspect-video rounded-2xl overflow-hidden shadow-2xl">
+                    <iframe
+                      src={`https://www.youtube.com/embed/${section.video_id}`}
+                      title={section.title}
+                      className="w-full h-full"
+                      frameBorder="0"
+                      allowFullScreen
+                    />
                   </div>
                 </div>
               )}
 
-              {/* Poll Section */}
-              {currentSectionData.type === 'poll' && currentSectionData.id && (
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                    Your Opinion
-                  </h2>
-                  <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg border border-blue-200 dark:border-blue-700">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                      {currentSectionData.question}
-                    </h3>
-                    <RadioGroup
-                      value={pollVotes[currentSectionData.id] || ""}
-                      onValueChange={(value) => handlePollVote(currentSectionData.id!, value)}
+              {section.type === 'spotify_preview' && (
+                <div className="max-w-4xl mx-auto">
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-8 border border-green-200 shadow-lg"
+                  >
+                    <div className="flex flex-col md:flex-row items-center gap-8">
+                      <div className="w-32 h-32 bg-green-200 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <Music className="w-16 h-16 text-green-700" />
+                      </div>
+                      <div className="flex-1 text-center md:text-left">
+                        <Badge className="mb-4 bg-green-100 text-green-800">
+                          Featured Track
+                        </Badge>
+                        <h3 className="text-3xl font-bold text-gray-900 mb-2">{section.title}</h3>
+                        <p className="text-green-700 text-lg mb-4">by {section.artist}</p>
+                        <p className="text-gray-700 leading-relaxed mb-6">{section.context}</p>
+                        <div className="flex flex-col sm:flex-row gap-3">
+                          <Button 
+                            onClick={() => playTrack(section.track_id, `https://p.scdn.co/mp3-preview/${section.track_id}`)}
+                            className="bg-green-600 hover:bg-green-700"
+                          >
+                            {playingTrack === section.track_id ? <Pause className="w-5 h-5 mr-2" /> : <Play className="w-5 h-5 mr-2" />}
+                            {playingTrack === section.track_id ? 'Pause' : 'Play Preview'}
+                          </Button>
+                          <Button variant="outline" className="border-green-600 text-green-600 hover:bg-green-50">
+                            <SiSpotify className="w-5 h-5 mr-2" />
+                            Open in Spotify
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                </div>
+              )}
+
+              {section.type === 'poll' && (
+                <div className="max-w-3xl mx-auto">
+                  <motion.div
+                    whileHover={{ scale: 1.01 }}
+                    className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-200 shadow-lg"
+                  >
+                    <div className="text-center mb-8">
+                      <Badge className="mb-4 bg-blue-100 text-blue-800 text-lg px-4 py-2">
+                        <Users className="w-5 h-5 mr-2" />
+                        Community Poll
+                      </Badge>
+                      <h3 className="text-3xl font-bold text-gray-900">{section.question}</h3>
+                    </div>
+                    <RadioGroup 
+                      value={pollAnswers[section.id] || ""} 
+                      onValueChange={(value) => handlePollVote(section.id, value)}
+                      className="space-y-4"
                     >
-                      {currentSectionData.options?.map((option) => (
-                        <div key={option} className="flex items-center space-x-2">
-                          <RadioGroupItem value={option} id={option} />
-                          <Label htmlFor={option} className="text-gray-700 dark:text-gray-300">
+                      {section.options.map((option: string, optionIndex: number) => (
+                        <motion.div 
+                          key={optionIndex}
+                          whileHover={{ scale: 1.02 }}
+                          className="flex items-center space-x-4 p-4 rounded-xl hover:bg-blue-50 transition-all duration-200 border border-blue-100"
+                        >
+                          <RadioGroupItem value={option} id={`${section.id}-${optionIndex}`} />
+                          <Label htmlFor={`${section.id}-${optionIndex}`} className="text-gray-700 cursor-pointer flex-1 text-lg">
                             {option}
                           </Label>
-                        </div>
+                        </motion.div>
                       ))}
                     </RadioGroup>
-                    {pollVotes[currentSectionData.id] && (
-                      <Badge className="mt-4 bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
-                        Vote recorded!
-                      </Badge>
+                    {pollAnswers[section.id] && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="mt-6 text-center"
+                      >
+                        <Badge className="bg-blue-100 text-blue-800 text-lg px-4 py-2">
+                          ✓ Vote recorded: {pollAnswers[section.id]}
+                        </Badge>
+                      </motion.div>
                     )}
-                  </div>
+                  </motion.div>
                 </div>
               )}
 
-              {/* Community Mixtape Section */}
-              {currentSectionData.type === 'community_mixtape' && (
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                    {currentSectionData.title}
-                  </h2>
-                  <div className="bg-purple-50 dark:bg-purple-900/20 p-6 rounded-lg border border-purple-200 dark:border-purple-700">
-                    <p className="text-gray-700 dark:text-gray-300 mb-4">
-                      {currentSectionData.description}
-                    </p>
-                    
-                    <div className="space-y-4">
-                      <Input
-                        placeholder="Search for a song to add..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        className="bg-white dark:bg-gray-800"
-                      />
-                      
-                      {searchResults && searchResults.length > 0 && (
-                        <div className="max-h-48 overflow-y-auto space-y-2">
-                          {searchResults.map((track) => (
-                            <div key={track.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 bg-white dark:bg-gray-800 rounded border">
-                              <div className="flex-1 min-w-0">
-                                <div className="font-medium text-gray-900 dark:text-white truncate">
-                                  {track.name}
-                                </div>
-                                <div className="text-sm text-gray-600 dark:text-gray-400 truncate">
-                                  {track.artists?.[0]?.name || 'Unknown Artist'}
-                                </div>
-                              </div>
-                              <Button
-                                size="sm"
-                                onClick={() => {
-                                  const mixtape = mixtapes?.[0];
-                                  if (mixtape) {
-                                    submitToMixtape.mutate({ mixtapeId: mixtape.id, track });
-                                  }
-                                }}
-                                disabled={submitToMixtape.isPending}
-                                className="w-full sm:w-auto shrink-0"
-                              >
-                                Add
-                              </Button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
+              {section.type === 'community_mixtape' && (
+                <div className="max-w-4xl mx-auto">
+                  <motion.div
+                    whileHover={{ scale: 1.01 }}
+                    className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-8 border border-purple-200 shadow-lg"
+                  >
+                    <div className="text-center mb-8">
+                      <Badge className="mb-4 bg-purple-100 text-purple-800 text-lg px-4 py-2">
+                        <Headphones className="w-5 h-5 mr-2" />
+                        Community Mixtape
+                      </Badge>
+                      <h3 className="text-3xl font-bold text-gray-900 mb-4">{section.title}</h3>
+                      <p className="text-gray-700 text-lg leading-relaxed">{section.description}</p>
                     </div>
-                  </div>
+                    
+                    <div className="space-y-6">
+                      <div>
+                        <Label className="text-lg font-medium text-gray-700 mb-3 block">Search for a song</Label>
+                        <Input
+                          placeholder="Search for songs on Spotify..."
+                          className="w-full h-12 text-lg"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label className="text-lg font-medium text-gray-700 mb-3 block">Why does this song belong here?</Label>
+                        <Textarea
+                          placeholder={section.prompt}
+                          className="w-full min-h-32 text-lg"
+                        />
+                      </div>
+                      
+                      <Button size="lg" className="w-full bg-purple-600 hover:bg-purple-700 text-lg py-4">
+                        <Music className="w-5 h-5 mr-2" />
+                        Add to Community Mixtape
+                      </Button>
+                    </div>
+                  </motion.div>
                 </div>
               )}
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Navigation */}
-        <div className="flex flex-col sm:flex-row gap-3 sm:justify-between">
-          <Button
-            variant="outline"
-            onClick={() => setCurrentSection(Math.max(0, currentSection - 1))}
-            disabled={currentSection === 0}
-            className="w-full sm:w-auto"
-          >
-            Previous
-          </Button>
-          <Button
-            onClick={() => setCurrentSection(Math.min(totalSections - 1, currentSection + 1))}
-            disabled={currentSection === totalSections - 1}
-            className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white"
-          >
-            Next
-          </Button>
-        </div>
+            </div>
+          </motion.section>
+        ))}
       </div>
     </div>
   );
