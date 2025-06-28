@@ -19,7 +19,8 @@ import {
   Headphones,
   Heart,
   ArrowRight,
-  Trophy
+  Trophy,
+  Compass
 } from 'lucide-react';
 import { CommunityListsPreview } from '@/components/community-lists-preview';
 
@@ -389,6 +390,53 @@ const LandingPage = () => {
                 </CardContent>
               </Card>
             </div>
+
+            {/* Musical Journeys Section */}
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="mt-16"
+            >
+              <Card className="max-w-4xl mx-auto bg-gradient-to-r from-purple-50 to-indigo-50 border-purple-200 relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-purple-500 to-indigo-500"></div>
+                <CardHeader className="text-center pb-4">
+                  <CardTitle className="flex items-center justify-center gap-2 text-2xl">
+                    <Compass className="w-6 h-6 text-purple-600" />
+                    Musical Journeys
+                  </CardTitle>
+                  <CardDescription className="text-lg">
+                    Immersive musical experiences that blend storytelling, interactive content, and community participation
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="pb-8">
+                  <div className="text-center space-y-4">
+                    <p className="text-gray-700 leading-relaxed max-w-2xl mx-auto">
+                      Discover the stories behind the music with our interactive documentaries. 
+                      Vote in polls, contribute to community mixtapes, and explore music like never before.
+                    </p>
+                    <div className="flex flex-wrap gap-3 justify-center">
+                      <Badge variant="secondary" className="bg-purple-100 text-purple-700">
+                        Interactive Stories
+                      </Badge>
+                      <Badge variant="secondary" className="bg-indigo-100 text-indigo-700">
+                        Community Mixtapes
+                      </Badge>
+                      <Badge variant="secondary" className="bg-blue-100 text-blue-700">
+                        Spotify Integration
+                      </Badge>
+                    </div>
+                    <Link href="/journeys">
+                      <Button size="lg" className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:opacity-90 mt-4">
+                        <Play className="w-5 h-5 mr-2" />
+                        Start Your Journey
+                        <ArrowRight className="w-5 h-5 ml-2" />
+                      </Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
 
             {/* Live Feed - Social Proof Engine */}
             <motion.div
