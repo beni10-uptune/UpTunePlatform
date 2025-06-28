@@ -98,8 +98,8 @@ export default function JourneyPage() {
         body: JSON.stringify({
           spotifyTrackId: track.id,
           trackTitle: track.name,
-          trackArtist: track.artists[0]?.name || 'Unknown Artist',
-          spotifyUrl: track.external_urls.spotify,
+          trackArtist: track.artists?.[0]?.name || 'Unknown Artist',
+          spotifyUrl: track.external_urls?.spotify || '',
           reason: `Added from "${journey?.title}" journey`
         })
       });
@@ -201,16 +201,16 @@ export default function JourneyPage() {
             </Button>
           </Link>
           
-          <div className="flex items-center justify-between mb-4">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <div className="mb-4">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3">
               {journey.title}
             </h1>
-            <div className="flex gap-2">
-              <Button size="sm" variant="outline">
+            <div className="flex flex-wrap gap-2">
+              <Button size="sm" variant="outline" className="flex-1 sm:flex-none">
                 <Heart className="w-4 h-4 mr-2" />
                 Save
               </Button>
-              <Button size="sm" variant="outline">
+              <Button size="sm" variant="outline" className="flex-1 sm:flex-none">
                 <Share2 className="w-4 h-4 mr-2" />
                 Share
               </Button>
@@ -255,20 +255,20 @@ export default function JourneyPage() {
                   <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                     Featured Track
                   </h2>
-                  <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 p-6 rounded-lg border border-green-200 dark:border-green-700">
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className="flex-1">
-                        <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                  <div className="bg-gradient-to-r from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 p-4 sm:p-6 rounded-lg border border-green-200 dark:border-green-700">
+                    <div className="mb-4">
+                      <div className="mb-3">
+                        <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
                           {currentSectionData.title}
                         </h3>
                         <p className="text-gray-600 dark:text-gray-300">
                           by {currentSectionData.artist}
                         </p>
                       </div>
-                      <div className="flex gap-2">
+                      <div className="flex flex-col sm:flex-row gap-2">
                         <Button
                           onClick={() => handleAudioToggle(currentSectionData.track_id!, null)}
-                          className="bg-green-600 hover:bg-green-700 text-white"
+                          className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white"
                         >
                           {audioPlaying === currentSectionData.track_id ? (
                             <Pause className="w-4 h-4 mr-2" />
@@ -277,7 +277,7 @@ export default function JourneyPage() {
                           )}
                           {audioPlaying === currentSectionData.track_id ? 'Pause' : 'Preview'}
                         </Button>
-                        <Button variant="outline" asChild>
+                        <Button variant="outline" asChild className="w-full sm:w-auto">
                           <a 
                             href={`https://open.spotify.com/track/${currentSectionData.track_id}`}
                             target="_blank"
@@ -350,13 +350,13 @@ export default function JourneyPage() {
                       {searchResults && searchResults.length > 0 && (
                         <div className="max-h-48 overflow-y-auto space-y-2">
                           {searchResults.map((track) => (
-                            <div key={track.id} className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 rounded border">
-                              <div>
-                                <div className="font-medium text-gray-900 dark:text-white">
+                            <div key={track.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 bg-white dark:bg-gray-800 rounded border">
+                              <div className="flex-1 min-w-0">
+                                <div className="font-medium text-gray-900 dark:text-white truncate">
                                   {track.name}
                                 </div>
-                                <div className="text-sm text-gray-600 dark:text-gray-400">
-                                  {track.artists[0]?.name}
+                                <div className="text-sm text-gray-600 dark:text-gray-400 truncate">
+                                  {track.artists?.[0]?.name || 'Unknown Artist'}
                                 </div>
                               </div>
                               <Button
@@ -368,6 +368,7 @@ export default function JourneyPage() {
                                   }
                                 }}
                                 disabled={submitToMixtape.isPending}
+                                className="w-full sm:w-auto shrink-0"
                               >
                                 Add
                               </Button>
@@ -384,18 +385,19 @@ export default function JourneyPage() {
         )}
 
         {/* Navigation */}
-        <div className="flex justify-between">
+        <div className="flex flex-col sm:flex-row gap-3 sm:justify-between">
           <Button
             variant="outline"
             onClick={() => setCurrentSection(Math.max(0, currentSection - 1))}
             disabled={currentSection === 0}
+            className="w-full sm:w-auto"
           >
             Previous
           </Button>
           <Button
             onClick={() => setCurrentSection(Math.min(totalSections - 1, currentSection + 1))}
             disabled={currentSection === totalSections - 1}
-            className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white"
+            className="w-full sm:w-auto bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white"
           >
             Next
           </Button>

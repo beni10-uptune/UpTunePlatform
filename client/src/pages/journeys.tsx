@@ -47,7 +47,7 @@ export default function JourneysPage() {
         </div>
 
         {/* Journeys Grid */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {journeys?.map((journey) => (
             <Card key={journey.id} className="overflow-hidden hover:shadow-lg transition-shadow duration-300 bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
               {/* Header Image */}
