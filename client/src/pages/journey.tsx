@@ -300,19 +300,19 @@ export default function JourneyPage() {
           <TabsList className="grid w-full grid-cols-3 bg-white/10 border border-white/20">
             <TabsTrigger 
               value="story" 
-              className="text-white data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+              className="journey-tab text-white data-[state=active]:bg-purple-600 data-[state=active]:text-white"
             >
               Story
             </TabsTrigger>
             <TabsTrigger 
               value="playlist" 
-              className="text-white data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+              className="journey-tab text-white data-[state=active]:bg-purple-600 data-[state=active]:text-white"
             >
               Playlist
             </TabsTrigger>
             <TabsTrigger 
               value="gallery" 
-              className="text-white data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+              className="journey-tab text-white data-[state=active]:bg-purple-600 data-[state=active]:text-white"
             >
               Gallery
             </TabsTrigger>
