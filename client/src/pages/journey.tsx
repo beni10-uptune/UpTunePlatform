@@ -14,7 +14,7 @@ import { SiSpotify } from "react-icons/si";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import type { Journey, CommunityMixtape, MixtapeSubmission, PollVote } from "@shared/schema";
+import type { Journey, CommunityMixtape, MixtapeSubmission, PollVote, CommunityList, ListEntry } from "@shared/schema";
 
 export default function JourneyPage() {
   const { slug } = useParams();
@@ -43,6 +43,27 @@ export default function JourneyPage() {
   const { data: mixtapes = [] } = useQuery<CommunityMixtape[]>({
     queryKey: [`/api/journeys/${journey?.id}/mixtapes`],
     enabled: !!journey?.id,
+  });
+
+  // Map journey slugs to community list slugs
+  const journeyCommunityListMap: Record<string, string> = {
+    'disco-underground-revolution': 'disco-classics',
+    'acid-house-second-summer-love': 'acid-house-classics',
+    'berlin-electronic-post-wall-revolution': 'berlin-electronic-revolution',
+    'detroit-techno-birth-future': 'detroit-techno-pioneers',
+    'madchester-factory-floor-dance-floor': 'madchester-anthem'
+  };
+
+  const communityListSlug = journey ? journeyCommunityListMap[journey.slug] : null;
+
+  const { data: communityList } = useQuery<CommunityList>({
+    queryKey: [`/api/community-lists/${communityListSlug}`],
+    enabled: !!communityListSlug,
+  });
+
+  const { data: communityEntries = [] } = useQuery<ListEntry[]>({
+    queryKey: [`/api/community-lists/${communityList?.id}/entries`],
+    enabled: !!communityList?.id,
   });
 
   // Mutations for interactions
@@ -287,10 +308,10 @@ export default function JourneyPage() {
               Story
             </TabsTrigger>
             <TabsTrigger 
-              value="podcast" 
+              value="playlist" 
               className="text-white data-[state=active]:bg-white data-[state=active]:text-gray-900"
             >
-              Podcast
+              Playlist
             </TabsTrigger>
             <TabsTrigger 
               value="gallery" 
@@ -343,21 +364,32 @@ export default function JourneyPage() {
                     >
                       <div className="flex items-center gap-4 mb-4">
                         <SiSpotify className="w-8 h-8 text-green-400" />
-                        <div>
+                        <div className="flex-1">
                           <h3 className="text-xl font-bold text-white">{section.title}</h3>
                           <p className="text-green-200">{section.artist}</p>
                         </div>
-                        <Button
-                          size="sm"
-                          className="ml-auto bg-green-600 hover:bg-green-700"
-                          onClick={() => playTrack(section.track_id, section.preview_url || "")}
-                        >
-                          {playingTrack === section.track_id ? (
-                            <Pause className="w-4 h-4" />
-                          ) : (
-                            <Play className="w-4 h-4" />
-                          )}
-                        </Button>
+                        <div className="flex items-center gap-3">
+                          <Button
+                            size="sm"
+                            className="bg-green-600 hover:bg-green-700"
+                            onClick={() => playTrack(section.track_id, section.preview_url || "")}
+                          >
+                            {playingTrack === section.track_id ? (
+                              <Pause className="w-4 h-4" />
+                            ) : (
+                              <Play className="w-4 h-4" />
+                            )}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-green-400 text-green-400 hover:bg-green-400 hover:text-black"
+                            onClick={() => window.open(`https://open.spotify.com/track/${section.track_id}`, '_blank')}
+                          >
+                            <ExternalLink className="w-4 h-4 mr-2" />
+                            Play in Spotify
+                          </Button>
+                        </div>
                       </div>
                       <p className="text-white/80 leading-relaxed">{section.context}</p>
                     </motion.div>
@@ -435,20 +467,135 @@ export default function JourneyPage() {
             </motion.div>
           </TabsContent>
 
-          {/* Podcast Tab */}
-          <TabsContent value="podcast" className="mt-8">
+          {/* Playlist Tab */}
+          <TabsContent value="playlist" className="mt-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="bg-white/10 backdrop-blur-lg rounded-2xl p-8 border border-white/20 text-center"
+              className="space-y-8"
             >
-              <Headphones className="w-16 h-16 text-white/60 mx-auto mb-6" />
-              <h2 className="text-2xl font-bold text-white mb-4">Podcast Coming Soon</h2>
-              <p className="text-white/70 text-lg">
-                Deep dive audio experiences exploring the cultural impact of {journey.title.split(' - ')[0]} 
-                will be available here soon.
-              </p>
+              {/* Ultimate Playlist Section */}
+              <div className="bg-gradient-to-r from-green-600/20 to-green-400/20 backdrop-blur-lg rounded-2xl p-8 border border-green-400/20">
+                <div className="flex items-center gap-4 mb-6">
+                  <SiSpotify className="w-10 h-10 text-green-400" />
+                  <div>
+                    <h2 className="text-3xl font-bold text-white">Ultimate {journey?.title?.split(' - ')[0]} Playlist</h2>
+                    <p className="text-green-200">Curated tracks that defined the movement</p>
+                  </div>
+                </div>
+                
+                {content.sections?.filter((section: any) => section.type === "spotify_preview").map((section: any, index: number) => (
+                  <div key={index} className="bg-black/20 rounded-xl p-4 mb-4 flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
+                        <Music className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                        <h4 className="text-white font-semibold">{section.title}</h4>
+                        <p className="text-green-200">{section.artist}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Button
+                        size="sm"
+                        className="bg-green-600 hover:bg-green-700"
+                        onClick={() => playTrack(section.track_id, section.preview_url || "")}
+                      >
+                        {playingTrack === section.track_id ? (
+                          <Pause className="w-4 h-4" />
+                        ) : (
+                          <Play className="w-4 h-4" />
+                        )}
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="border-green-400 text-green-400 hover:bg-green-400 hover:text-black"
+                        onClick={() => window.open(`https://open.spotify.com/track/${section.track_id}`, '_blank')}
+                      >
+                        <ExternalLink className="w-4 h-4 mr-2" />
+                        Play in Spotify
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Community Playlist Section */}
+              <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-lg rounded-2xl p-8 border border-purple-400/20">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="flex items-center gap-4">
+                    <Users className="w-10 h-10 text-purple-400" />
+                    <div>
+                      <h2 className="text-3xl font-bold text-white">Community Playlist</h2>
+                      <p className="text-purple-200">Songs submitted by the Uptune community</p>
+                    </div>
+                  </div>
+                  {communityList && (
+                    <Link href={`/community-lists/${communityList.slug}`}>
+                      <Button variant="outline" className="border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-black">
+                        View Full List
+                        <ExternalLink className="w-4 h-4 ml-2" />
+                      </Button>
+                    </Link>
+                  )}
+                </div>
+                
+                {communityEntries.length > 0 ? (
+                  <div className="space-y-4">
+                    {communityEntries.slice(0, 5).map((entry: any, index: number) => (
+                      <div key={entry.id} className="bg-black/20 rounded-xl p-4 flex items-center justify-between">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
+                            <span className="text-white font-bold">#{index + 1}</span>
+                          </div>
+                          <div>
+                            <h4 className="text-white font-semibold">{entry.title}</h4>
+                            <p className="text-purple-200">{entry.artist}</p>
+                            {entry.reasoning && (
+                              <p className="text-white/60 text-sm mt-1 italic">"{entry.reasoning}"</p>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-1 text-purple-300">
+                            <Heart className="w-4 h-4" />
+                            <span className="text-sm">{entry.votes || 0}</span>
+                          </div>
+                          {entry.spotifyTrackId && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-black"
+                              onClick={() => window.open(`https://open.spotify.com/track/${entry.spotifyTrackId}`, '_blank')}
+                            >
+                              <ExternalLink className="w-4 h-4 mr-2" />
+                              Play in Spotify
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                    {communityEntries.length > 5 && (
+                      <div className="text-center pt-4">
+                        <p className="text-purple-200">and {communityEntries.length - 5} more songs...</p>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <p className="text-white/70 mb-4">No community submissions yet</p>
+                    {communityList && (
+                      <Link href={`/community-lists/${communityList.slug}`}>
+                        <Button className="bg-purple-600 hover:bg-purple-700">
+                          Be the first to contribute!
+                        </Button>
+                      </Link>
+                    )}
+                  </div>
+                )}
+              </div>
             </motion.div>
           </TabsContent>
 
