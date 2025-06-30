@@ -26,7 +26,7 @@ function Router() {
       <Route path="/community-lists" component={CommunityLists} />
       <Route path="/community-lists/:slug" component={CommunityListDetail} />
       <Route path="/journeys" component={JourneysPage} />
-      <Route path="/journeys/:slug" component={JourneyPage} />
+      <Route path="/journey/:slug" component={JourneyPage} />
       <Route component={NotFound} />
     </Switch>
   );

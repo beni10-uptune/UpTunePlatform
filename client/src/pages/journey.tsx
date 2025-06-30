@@ -122,7 +122,26 @@ export default function JourneyPage() {
     );
   }
 
-  const content = JSON.parse(journey.content);
+  let content;
+  try {
+    content = JSON.parse(journey.content);
+  } catch (error) {
+    console.error("Failed to parse journey content:", error);
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+        <div className="text-center text-white">
+          <h1 className="text-4xl font-bold mb-4">Journey Content Error</h1>
+          <p className="text-white/80 mb-8 text-xl">There was an error loading this journey's content.</p>
+          <Link href="/journeys">
+            <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100">
+              <ArrowLeft className="w-5 h-5 mr-2" />
+              Back to Journeys
+            </Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div ref={containerRef} className="relative">

@@ -28,7 +28,7 @@ const getMovementColor = (slug: string) => {
 export default function JourneysPage() {
   const [hoveredId, setHoveredId] = useState<number | null>(null);
   
-  const { data: journeys = [], isLoading } = useQuery({
+  const { data: journeys = [], isLoading } = useQuery<Journey[]>({
     queryKey: ['/api/journeys'],
   });
 
