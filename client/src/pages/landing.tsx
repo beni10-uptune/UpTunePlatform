@@ -23,6 +23,7 @@ import {
   Compass
 } from 'lucide-react';
 import { CommunityListsPreview } from '@/components/community-lists-preview';
+import { FeaturedMusicalJourney } from '@/components/featured-musical-journey';
 
 const LandingPage = () => {
   const [isHovered, setIsHovered] = useState(false);
@@ -513,11 +514,21 @@ const LandingPage = () => {
             </motion.div>
           </motion.div>
 
-          {/* Community Lists Section */}
+          {/* Featured Musical Journey Section */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
+            className="mt-20"
+          >
+            <FeaturedMusicalJourney />
+          </motion.div>
+
+          {/* Community Lists Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.7 }}
             className="mt-20"
           >
             <CommunityListsPreview />
