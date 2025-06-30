@@ -55,9 +55,9 @@ const GAME_TYPES = {
     isGuided: false,
     prompts: undefined
   },
-  soundtrack: {
-    title: 'Soundtrack Session',
-    description: 'Build the perfect soundtrack for any occasion',
+  'jam-session': {
+    title: 'Jam Session',
+    description: 'Build the perfect playlist for any event or vibe',
     icon: Headphones,
     color: 'from-blue-500 to-cyan-500',
     themes: ['Movie Night', 'Study Session', 'Party Playlist', 'Morning Motivation', 'Rain Day'],

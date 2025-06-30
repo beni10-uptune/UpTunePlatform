@@ -133,7 +133,7 @@ export async function generateSongRecommendations(songs: Song[], gameType: strin
 
     const gameContext = {
       'mixtape': 'collaborative mixtape where friends share their favorite songs',
-      'soundtrack': 'movie soundtrack creation session',
+      'jam-session': 'jam session playlist creation for any event or vibe',
       'desert-island': 'desert island discs - essential songs that define someone'
     };
 
@@ -178,7 +178,7 @@ export async function suggestGameMode(playerCount: number, context?: string): Pr
 
 Available modes:
 - Collaborative Mixtape: Everyone adds favorite songs with stories
-- Movie Soundtrack: Create soundtrack for a movie theme  
+- Jam Session: Create playlist for any event or vibe  
 - Desert Island Discs: 5 essential songs (head, heart, feet, guilty pleasure, current obsession)
 
 Consider group size, engagement level, and time commitment.

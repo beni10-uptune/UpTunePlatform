@@ -33,7 +33,7 @@ Uptune is a modern web application that transforms music into a social experienc
 
 ### Game System
 - **Game Types**: 
-  - Soundtrack: Collaborative themed playlists
+  - Jam Sessions: Collaborative themed playlists for any event or vibe
   - Desert Island Discs: Personal music sharing
   - Guess Who: Anonymous music sharing with reveals
 - **Room Management**: Unique codes for game sessions

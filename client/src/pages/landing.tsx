@@ -317,17 +317,17 @@ const LandingPage = () => {
             <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
               <Card 
                 className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-blue-300 relative overflow-hidden"
-                onClick={() => handleGameModeClick('soundtrack')}
+                onClick={() => handleGameModeClick('jam-session')}
               >
                 <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
                 <CardHeader className="pb-3">
                   <div className="text-sm font-medium text-blue-600 mb-1">For Creative Collaboration</div>
                   <CardTitle className="flex items-center gap-2 text-xl">
                     <Headphones className="w-6 h-6 text-blue-600" />
-                    Soundtrack
+                    Jam Sessions
                   </CardTitle>
                   <CardDescription className="text-sm leading-relaxed">
-                    "Build the perfect soundtrack for any event or vibe. Export directly to Spotify when you're done."
+                    "Build the perfect playlist for any event or vibe. Export directly to Spotify when you're done."
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="pt-0">
@@ -335,7 +335,7 @@ const LandingPage = () => {
                     className="w-full gradient-bg text-white hover:opacity-90"
                     disabled={createGameMutation.isPending}
                   >
-                    {createGameMutation.isPending ? 'Creating...' : 'Start Soundtrack'}
+                    {createGameMutation.isPending ? 'Creating...' : 'Start Jam Session'}
                   </Button>
                 </CardContent>
               </Card>
