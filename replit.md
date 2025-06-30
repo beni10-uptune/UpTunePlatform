@@ -136,6 +136,14 @@ Changelog:
   * Added "Play in Spotify" links for all songs in journeys and playlist sections
   * Enhanced navigation throughout site with proper "Back to Uptune" links and cross-navigation
   * Updated all AI context references and game descriptions to reflect new terminology
+- June 30, 2025. World-class user experience improvements:
+  * Fixed Musical Journey songs overflow on homepage with responsive vertical layout
+  * Removed problematic white tab backgrounds in journey navigation (changed to purple active state)
+  * Fixed all game button overflow issues on mobile with truncation and responsive design
+  * Improved button text lengths for mobile compatibility (shortened "Create Playlist in Spotify" to "Create in Spotify")
+  * Enhanced Guess Who reveal functionality to properly display player nicknames when revealed
+  * Removed all Weekly Challenge references from platform per user request
+  * Implemented comprehensive responsive design across all interactive elements
 ```
 
 ## User Preferences

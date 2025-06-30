@@ -810,7 +810,7 @@ export default function GameRoom() {
                         <span className="truncate">
                           {(songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length >= 5 
                             ? 'All 5 Songs Added' 
-                            : `Add Song ${Math.min((songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length + 1, 5)}/5`}
+                            : `Song ${Math.min((songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length + 1, 5)}/5`}
                         </span>
                       </Button>
                     ) : gameRoom?.gameType === 'guess-who' ? (
@@ -818,20 +818,20 @@ export default function GameRoom() {
                         <Button
                           onClick={() => setShowAddSong(true)}
                           size="lg"
-                          className="bg-gradient-to-r from-amber-500 to-orange-500 text-white w-full sm:flex-1 py-4 sm:py-3 text-base sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all animate-pulse"
+                          className="bg-gradient-to-r from-amber-500 to-orange-500 text-white w-full sm:flex-1 py-4 sm:py-3 text-base sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all animate-pulse min-w-0"
                         >
-                          <Plus className="w-5 h-5 sm:w-4 sm:h-4 mr-2" />
-                          Add Anonymous Song
+                          <Plus className="w-5 h-5 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
+                          <span className="truncate">Add Anonymous Song</span>
                         </Button>
                         {isHost && (songs as Song[]).length > 0 && (
                           <Button
                             onClick={() => setRevealAllPlayers(true)}
                             size="lg"
                             variant="outline"
-                            className="border-amber-200 text-amber-700 hover:bg-amber-50 py-4 sm:py-3 text-base sm:text-sm font-semibold"
+                            className="border-amber-200 text-amber-700 hover:bg-amber-50 py-4 sm:py-3 text-base sm:text-sm font-semibold min-w-0 px-3 sm:px-4"
                           >
-                            <Heart className="w-5 h-5 sm:w-4 sm:h-4 mr-2" />
-                            Reveal All
+                            <Heart className="w-5 h-5 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
+                            <span className="truncate">Reveal All</span>
                           </Button>
                         )}
                       </div>
@@ -839,10 +839,10 @@ export default function GameRoom() {
                       <Button
                         onClick={() => setShowAddSong(true)}
                         size="lg"
-                        className="gradient-bg text-white w-full sm:flex-1 py-4 sm:py-3 text-base sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all animate-pulse"
+                        className="gradient-bg text-white w-full sm:flex-1 py-4 sm:py-3 text-base sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all animate-pulse min-w-0"
                       >
-                        <Plus className="w-5 h-5 sm:w-4 sm:h-4 mr-2" />
-                        Add Your Song
+                        <Plus className="w-5 h-5 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
+                        <span className="truncate">Add Your Song</span>
                       </Button>
                     )}
                     {(songs as Song[]).some(song => song.spotifyId) && (
@@ -856,7 +856,7 @@ export default function GameRoom() {
                           <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.84-.179-.84-.66 0-.36.24-.66.54-.779 4.56-1.021 8.52-.6 11.64 1.32.36.18.479.66.241 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.32 11.28-1.08 15.721 1.621.539.3.719 1.02.42 1.56-.299.421-1.02.599-1.559.3z"/>
                         </svg>
                         <span className="truncate">
-                          {createPlaylistMutation.isPending ? 'Creating...' : 'Create Playlist in Spotify'}
+                          {createPlaylistMutation.isPending ? 'Creating...' : 'Create in Spotify'}
                         </span>
                       </Button>
                     )}
