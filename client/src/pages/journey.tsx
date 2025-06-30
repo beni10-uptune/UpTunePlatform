@@ -207,13 +207,10 @@ export default function JourneyPage() {
             <div className="flex items-center gap-3">
               <Link href="/">
                 <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
-                  Uptune Home
+                  <Users className="w-4 h-4 mr-2" />
+                  Start Session
                 </Button>
               </Link>
-              <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
-                <Share2 className="w-4 h-4 mr-2" />
-                Share
-              </Button>
             </div>
           </div>
         </div>
@@ -485,41 +482,60 @@ export default function JourneyPage() {
                   </div>
                 </div>
                 
-                {content.sections?.filter((section: any) => section.type === "spotify_preview").map((section: any, index: number) => (
-                  <div key={index} className="bg-black/20 rounded-xl p-4 mb-4 flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center">
-                        <Music className="w-6 h-6 text-white" />
-                      </div>
-                      <div>
-                        <h4 className="text-white font-semibold">{section.title}</h4>
-                        <p className="text-green-200">{section.artist}</p>
+                <div className="space-y-4">
+                  {content.sections?.filter((section: any) => section.type === "spotify_preview").map((section: any, index: number) => (
+                    <div key={index} className="bg-black/20 rounded-xl p-4">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div className="flex items-center gap-4 min-w-0 flex-1">
+                          <div className="w-12 h-12 bg-green-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <Music className="w-6 h-6 text-white" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <h4 className="text-white font-semibold truncate">{section.title}</h4>
+                            <p className="text-green-200 truncate">{section.artist}</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-3 flex-shrink-0">
+                          <Button
+                            size="sm"
+                            className="bg-green-600 hover:bg-green-700 min-w-[80px]"
+                            onClick={() => playTrack(section.track_id, section.preview_url || "")}
+                          >
+                            {playingTrack === section.track_id ? (
+                              <>
+                                <Pause className="w-4 h-4 mr-2" />
+                                Playing
+                              </>
+                            ) : (
+                              <>
+                                <Play className="w-4 h-4 mr-2" />
+                                Preview
+                              </>
+                            )}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-green-400 text-green-400 hover:bg-green-400 hover:text-black hidden sm:flex"
+                            onClick={() => window.open(`https://open.spotify.com/track/${section.track_id}`, '_blank')}
+                          >
+                            <ExternalLink className="w-4 h-4 mr-2" />
+                            Play in Spotify
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-green-400 text-green-400 hover:bg-green-400 hover:text-black sm:hidden"
+                            onClick={() => window.open(`https://open.spotify.com/track/${section.track_id}`, '_blank')}
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <Button
-                        size="sm"
-                        className="bg-green-600 hover:bg-green-700"
-                        onClick={() => playTrack(section.track_id, section.preview_url || "")}
-                      >
-                        {playingTrack === section.track_id ? (
-                          <Pause className="w-4 h-4" />
-                        ) : (
-                          <Play className="w-4 h-4" />
-                        )}
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        className="border-green-400 text-green-400 hover:bg-green-400 hover:text-black"
-                        onClick={() => window.open(`https://open.spotify.com/track/${section.track_id}`, '_blank')}
-                      >
-                        <ExternalLink className="w-4 h-4 mr-2" />
-                        Play in Spotify
-                      </Button>
-                    </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
 
               {/* Community Playlist Section */}
