@@ -53,8 +53,31 @@ export default function JourneysPage() {
         <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10"></div>
       </div>
       
+      {/* Navigation */}
+      <nav className="relative z-10 p-6">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <Link href="/">
+            <Button variant="ghost" className="text-white hover:bg-white/10">
+              ← Back to Uptune
+            </Button>
+          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/community-lists">
+              <Button variant="ghost" className="text-white hover:bg-white/10">
+                Community Lists
+              </Button>
+            </Link>
+            <Link href="/">
+              <Button variant="outline" className="border-white/30 text-white hover:bg-white/10">
+                Create Game
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </nav>
+
       {/* Header */}
-      <header className="relative z-10 p-6 md:p-8">
+      <header className="relative z-10 px-6 md:px-8">
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}

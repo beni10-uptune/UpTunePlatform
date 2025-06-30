@@ -128,6 +128,14 @@ Changelog:
   * Enhanced immersive single-page scrollable experience with parallax effects and animations
   * Added curated "Ultimate Playlist" sections for each journey with Spotify integration
   * Improved mobile responsiveness and visual design with cutting-edge gradients and motion effects
+- June 30, 2025. Major platform updates and rebranding:
+  * Changed "Soundtrack" game mode to "Jam Sessions" throughout entire platform and database
+  * Changed "Podcast" tab to "Playlist" tab in journey navigation with proper 3-tab Manus design
+  * Replaced Weekly Challenge feature with Featured Musical Journey panel showcasing immersive content
+  * Integrated community playlists into each journey with direct links to related community lists
+  * Added "Play in Spotify" links for all songs in journeys and playlist sections
+  * Enhanced navigation throughout site with proper "Back to Uptune" links and cross-navigation
+  * Updated all AI context references and game descriptions to reflect new terminology
 ```
 
 ## User Preferences
