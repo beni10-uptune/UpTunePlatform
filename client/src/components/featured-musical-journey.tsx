@@ -127,42 +127,59 @@ export function FeaturedMusicalJourney() {
             {featuredTracks.length > 0 && (
               <div className="mb-8">
                 <h3 className="text-xl font-semibold mb-4 text-white/90">Featured Tracks</h3>
-                <div className="grid md:grid-cols-3 gap-4">
+                <div className="space-y-4">
                   {featuredTracks.map((track: any, index: number) => (
                     <div
                       key={index}
                       className="bg-black/20 backdrop-blur-sm rounded-lg p-4 hover:bg-black/30 transition-colors"
                     >
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
-                          <SiSpotify className="w-5 h-5 text-white" />
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                        <div className="flex items-center gap-3 min-w-0 flex-1">
+                          <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                            <SiSpotify className="w-5 h-5 text-white" />
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <h4 className="text-white font-medium truncate">{track.title}</h4>
+                            <p className="text-white/70 text-sm truncate">{track.artist}</p>
+                          </div>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <h4 className="text-white font-medium truncate">{track.title}</h4>
-                          <p className="text-white/70 text-sm truncate">{track.artist}</p>
+                        
+                        <div className="flex items-center gap-3 flex-shrink-0">
+                          <Button
+                            size="sm"
+                            className="bg-green-600 hover:bg-green-700 text-white min-w-[80px]"
+                            onClick={() => playTrack(track.track_id, track.preview_url)}
+                          >
+                            {playingTrack === track.track_id ? (
+                              <>
+                                <Pause className="w-4 h-4 mr-2" />
+                                Playing
+                              </>
+                            ) : (
+                              <>
+                                <Play className="w-4 h-4 mr-2" />
+                                Preview
+                              </>
+                            )}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-white/30 text-white hover:bg-white/10 hidden sm:flex"
+                            onClick={() => window.open(`https://open.spotify.com/track/${track.track_id}`, '_blank')}
+                          >
+                            <ExternalLink className="w-4 h-4 mr-2" />
+                            Play in Spotify
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="border-white/30 text-white hover:bg-white/10 sm:hidden"
+                            onClick={() => window.open(`https://open.spotify.com/track/${track.track_id}`, '_blank')}
+                          >
+                            <ExternalLink className="w-4 h-4" />
+                          </Button>
                         </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Button
-                          size="sm"
-                          className="bg-green-600 hover:bg-green-700 text-white flex-1"
-                          onClick={() => playTrack(track.track_id, track.preview_url)}
-                        >
-                          {playingTrack === track.track_id ? (
-                            <Pause className="w-4 h-4 mr-2" />
-                          ) : (
-                            <Play className="w-4 h-4 mr-2" />
-                          )}
-                          {playingTrack === track.track_id ? 'Playing' : 'Preview'}
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="border-white/30 text-white hover:bg-white/10"
-                          onClick={() => window.open(`https://open.spotify.com/track/${track.track_id}`, '_blank')}
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                        </Button>
                       </div>
                     </div>
                   ))}

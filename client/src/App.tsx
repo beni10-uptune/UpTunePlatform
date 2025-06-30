@@ -6,7 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import LandingPage from "@/pages/landing";
 import GameMenu from "@/pages/game-menu";
 import GameRoom from "@/pages/game-room";
-import WeeklyChallenge from "@/pages/weekly-challenge";
+
 import TeamsWaitlist from "@/pages/teams-waitlist";
 import CommunityLists from "@/pages/community-lists";
 import CommunityListDetail from "@/pages/community-list-detail";
