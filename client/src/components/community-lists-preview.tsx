@@ -119,10 +119,10 @@ export function CommunityListsPreview() {
       <CardHeader className="text-center pb-4">
         <CardTitle className="flex items-center justify-center gap-2 text-2xl">
           <TrendingUp className="w-6 h-6 text-purple-600" />
-          Have Your Say
+          Community Lists
         </CardTitle>
         <p className="text-gray-600 text-lg">
-          Vote for your favourite songs and share the tracks that matter to you. See what the world thinks.
+          Vote for your favourite songs and share the tracks that matter to you. See what the community thinks.
         </p>
       </CardHeader>
       

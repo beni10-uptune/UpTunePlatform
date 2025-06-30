@@ -2,7 +2,7 @@ import express, { type Request, Response, NextFunction } from "express";
 import session from "express-session";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
-import { challengeManager } from "./weekly-challenge-manager.js";
+// import { challengeManager } from "./weekly-challenge-manager.js";
 
 declare module 'express-session' {
   interface SessionData {
@@ -58,7 +58,7 @@ app.use((req, res, next) => {
 
 (async () => {
   // Initialize the weekly challenge manager
-  await challengeManager.initialize();
+  // await challengeManager.initialize();
   
   const server = await registerRoutes(app);
 
