@@ -144,6 +144,11 @@ Changelog:
   * Enhanced Guess Who reveal functionality to properly display player nicknames when revealed
   * Removed all Weekly Challenge references from platform per user request
   * Implemented comprehensive responsive design across all interactive elements
+- June 30, 2025. Final cleanup and navigation improvements:
+  * Removed "Songs That Make You Invincible" community list from homepage completely
+  * Added Musical Journeys to main navigation menu for easy access
+  * Applied enhanced CSS fixes for white button issue on journey pages with inline styles
+  * Added redirect from /musicaljourneys to /journeys for URL compatibility
 ```
 
 ## User Preferences
