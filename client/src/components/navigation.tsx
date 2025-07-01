@@ -14,8 +14,9 @@ export function Navigation({ variant = "header", className = "" }: NavigationPro
 
   const navItems = [
     { href: "/", label: "Home", icon: Home },
-    { href: "/community-lists", label: "Community Lists", icon: Music },
-    { href: "/teams", label: "Teams", icon: Users },
+    { href: "/journeys", label: "Musical Journeys", icon: Music },
+    { href: "/community-lists", label: "Community Lists", icon: Users },
+    { href: "/teams", label: "Teams", icon: Trophy },
   ];
 
   const isActive = (href: string) => {

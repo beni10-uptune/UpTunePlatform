@@ -301,18 +301,21 @@ export default function JourneyPage() {
             <TabsTrigger 
               value="story" 
               className="journey-tab text-white data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+              style={activeTab === 'story' ? { backgroundColor: 'rgb(147 51 234)', color: 'white' } : {}}
             >
               Story
             </TabsTrigger>
             <TabsTrigger 
               value="playlist" 
               className="journey-tab text-white data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+              style={activeTab === 'playlist' ? { backgroundColor: 'rgb(147 51 234)', color: 'white' } : {}}
             >
               Playlist
             </TabsTrigger>
             <TabsTrigger 
               value="gallery" 
               className="journey-tab text-white data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+              style={activeTab === 'gallery' ? { backgroundColor: 'rgb(147 51 234)', color: 'white' } : {}}
             >
               Gallery
             </TabsTrigger>
