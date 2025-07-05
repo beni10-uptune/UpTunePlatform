@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Music, Users, TrendingUp, ArrowRight } from "lucide-react";
 import { Navigation } from "@/components/navigation";
+import { CommunityLeaderboard } from "@/components/community-leaderboard";
 
 interface CommunityList {
   id: number;
@@ -90,9 +91,11 @@ export default function CommunityLists() {
           </div>
         </div>
 
-        {/* Community Lists Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {lists?.map((list) => (
+        {/* Community Lists Grid with Leaderboard Sidebar */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Lists Section */}
+          <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6">
+            {lists?.map((list) => (
             <Card 
               key={list.id} 
               className="bg-white/95 backdrop-blur-sm hover:bg-white transition-all duration-300 hover:scale-105 cursor-pointer group"
@@ -122,6 +125,12 @@ export default function CommunityLists() {
               </CardContent>
             </Card>
           ))}
+          </div>
+          
+          {/* Leaderboard Sidebar */}
+          <div className="lg:col-span-1">
+            <CommunityLeaderboard />
+          </div>
         </div>
 
         {/* Empty State */}

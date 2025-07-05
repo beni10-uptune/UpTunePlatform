@@ -188,8 +188,8 @@ const TeamsWaitlist = () => {
             </h1>
             
             <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-              Transform your workplace culture with music-powered team building experiences. 
-              Create deeper connections, boost morale, and spark conversations that matter.
+              Music has always brought people together. Now, imagine that magic in your workplace - 
+              where every team member's musical story creates a symphony of connection and understanding.
             </p>
           </motion.div>
 
@@ -327,9 +327,9 @@ const TeamsWaitlist = () => {
                       <Users className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-lg mb-2">Team Building Games</h3>
+                      <h3 className="font-semibold text-lg mb-2">Musical Team Experiences</h3>
                       <p className="text-gray-600">
-                        Collaborative music experiences that break down barriers and create authentic connections
+                        Everyone has a soundtrack to their life. Share yours, discover theirs, and watch magic happen
                       </p>
                     </div>
                   </div>
@@ -341,9 +341,9 @@ const TeamsWaitlist = () => {
                       <BarChart3 className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-lg mb-2">Analytics & Insights</h3>
+                      <h3 className="font-semibold text-lg mb-2">Musical Connections Map</h3>
                       <p className="text-gray-600">
-                        Track engagement, participation, and team dynamics with detailed reporting
+                        See how music brings your team together with beautiful visualizations of shared tastes and discoveries
                       </p>
                     </div>
                   </div>
@@ -355,9 +355,9 @@ const TeamsWaitlist = () => {
                       <Shield className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-lg mb-2">Enterprise Security</h3>
+                      <h3 className="font-semibold text-lg mb-2">Safe & Inclusive Space</h3>
                       <p className="text-gray-600">
-                        SOC 2 compliance, SSO integration, and enterprise-grade privacy controls
+                        Everyone feels comfortable sharing their musical soul with thoughtful privacy and respect for all
                       </p>
                     </div>
                   </div>
@@ -369,9 +369,9 @@ const TeamsWaitlist = () => {
                       <Calendar className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-lg mb-2">Flexible Scheduling</h3>
+                      <h3 className="font-semibold text-lg mb-2">Play Anytime, Anywhere</h3>
                       <p className="text-gray-600">
-                        Run sessions during meetings, events, or as standalone team activities
+                        Perfect for offsites, virtual hangouts, or those spontaneous moments when you just want to connect
                       </p>
                     </div>
                   </div>

@@ -10,6 +10,9 @@ import { motion } from "framer-motion";
 import { apiRequest } from "@/lib/queryClient";
 import { FeaturedMusicalJourney } from "@/components/featured-musical-journey";
 import { CommunityListsPreview } from "@/components/community-lists-preview";
+import { SocialProofEngine } from "@/components/social-proof-engine";
+import { InteractiveDemo } from "@/components/interactive-demo";
+import { QuickStartTemplates } from "@/components/quick-start-templates";
 
 export default function LandingPage() {
   const [, navigate] = useLocation();
@@ -123,18 +126,18 @@ export default function LandingPage() {
             >
               <Badge className="bg-white/10 text-white border-white/20 px-4 py-2 backdrop-blur-lg">
                 <Sparkles className="w-4 h-4 mr-2" />
-                100% Free Forever
+                Made with Love for Music
               </Badge>
               
               <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight text-white">
-                Your Musical{' '}
+                Where Music{' '}
                 <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  Playground
+                  Brings Us Together
                 </span>
               </h1>
               
               <p className="text-base sm:text-lg lg:text-xl text-white/80 leading-relaxed">
-                Start a game with friends, create hilarious playlists, and make memories. No sign-ups needed. Just pure fun.
+                Share your musical soul. Create playlists that tell stories, discover what moves your friends, and celebrate the soundtracks of your lives.
               </p>
             </motion.div>
 
@@ -266,6 +269,16 @@ export default function LandingPage() {
                 </DialogContent>
               </Dialog>
             </motion.div>
+            
+            {/* Social Proof Engine */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="mt-12 max-w-4xl mx-auto"
+            >
+              <SocialProofEngine />
+            </motion.div>
           </div>
 
           {/* Game Modes Section */}
@@ -276,8 +289,8 @@ export default function LandingPage() {
             className="mt-20 space-y-8"
           >
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-white mb-2">A Game for Every Mood</h2>
-              <p className="text-white/80">Simple, fun ways to connect through music</p>
+              <h2 className="text-2xl font-bold text-white mb-2">Musical Adventures Await</h2>
+              <p className="text-white/80">Every song has a story, every playlist a journey</p>
             </div>
 
             <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -295,7 +308,7 @@ export default function LandingPage() {
                   </div>
                 </div>
                 <p className="text-white/80 mb-6 leading-relaxed">
-                  Build the perfect playlist for any event or vibe. Export directly to Spotify when you're done.
+                  Pour your hearts into a shared playlist. Each song becomes part of your collective story.
                 </p>
                 <Button 
                   className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-700 hover:to-cyan-700"
@@ -319,7 +332,7 @@ export default function LandingPage() {
                   </div>
                 </div>
                 <p className="text-white/80 mb-6 leading-relaxed">
-                  Share your essential songs that define you. Discover what makes your friends tick musically.
+                  The songs that shaped you, the melodies that move you. Reveal your musical DNA.
                 </p>
                 <Button 
                   className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white hover:from-emerald-700 hover:to-teal-700"
@@ -343,7 +356,7 @@ export default function LandingPage() {
                   </div>
                 </div>
                 <p className="text-white/80 mb-6 leading-relaxed">
-                  Everyone adds songs anonymously. Guess who picked what, then reveal for hilarious surprises.
+                  Musical mysteries and surprising revelations. Let your songs speak while your identity hides.
                 </p>
                 <Button 
                   className="w-full bg-gradient-to-r from-amber-600 to-orange-600 text-white hover:from-amber-700 hover:to-orange-700"
@@ -353,6 +366,26 @@ export default function LandingPage() {
                 </Button>
               </motion.div>
             </div>
+          </motion.div>
+
+          {/* Quick Start Templates Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="mt-16 max-w-6xl mx-auto"
+          >
+            <QuickStartTemplates />
+          </motion.div>
+
+          {/* Interactive Demo Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="mt-16 max-w-5xl mx-auto"
+          >
+            <InteractiveDemo />
           </motion.div>
 
           {/* Musical Journeys Section */}

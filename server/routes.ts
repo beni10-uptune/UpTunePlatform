@@ -919,6 +919,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Social proof data endpoint
+  app.get("/api/social-proof", async (req, res) => {
+    try {
+      const socialProofData = await storage.getSocialProofData();
+      res.json(socialProofData);
+    } catch (error) {
+      console.error("Error fetching social proof data:", error);
+      res.status(500).json({ error: "Failed to fetch social proof data" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

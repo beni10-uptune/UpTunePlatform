@@ -114,6 +114,20 @@ export interface IStorage {
   castPollVote(vote: InsertPollVote): Promise<void>;
   getPollResults(pollId: string): Promise<{ option: string; count: number }[]>;
   getUserPollVote(pollId: string, userId?: number, guestSessionId?: string): Promise<PollVote | undefined>;
+  
+  // Social Proof
+  getSocialProofData(): Promise<{
+    activeUsers: number;
+    gamesCreatedToday: number;
+    songsAddedToday: number;
+    totalCommunityLists: number;
+    recentActivity: Array<{
+      id: string;
+      type: 'game_created' | 'song_added' | 'list_entry' | 'vote_cast';
+      description: string;
+      timestamp: Date;
+    }>;
+  }>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -538,6 +552,92 @@ export class DatabaseStorage implements IStorage {
       .limit(1);
     
     return vote;
+  }
+
+  async getSocialProofData() {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    
+    // Get total community lists
+    const totalCommunityLists = await db.select({ count: count() })
+      .from(communityLists);
+    
+    // Get games created today
+    const gamesCreatedToday = await db.select({ count: count() })
+      .from(gameRooms)
+      .where(gte(gameRooms.createdAt, today));
+    
+    // Get songs added today
+    const songsAddedToday = await db.select({ count: count() })
+      .from(songs)
+      .where(gte(songs.addedAt, today));
+    
+    // Get recent activity (last 50 activities)
+    const recentGames = await db.select({
+      id: gameRooms.id,
+      createdAt: gameRooms.createdAt,
+      gameType: gameRooms.gameType,
+      theme: gameRooms.theme
+    })
+    .from(gameRooms)
+    .orderBy(desc(gameRooms.createdAt))
+    .limit(20);
+    
+    const recentSongs = await db.select({
+      id: songs.id,
+      createdAt: songs.addedAt,
+      title: songs.title,
+      artist: songs.artist
+    })
+    .from(songs)
+    .orderBy(desc(songs.addedAt))
+    .limit(20);
+    
+    const recentEntries = await db.select({
+      id: listEntries.id,
+      createdAt: listEntries.createdAt,
+      songTitle: listEntries.songTitle,
+      artistName: listEntries.artistName,
+      listId: listEntries.listId
+    })
+    .from(listEntries)
+    .orderBy(desc(listEntries.createdAt))
+    .limit(20);
+    
+    // Combine and format recent activities
+    const activities = [
+      ...recentGames.map(game => ({
+        id: `game-${game.id}`,
+        type: 'game_created' as const,
+        description: `New ${game.gameType.replace('-', ' ')} game created${game.theme ? ` for "${game.theme}"` : ''}`,
+        timestamp: game.createdAt
+      })),
+      ...recentSongs.map(song => ({
+        id: `song-${song.id}`,
+        type: 'song_added' as const,
+        description: `"${song.title}" by ${song.artist} added to a playlist`,
+        timestamp: song.createdAt
+      })),
+      ...recentEntries.map(entry => ({
+        id: `entry-${entry.id}`,
+        type: 'list_entry' as const,
+        description: `"${entry.songTitle}" by ${entry.artistName} added to community list`,
+        timestamp: entry.createdAt
+      }))
+    ]
+    .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime())
+    .slice(0, 10);
+    
+    // Simulate active users (in a real app, this would be tracked via sessions/analytics)
+    const activeUsers = Math.floor(Math.random() * 50) + 25; // 25-75 active users
+    
+    return {
+      activeUsers,
+      gamesCreatedToday: Number(gamesCreatedToday[0].count),
+      songsAddedToday: Number(songsAddedToday[0].count),
+      totalCommunityLists: Number(totalCommunityLists[0].count),
+      recentActivity: activities
+    };
   }
 }
 
