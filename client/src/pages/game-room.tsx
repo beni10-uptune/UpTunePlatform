@@ -609,7 +609,7 @@ export default function GameRoom() {
           {/* Players & Achievements Panel */}
           <div className="lg:order-1 order-2 space-y-6">
             {/* Players */}
-            <Card className="bg-white/95 backdrop-blur-sm">
+            <Card className="bg-white/10 backdrop-blur-lg border-white/20">
               <CardHeader>
                 <CardTitle className="flex items-center text-lg">
                   <Users className="w-5 h-5 mr-2" />
@@ -628,8 +628,8 @@ export default function GameRoom() {
                         transition={{ delay: index * 0.1 }}
                         className={`flex items-center justify-between p-3 rounded-lg transition-all ${
                           player.id === currentPlayer?.id 
-                            ? 'bg-gradient-to-r from-purple-100 to-pink-100 border border-purple-200' 
-                            : 'bg-gray-50 hover:bg-gray-100'
+                            ? 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30' 
+                            : 'bg-white/5 hover:bg-white/10'
                         }`}
                       >
                         <div className="flex items-center space-x-3">
@@ -654,8 +654,8 @@ export default function GameRoom() {
                               )}
                             </div>
                             <div className="flex items-center space-x-1 mt-1">
-                              <Music className="w-3 h-3 text-gray-400" />
-                              <span className="text-xs text-gray-500">
+                              <Music className="w-3 h-3 text-white/60" />
+                              <span className="text-xs text-white/70">
                                 {playerSongs.length} song{playerSongs.length !== 1 ? 's' : ''}
                               </span>
                             </div>
@@ -679,9 +679,9 @@ export default function GameRoom() {
 
             {/* Achievements */}
             {achievements.length > 0 && (
-              <Card className="bg-gradient-to-br from-yellow-50 to-orange-50 border border-yellow-200">
+              <Card className="bg-gradient-to-br from-purple-600/10 to-pink-600/10 backdrop-blur-lg border border-purple-500/30">
                 <CardHeader>
-                  <CardTitle className="flex items-center text-lg text-orange-700">
+                  <CardTitle className="flex items-center text-lg text-white">
                     <Trophy className="w-5 h-5 mr-2" />
                     Your Achievements
                   </CardTitle>
@@ -695,20 +695,20 @@ export default function GameRoom() {
                           initial={{ opacity: 0, x: -20, scale: 0.9 }}
                           animate={{ opacity: 1, x: 0, scale: 1 }}
                           transition={{ delay: index * 0.2 }}
-                          className="flex items-center space-x-3 p-2 bg-white/70 rounded-lg"
+                          className="flex items-center space-x-3 p-2 bg-white/10 rounded-lg"
                         >
                           <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
                             <Trophy className="w-4 h-4 text-white" />
                           </div>
                           <div>
-                            <p className="font-medium text-orange-800">
+                            <p className="font-medium text-white">
                               {achievement === 'first-song' && 'First Note'}
                               {achievement === 'storyteller' && 'Storyteller'}
                               {achievement === 'desert-master' && 'Desert Island Master'}
                               {achievement === 'pioneer' && 'Playlist Pioneer'}
                               {achievement === 'harmony' && 'Group Harmony'}
                             </p>
-                            <p className="text-xs text-orange-600">
+                            <p className="text-xs text-white/70">
                               {achievement === 'first-song' && 'Added your first song'}
                               {achievement === 'storyteller' && 'Shared meaningful stories'}
                               {achievement === 'desert-master' && 'Completed your 5 essential songs'}
@@ -725,9 +725,9 @@ export default function GameRoom() {
             )}
 
             {/* Playlist Stats */}
-            <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border border-purple-200">
+            <Card className="bg-gradient-to-br from-purple-600/10 to-pink-600/10 backdrop-blur-lg border border-purple-500/30">
               <CardHeader>
-                <CardTitle className="flex items-center text-lg text-purple-700">
+                <CardTitle className="flex items-center text-lg text-white">
                   <Zap className="w-5 h-5 mr-2" />
                   Playlist Magic
                 </CardTitle>
@@ -735,17 +735,17 @@ export default function GameRoom() {
               <CardContent>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Total Songs</span>
-                    <Badge className="bg-purple-100 text-purple-700">{(songs as Song[]).length}</Badge>
+                    <span className="text-sm text-white/70">Total Songs</span>
+                    <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0">{(songs as Song[]).length}</Badge>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Contributors</span>
-                    <Badge className="bg-pink-100 text-pink-700">
+                    <span className="text-sm text-white/70">Contributors</span>
+                    <Badge className="bg-gradient-to-r from-pink-600 to-purple-600 text-white border-0">
                       {new Set((songs as Song[]).map(s => s.playerId)).size}
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600">Your Progress</span>
+                    <span className="text-sm text-white/70">Your Progress</span>
                     <div className="flex items-center space-x-2">
                       <Progress 
                         value={gameRoom?.gameType === 'desert-island' 
@@ -754,7 +754,7 @@ export default function GameRoom() {
                         } 
                         className="w-16 h-2" 
                       />
-                      <span className="text-xs text-gray-500">
+                      <span className="text-xs text-white/60">
                         {gameRoom?.gameType === 'desert-island' 
                           ? `${(songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length}/5`
                           : `${(songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length}`

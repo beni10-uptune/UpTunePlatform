@@ -28,6 +28,8 @@ import {
   type InsertMixtapeSubmission,
   type PollVote,
   type InsertPollVote,
+  type User,
+  type UpsertUser,
   gameRooms,
   players,
   songs,
@@ -42,13 +44,18 @@ import {
   journeys,
   communityMixtapes,
   mixtapeSubmissions,
-  pollVotes
+  pollVotes,
+  users
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, desc, asc, and, lte, gte, lt, gt, sql } from "drizzle-orm";
 import { count } from "drizzle-orm";
 
 export interface IStorage {
+  // User operations for Replit Auth
+  getUser(id: string): Promise<User | undefined>;
+  upsertUser(user: UpsertUser): Promise<User>;
+  
   // Game Rooms
   createGameRoom(gameRoom: InsertGameRoom): Promise<GameRoom>;
   getGameRoomByCode(code: string): Promise<GameRoom | undefined>;
@@ -133,6 +140,27 @@ export interface IStorage {
 export class DatabaseStorage implements IStorage {
   private generateGameCode(): string {
     return Math.random().toString(36).substring(2, 8).toUpperCase();
+  }
+
+  // User operations for Replit Auth
+  async getUser(id: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
+  }
+
+  async upsertUser(userData: UpsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(userData)
+      .onConflictDoUpdate({
+        target: users.id,
+        set: {
+          ...userData,
+          updatedAt: new Date(),
+        },
+      })
+      .returning();
+    return user;
   }
 
   async createGameRoom(gameRoom: InsertGameRoom): Promise<GameRoom> {

@@ -3,7 +3,6 @@ import { Link, useParams } from "wouter";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Navigation } from "@/components/navigation";
 import { Music, Clock, ArrowLeft, Calendar, User, Share2, Heart } from "lucide-react";
 
 // This would come from an API in a real app
@@ -113,24 +112,7 @@ export default function BlogPost() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Header */}
-      <header className="relative z-10 px-6 py-4">
-        <nav className="max-w-7xl mx-auto flex items-center justify-between">
-          <Link href="/">
-            <div className="flex items-center space-x-2 cursor-pointer">
-              <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
-                <Music className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-2xl font-bold text-white">Uptune</span>
-            </div>
-          </Link>
-          
-          <Navigation variant="header" />
-          <Navigation variant="mobile" />
-        </nav>
-      </header>
-
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-16">
       <main className="px-6 py-12 max-w-4xl mx-auto">
         {/* Back Button */}
         <motion.div

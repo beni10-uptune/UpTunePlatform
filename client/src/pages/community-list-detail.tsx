@@ -14,7 +14,6 @@ import { z } from "zod";
 import { ChevronUp, ChevronDown, Plus, Music, ExternalLink, Share2, Vote, Users, ListMusic } from "lucide-react";
 import { SongSearch } from "@/components/song-search";
 import { useToast } from "@/hooks/use-toast";
-import { Navigation } from "@/components/navigation";
 
 interface CommunityList {
   id: number;
@@ -318,7 +317,7 @@ export default function CommunityListDetail() {
               </Button>
             </Link>
             <div className="text-white font-bold text-xl">Uptune Community</div>
-            <Navigation variant="minimal" />
+            <div className="w-20"></div>
           </div>
         </div>
       </div>
@@ -376,7 +375,7 @@ export default function CommunityListDetail() {
                             : "Selected Song:"
                           }
                         </h3>
-                        <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+                        <div className="flex items-center gap-4 p-4 bg-white/10 rounded-lg">
                           {selectedSong.imageUrl && (
                             <img 
                               src={selectedSong.imageUrl} 
@@ -530,7 +529,7 @@ export default function CommunityListDetail() {
             entries
               .sort((a: ListEntry, b: ListEntry) => b.voteScore - a.voteScore)
               .map((entry: ListEntry, index: number) => (
-                <Card key={entry.id} className="bg-white/95 backdrop-blur-sm hover:bg-white transition-all duration-300">
+                <Card key={entry.id} className="bg-white/10 backdrop-blur-lg border-white/20 hover:bg-white/20 transition-all duration-300">
                   <CardContent className="p-6">
                     <div className="flex items-center gap-4">
                       <div className="flex flex-col items-center gap-2">
@@ -538,24 +537,24 @@ export default function CommunityListDetail() {
                           variant="ghost"
                           size="sm"
                           onClick={() => voteMutation.mutate({ entryId: entry.id, voteType: 'up' })}
-                          className="text-gray-600 hover:text-green-600 p-1"
+                          className="text-white/60 hover:text-green-400 p-1"
                           disabled={voteMutation.isPending}
                         >
                           <ChevronUp className="w-5 h-5" />
                         </Button>
-                        <span className="font-bold text-lg text-gray-700">{entry.voteScore}</span>
+                        <span className="font-bold text-lg text-white">{entry.voteScore}</span>
                         <Button
                           variant="ghost"
                           size="sm"
                           onClick={() => voteMutation.mutate({ entryId: entry.id, voteType: 'down' })}
-                          className="text-gray-600 hover:text-red-600 p-1"
+                          className="text-white/60 hover:text-red-400 p-1"
                           disabled={voteMutation.isPending}
                         >
                           <ChevronDown className="w-5 h-5" />
                         </Button>
                       </div>
                       
-                      <div className="w-16 h-16 bg-gray-200 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
+                      <div className="w-16 h-16 bg-white/10 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
                         {entry.imageUrl ? (
                           <img 
                             src={entry.imageUrl} 
@@ -563,32 +562,32 @@ export default function CommunityListDetail() {
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <Music className="w-8 h-8 text-gray-400" />
+                          <Music className="w-8 h-8 text-white/40" />
                         )}
                       </div>
                       
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between">
                           <div>
-                            <h3 className="font-semibold text-gray-900 truncate">{entry.songTitle}</h3>
-                            <p className="text-gray-600 truncate">{entry.artistName}</p>
+                            <h3 className="font-semibold text-white truncate">{entry.songTitle}</h3>
+                            <p className="text-white/70 truncate">{entry.artistName}</p>
                             {entry.albumName && (
-                              <p className="text-gray-500 text-sm truncate">{entry.albumName}</p>
+                              <p className="text-white/50 text-sm truncate">{entry.albumName}</p>
                             )}
                           </div>
                           <div className="flex items-center gap-2 ml-4">
                             {index < 3 && (
-                              <Badge variant="secondary" className="bg-yellow-100 text-yellow-800">
+                              <Badge variant="secondary" className="bg-gradient-to-r from-yellow-600 to-orange-600 text-white border-0">
                                 #{index + 1}
                               </Badge>
                             )}
                           </div>
                         </div>
                         
-                        <div className="mt-3 p-3 bg-gray-50 rounded-lg">
-                          <p className="text-gray-700 text-sm">{entry.contextReason}</p>
+                        <div className="mt-3 p-3 bg-white/5 rounded-lg">
+                          <p className="text-white/80 text-sm">{entry.contextReason}</p>
                           {entry.submitterName && (
-                            <p className="text-gray-500 text-xs mt-2">— {entry.submitterName}</p>
+                            <p className="text-white/60 text-xs mt-2">— {entry.submitterName}</p>
                           )}
                         </div>
                         
@@ -597,7 +596,7 @@ export default function CommunityListDetail() {
                             href={`https://open.spotify.com/track/${entry.spotifyTrackId}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-green-600 hover:text-green-700 text-sm font-medium flex items-center gap-1"
+                            className="text-green-400 hover:text-green-300 text-sm font-medium flex items-center gap-1"
                           >
                             <ExternalLink className="w-4 h-4" />
                             Open in Spotify
@@ -616,7 +615,7 @@ export default function CommunityListDetail() {
                 Be the first to submit a song to this community list!
               </p>
               <Button 
-                className="bg-white text-purple-600 hover:bg-white/90"
+                className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700"
                 onClick={() => setIsSubmitDialogOpen(true)}
               >
                 <Plus className="w-4 h-4 mr-2" />

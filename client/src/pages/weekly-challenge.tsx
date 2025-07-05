@@ -11,7 +11,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { SongSearch } from '@/components/song-search';
-import { Navigation } from '@/components/navigation';
 import { 
   ArrowLeft,
   Calendar,
@@ -169,31 +168,17 @@ const WeeklyChallenge = () => {
 
   if (!challenge) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
         <div className="text-center">
-          <Music className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600">Loading challenge...</p>
+          <Music className="w-12 h-12 text-white/60 mx-auto mb-4" />
+          <p className="text-white/80">Loading challenge...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
-      {/* Header */}
-      <header className="px-6 py-4">
-        <nav className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 gradient-bg rounded-lg flex items-center justify-center">
-              <Music className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-2xl font-bold gradient-text">Uptune</span>
-          </div>
-          
-          <Navigation variant="header" className="text-gray-600" />
-          <Navigation variant="mobile" className="text-gray-600" />
-        </nav>
-      </header>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-16">
 
       <div className="px-6 py-8">
         <div className="max-w-6xl mx-auto">
@@ -215,11 +200,11 @@ const WeeklyChallenge = () => {
               {challenge.title}
             </h1>
             
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+            <p className="text-xl text-white/80 max-w-3xl mx-auto mb-8">
               {challenge.description}
             </p>
             
-            <div className="flex items-center justify-center space-x-8 text-sm text-gray-600 mb-8">
+            <div className="flex items-center justify-center space-x-8 text-sm text-white/60 mb-8">
               <div className="flex items-center space-x-2">
                 <Clock className="w-4 h-4" />
                 <span>{getDaysLeft()} days left</span>
@@ -260,8 +245,8 @@ const WeeklyChallenge = () => {
                 <CardContent>
                   {submissions.length === 0 ? (
                     <div className="text-center py-12">
-                      <Music className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                      <p className="text-gray-600">No submissions yet. Be the first!</p>
+                      <Music className="w-12 h-12 text-white/60 mx-auto mb-4" />
+                      <p className="text-white/80">No submissions yet. Be the first!</p>
                     </div>
                   ) : (
                     <div className="space-y-4">
@@ -271,22 +256,22 @@ const WeeklyChallenge = () => {
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
                           transition={{ duration: 0.5, delay: index * 0.1 }}
-                          className="flex items-center space-x-4 p-4 bg-white/50 rounded-lg hover:bg-white/70 transition-colors"
+                          className="flex items-center space-x-4 p-4 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
                         >
-                          <div className={`w-8 h-8 ${index === 0 ? 'bg-yellow-100 text-yellow-700' : index === 1 ? 'bg-gray-100 text-gray-700' : index === 2 ? 'bg-orange-100 text-orange-700' : 'bg-purple-100 text-purple-700'} rounded-full flex items-center justify-center font-bold text-sm`}>
+                          <div className={`w-8 h-8 ${index === 0 ? 'bg-gradient-to-r from-yellow-600 to-orange-600 text-white' : index === 1 ? 'bg-gradient-to-r from-gray-600 to-gray-700 text-white' : index === 2 ? 'bg-gradient-to-r from-orange-600 to-red-600 text-white' : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white'} rounded-full flex items-center justify-center font-bold text-sm`}>
                             {index + 1}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="font-semibold text-gray-900 truncate">{submission.songTitle}</div>
-                            <div className="text-sm text-gray-600 truncate">{submission.songArtist}</div>
-                            <div className="text-xs text-gray-500">by {submission.nickname}</div>
+                            <div className="font-semibold text-white truncate">{submission.songTitle}</div>
+                            <div className="text-sm text-white/70 truncate">{submission.songArtist}</div>
+                            <div className="text-xs text-white/50">by {submission.nickname}</div>
                           </div>
                           <Button
                             onClick={() => voteMutation.mutate(submission.id)}
                             variant="ghost"
                             size="sm"
                             disabled={voteMutation.isPending}
-                            className="flex items-center space-x-2 text-sm text-gray-600 hover:text-red-600"
+                            className="flex items-center space-x-2 text-sm text-white/60 hover:text-red-400"
                           >
                             <Heart className="w-4 h-4" />
                             <span>{submission.votes}</span>

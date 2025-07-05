@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Music, Users, TrendingUp, ArrowRight } from "lucide-react";
-import { Navigation } from "@/components/navigation";
 import { CommunityLeaderboard } from "@/components/community-leaderboard";
 
 interface CommunityList {
