@@ -68,7 +68,7 @@ export default function JourneysPage() {
               </Button>
             </Link>
             <Link href="/">
-              <Button variant="outline" className="border-white/30 text-white hover:bg-white/10">
+              <Button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:opacity-90 border-0">
                 Create Game
               </Button>
             </Link>

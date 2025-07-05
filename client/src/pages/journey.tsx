@@ -49,8 +49,8 @@ export default function JourneyPage() {
   const journeyCommunityListMap: Record<string, string> = {
     'disco-underground-revolution': 'disco-classics',
     'acid-house-second-summer-love': 'acid-house-classics',
-    'berlin-electronic-post-wall-revolution': 'berlin-electronic-revolution',
-    'detroit-techno-birth-future': 'detroit-techno-pioneers',
+    'berlin-electronic-soundtrack-freedom': 'berlin-electronic-revolution',
+    'detroit-techno-post-industrial-resurrection': 'detroit-techno-pioneers',
     'madchester-factory-floor-dance-floor': 'madchester-anthem'
   };
 
@@ -580,17 +580,14 @@ export default function JourneyPage() {
                             <Heart className="w-4 h-4" />
                             <span className="text-sm">{entry.votes || 0}</span>
                           </div>
-                          {entry.spotifyTrackId && (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-black"
-                              onClick={() => window.open(`https://open.spotify.com/track/${entry.spotifyTrackId}`, '_blank')}
-                            >
-                              <ExternalLink className="w-4 h-4 mr-2" />
-                              Play in Spotify
-                            </Button>
-                          )}
+                          <Button
+                            size="sm"
+                            className="bg-purple-600 hover:bg-purple-700 text-white"
+                            onClick={() => window.open(`https://open.spotify.com/search/${encodeURIComponent(entry.artist + ' ' + entry.title)}`, '_blank')}
+                          >
+                            <ExternalLink className="w-4 h-4 mr-2" />
+                            Find on Spotify
+                          </Button>
                         </div>
                       </div>
                     ))}

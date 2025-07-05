@@ -142,6 +142,52 @@ button[data-variant="outline"] {
   background-color: transparent !important;
 }
 
+/* Fix all white button backgrounds site-wide */
+.bg-white {
+  color: black !important;
+}
+
+/* Ensure gradient buttons always have white text */
+.gradient-bg,
+.bg-gradient-to-r {
+  color: white !important;
+}
+
+/* Force white text on all purple/gradient buttons */
+button.bg-gradient-to-r,
+button[class*="bg-gradient"],
+button[class*="bg-purple"],
+button[class*="bg-blue"],
+button[class*="bg-green"] {
+  color: white !important;
+}
+
+/* Specifically target journey page buttons */
+.bg-gradient-to-r.from-purple-600,
+.bg-gradient-to-r.from-blue-500,
+.bg-gradient-to-r.from-green-500,
+.bg-gradient-to-r.from-amber-500,
+.bg-gradient-to-r.from-red-600 {
+  color: white !important;
+}
+
+/* Fix outline buttons with white text specifically */
+button[variant="outline"] {
+  background-color: transparent !important;
+  color: white !important;
+}
+
+/* Override any default button styles that might cause white on white */
+button {
+  color: inherit;
+}
+
+/* Ensure buttons in navigation have proper contrast */
+nav button,
+.navigation button {
+  color: white !important;
+}
+
 @keyframes musical-bounce {
   0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
   40% { transform: translateY(-10px); }

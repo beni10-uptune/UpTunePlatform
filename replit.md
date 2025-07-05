@@ -152,9 +152,17 @@ Changelog:
 - July 5, 2025. Bug fixes and comprehensive site testing:
   * Fixed game room creation issue: changed 'jam-session' to 'jam-sessions' in game-room.tsx to match database schema
   * Fixed Madchester button 404 error: corrected journey routing from /journey/:slug to /journeys/:slug in App.tsx and journeys.tsx
-  * Strengthened CSS overrides to prevent white button background on Musical Journey tab navigation
+  * FIXED white text on white background issue: Changed "Create Game" button on journeys page from outline variant to gradient background
+  * Added comprehensive CSS overrides to prevent white text visibility issues across all buttons
   * Fixed Spotify button functionality: changed from direct track links to Spotify search links to ensure working functionality
   * Confirmed game type consistency across all components
+  * Verified all musical journeys have associated community playlists:
+    - Disco → "Disco Classics" (1 entry)
+    - Acid House → "Acid House Classics" (0 entries, ready for community)
+    - Berlin Electronic → "Berlin Electronic Revolution" (0 entries, ready for community)
+    - Detroit Techno → "Detroit Techno Pioneers" (0 entries, ready for community)
+    - Madchester → "Madchester Anthem" (2 entries)
+  * Updated journey-to-community-list mapping to ensure proper linking
 ```
 
 ## User Preferences
