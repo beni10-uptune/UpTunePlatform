@@ -170,3 +170,23 @@ Changelog:
 ```
 Preferred communication style: Simple, everyday language.
 ```
+
+## Improvement Roadmap (July 5, 2025)
+
+### Immediate Priorities
+1. Fix button styling consistency across site
+2. Implement social proof on homepage
+3. Add game templates for quick start
+4. Optimize Teams conversion funnel
+
+### Engagement Features
+- Community leaderboards
+- Achievement system
+- Social sharing capabilities
+- Email capture for playlist saving
+
+### Technical Improvements
+- Performance optimization
+- Mobile responsive fixes
+- Real-time updates via WebSocket
+- Analytics implementation

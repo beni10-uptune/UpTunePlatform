@@ -188,6 +188,49 @@ nav button,
   color: white !important;
 }
 
+/* Consistent button design system */
+/* Primary gradient buttons */
+.gradient-bg,
+button.gradient-bg,
+.bg-gradient-to-r {
+  background: linear-gradient(to right, rgb(147, 51, 234), rgb(219, 39, 119)) !important;
+  color: white !important;
+  border: none !important;
+}
+
+/* Secondary outline buttons with proper contrast */
+button[variant="outline"],
+.border-purple-200 {
+  background-color: white !important;
+  color: rgb(147, 51, 234) !important;
+  border: 1px solid rgb(221, 214, 254) !important;
+}
+
+button[variant="outline"]:hover,
+.border-purple-200:hover {
+  background-color: rgb(245, 243, 255) !important;
+  color: rgb(124, 58, 237) !important;
+}
+
+/* Ghost buttons for navigation */
+button[variant="ghost"] {
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
+/* Dark background ghost buttons */
+.bg-gradient-to-br button[variant="ghost"],
+.bg-slate-900 button[variant="ghost"],
+.bg-purple-900 button[variant="ghost"] {
+  color: white !important;
+}
+
+.bg-gradient-to-br button[variant="ghost"]:hover,
+.bg-slate-900 button[variant="ghost"]:hover,
+.bg-purple-900 button[variant="ghost"]:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
 @keyframes musical-bounce {
   0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
   40% { transform: translateY(-10px); }
