@@ -103,18 +103,33 @@
 [data-state="active"].journey-tab {
   background-color: rgb(147 51 234) !important;
   color: white !important;
+  box-shadow: none !important;
 }
 
 /* Additional specificity for journey page tabs */
 .journey-tab[data-state="active"] {
   background-color: rgb(147 51 234) !important;
   color: white !important;
+  box-shadow: none !important;
 }
 
 /* Force override any Radix UI default styles */
 button.journey-tab[data-state="active"] {
   background-color: rgb(147 51 234) !important;
   color: white !important;
+  box-shadow: none !important;
+}
+
+/* Override even more specifically for tabs component */
+[role="tablist"] button[data-state="active"].journey-tab {
+  background-color: rgb(147 51 234) !important;
+  color: white !important;
+  box-shadow: none !important;
+}
+
+/* Remove all default background colors from active tabs */
+.journey-tab[data-state="active"]:not(:hover) {
+  background-color: rgb(147 51 234) !important;
 }
 
 @keyframes musical-bounce {

@@ -21,8 +21,8 @@ const GameMenu = () => {
 
   const games = [
     {
-      id: 'soundtrack',
-      title: 'Soundtrack',
+      id: 'jam-sessions',
+      title: 'Jam Sessions',
       description: 'Build the perfect soundtrack for any movie, moment, or mood you can imagine',
       icon: Headphones,
       color: 'blue',

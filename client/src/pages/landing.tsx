@@ -57,7 +57,7 @@ const LandingPage = () => {
 
   const getThemeOptions = (gameType: string) => {
     switch (gameType) {
-      case 'soundtrack':
+      case 'jam-sessions':
         return [
           'Road trip',
           'Festival campsite',
@@ -243,8 +243,8 @@ const LandingPage = () => {
                       Choose Your Theme
                     </DialogTitle>
                     <DialogDescription>
-                      {selectedGameType === 'soundtrack' 
-                        ? "Soundtrack: What's the vibe for your playlist?"
+                      {selectedGameType === 'jam-sessions' 
+                        ? "Jam Sessions: What's the vibe for your playlist?"
                         : selectedGameType === 'guess-who'
                         ? "Guess Who: Pick a theme for anonymous sharing"
                         : "Pick a theme that inspires your group's music choices"
@@ -318,7 +318,7 @@ const LandingPage = () => {
             <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
               <Card 
                 className="group hover:shadow-lg transition-all duration-300 cursor-pointer hover:scale-105 border-2 hover:border-blue-300 relative overflow-hidden"
-                onClick={() => handleGameModeClick('jam-session')}
+                onClick={() => handleGameModeClick('jam-sessions')}
               >
                 <div className="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
                 <CardHeader className="pb-3">

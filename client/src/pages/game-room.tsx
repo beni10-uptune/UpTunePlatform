@@ -55,8 +55,8 @@ const GAME_TYPES = {
     isGuided: false,
     prompts: undefined
   },
-  'jam-session': {
-    title: 'Jam Session',
+  'jam-sessions': {
+    title: 'Jam Sessions',
     description: 'Build the perfect playlist for any event or vibe',
     icon: Headphones,
     color: 'from-blue-500 to-cyan-500',
