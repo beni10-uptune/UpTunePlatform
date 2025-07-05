@@ -164,18 +164,16 @@ export function FeaturedMusicalJourney() {
                           </Button>
                           <Button
                             size="sm"
-                            variant="outline"
-                            className="border-white/30 text-white hover:bg-white/10 hidden sm:flex"
-                            onClick={() => window.open(`https://open.spotify.com/track/${track.track_id}`, '_blank')}
+                            className="bg-green-600 hover:bg-green-700 text-white hidden sm:flex"
+                            onClick={() => window.open(`https://open.spotify.com/search/${encodeURIComponent(track.artist + ' ' + track.title)}`, '_blank')}
                           >
                             <ExternalLink className="w-4 h-4 mr-2" />
-                            Play in Spotify
+                            Find on Spotify
                           </Button>
                           <Button
                             size="sm"
-                            variant="outline"
-                            className="border-white/30 text-white hover:bg-white/10 sm:hidden"
-                            onClick={() => window.open(`https://open.spotify.com/track/${track.track_id}`, '_blank')}
+                            className="bg-green-600 hover:bg-green-700 text-white sm:hidden"
+                            onClick={() => window.open(`https://open.spotify.com/search/${encodeURIComponent(track.artist + ' ' + track.title)}`, '_blank')}
                           >
                             <ExternalLink className="w-4 h-4" />
                           </Button>

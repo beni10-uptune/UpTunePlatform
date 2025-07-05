@@ -519,18 +519,16 @@ export default function JourneyPage() {
                           </Button>
                           <Button
                             size="sm"
-                            variant="outline"
-                            className="border-green-400 text-green-400 hover:bg-green-400 hover:text-black hidden sm:flex"
-                            onClick={() => window.open(`https://open.spotify.com/track/${section.track_id}`, '_blank')}
+                            className="bg-green-600 hover:bg-green-700 text-white hidden sm:flex"
+                            onClick={() => window.open(`https://open.spotify.com/search/${encodeURIComponent(section.artist + ' ' + section.title)}`, '_blank')}
                           >
                             <ExternalLink className="w-4 h-4 mr-2" />
-                            Play in Spotify
+                            Find on Spotify
                           </Button>
                           <Button
                             size="sm"
-                            variant="outline"
-                            className="border-green-400 text-green-400 hover:bg-green-400 hover:text-black sm:hidden"
-                            onClick={() => window.open(`https://open.spotify.com/track/${section.track_id}`, '_blank')}
+                            className="bg-green-600 hover:bg-green-700 text-white sm:hidden"
+                            onClick={() => window.open(`https://open.spotify.com/search/${encodeURIComponent(section.artist + ' ' + section.title)}`, '_blank')}
                           >
                             <ExternalLink className="w-4 h-4" />
                           </Button>

@@ -175,7 +175,7 @@ export default function JourneysPage() {
                         </div>
                       </div>
                       
-                      <Link href={`/journey/${journey.slug}`}>
+                      <Link href={`/journeys/${journey.slug}`}>
                         <Button 
                           size="sm" 
                           className={`bg-gradient-to-r ${getMovementColor(journey.slug)} text-white border-0 hover:scale-105 transition-transform duration-200`}
