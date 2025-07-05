@@ -119,10 +119,10 @@ export function CommunityListsPreview() {
       <CardHeader className="text-center pb-4">
         <CardTitle className="flex items-center justify-center gap-2 text-2xl text-white">
           <TrendingUp className="w-6 h-6 text-purple-400" />
-          Sacred Song Collections
+          Community Playlists
         </CardTitle>
         <p className="text-white/80 text-lg">
-          The songs that define us. Vote to elevate the tracks that matter, create lists that capture the soul of music.
+          Vote for your favorite songs. Shape the playlists that define music moments.
         </p>
       </CardHeader>
       
@@ -233,7 +233,7 @@ export function CommunityListsPreview() {
             <Link href="/community-lists">
               <Button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700">
                 <TrendingUp className="w-4 h-4 mr-2" />
-                Explore All Sacred Lists
+                Explore All Playlists
               </Button>
             </Link>
           </div>

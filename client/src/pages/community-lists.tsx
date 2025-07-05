@@ -70,7 +70,7 @@ export default function CommunityLists() {
       <div className="max-w-6xl mx-auto px-4 py-12">
         <div className="text-center mb-12">
           <h1 className="text-5xl font-bold text-white mb-4">
-            🗣️ Community Lists
+            🎵 Community Playlists
           </h1>
           <p className="text-xl text-white/90 mb-8 max-w-3xl mx-auto">
             What's the best song ever? The perfect driving tune? Share your picks and see what the community thinks.
@@ -98,29 +98,29 @@ export default function CommunityLists() {
             {lists?.map((list) => (
             <Card 
               key={list.id} 
-              className="bg-white/95 backdrop-blur-sm hover:bg-white transition-all duration-300 hover:scale-105 cursor-pointer group"
+              className="bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-all duration-300 hover:scale-105 cursor-pointer group border border-white/20"
               onClick={() => setLocation(`/community-lists/${list.slug}`)}
             >
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
                   <div className="text-4xl mb-2">{list.emoji}</div>
-                  <Badge variant="secondary" className="bg-purple-100 text-purple-700">
+                  <Badge className="bg-gradient-to-r from-green-600 to-teal-600 text-white border-0">
                     Active
                   </Badge>
                 </div>
-                <CardTitle className="text-xl text-gray-800 group-hover:text-purple-600 transition-colors">
+                <CardTitle className="text-xl text-white group-hover:text-purple-300 transition-colors">
                   {list.title}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 mb-4 line-clamp-3">
+                <p className="text-white/70 mb-4 line-clamp-3">
                   {list.description}
                 </p>
                 <div className="flex items-center justify-between">
-                  <div className="text-sm text-gray-500">
+                  <div className="text-sm text-white/60">
                     Join the conversation
                   </div>
-                  <ArrowRight className="w-4 h-4 text-purple-500 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-4 h-4 text-purple-400 group-hover:translate-x-1 transition-transform" />
                 </div>
               </CardContent>
             </Card>
