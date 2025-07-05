@@ -291,7 +291,7 @@ export const sessions = pgTable(
 );
 
 // User storage table for Replit Auth
-export const users = pgTable("users", {
+export const users = pgTable("auth_users", {
   id: varchar("id").primaryKey().notNull(),
   email: varchar("email").unique(),
   firstName: varchar("first_name"),
