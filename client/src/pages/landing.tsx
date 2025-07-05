@@ -13,6 +13,7 @@ import { CommunityListsPreview } from "@/components/community-lists-preview";
 import { SocialProofEngine } from "@/components/social-proof-engine";
 import { InteractiveDemo } from "@/components/interactive-demo";
 import { QuickStartTemplates } from "@/components/quick-start-templates";
+import { MusicalJourneysShowcase } from "@/components/musical-journeys-showcase";
 
 export default function LandingPage() {
   const [, navigate] = useLocation();
@@ -395,92 +396,10 @@ export default function LandingPage() {
             transition={{ duration: 0.8, delay: 0.6 }}
             className="mt-16"
           >
-            <div className="max-w-4xl mx-auto bg-gradient-to-r from-purple-600/20 to-indigo-600/20 backdrop-blur-lg rounded-2xl p-8 border border-purple-400/20">
-              <div className="text-center space-y-6">
-                <div className="flex items-center justify-center gap-4 mb-6">
-                  <Compass className="w-10 h-10 text-purple-400" />
-                  <div>
-                    <h2 className="text-3xl font-bold text-white">Musical Journeys</h2>
-                    <p className="text-purple-200">Immersive Musical Experiences</p>
-                  </div>
-                </div>
-                
-                <p className="text-white/80 leading-relaxed max-w-2xl mx-auto text-lg">
-                  Discover the stories behind the music with our interactive documentaries. 
-                  Vote in polls, contribute to community mixtapes, and explore music like never before.
-                </p>
-                
-                <div className="flex flex-wrap gap-3 justify-center">
-                  <Badge className="bg-white/10 text-white border-white/20 backdrop-blur-lg">
-                    Interactive Stories
-                  </Badge>
-                  <Badge className="bg-white/10 text-white border-white/20 backdrop-blur-lg">
-                    Community Mixtapes
-                  </Badge>
-                  <Badge className="bg-white/10 text-white border-white/20 backdrop-blur-lg">
-                    Spotify Integration
-                  </Badge>
-                </div>
-                
-                <Link href="/journeys">
-                  <Button size="lg" className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 mt-4 w-full sm:w-auto">
-                    <Play className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                    <span className="truncate">Start Your Journey</span>
-                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 ml-2" />
-                  </Button>
-                </Link>
-              </div>
-            </div>
+            <MusicalJourneysShowcase />
           </motion.div>
 
-          {/* Social Proof Section */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1, delay: 1 }}
-            className="mt-16"
-          >
-            <div className="max-w-4xl mx-auto bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-lg rounded-2xl p-8 border border-blue-400/20">
-              <div className="text-center mb-6">
-                <div className="flex items-center justify-center gap-4 mb-4">
-                  <Sparkles className="w-8 h-8 text-blue-400" />
-                  <div>
-                    <h2 className="text-2xl font-bold text-white">See What's Playing</h2>
-                    <p className="text-blue-200">Join thousands creating musical memories every day</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="space-y-3 max-h-48 overflow-hidden">
-                <motion.div
-                  animate={{ y: [0, -200] }}
-                  transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                  className="space-y-3"
-                >
-                  <div className="flex items-center gap-3 p-3 bg-white/10 backdrop-blur-lg rounded-lg border border-white/20">
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                    <span className="text-sm text-white"><strong>Jones family</strong> desert island discs</span>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-white/10 backdrop-blur-lg rounded-lg border border-white/20">
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                    <span className="text-sm text-white"><strong>Campsite</strong> festival classics</span>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-white/10 backdrop-blur-lg rounded-lg border border-white/20">
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                    <span className="text-sm text-white"><strong>Wedding</strong> dance floor hits</span>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-white/10 backdrop-blur-lg rounded-lg border border-white/20">
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                    <span className="text-sm text-white"><strong>Office party</strong> guilty pleasures</span>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-white/10 backdrop-blur-lg rounded-lg border border-white/20">
-                    <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                    <span className="text-sm text-white"><strong>Study group</strong> focus tracks</span>
-                  </div>
-                </motion.div>
-              </div>
-            </div>
-          </motion.div>
+
 
           {/* Featured Musical Journey */}
           <motion.div

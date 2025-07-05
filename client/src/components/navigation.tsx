@@ -1,6 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Home, Users, Music, Trophy, Menu, X } from "lucide-react";
+import { Home, Users, Music, Trophy, Menu, X, BookOpen } from "lucide-react";
 import { useState } from "react";
 
 interface NavigationProps {
@@ -15,7 +15,8 @@ export function Navigation({ variant = "header", className = "" }: NavigationPro
   const navItems = [
     { href: "/", label: "Home", icon: Home },
     { href: "/journeys", label: "Musical Journeys", icon: Music },
-    { href: "/community-lists", label: "Community Lists", icon: Users },
+    { href: "/community-lists", label: "Sacred Collections", icon: Users },
+    { href: "/blog", label: "Blog", icon: BookOpen },
     { href: "/teams", label: "Teams", icon: Trophy },
   ];
 

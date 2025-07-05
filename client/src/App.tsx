@@ -12,6 +12,8 @@ import CommunityLists from "@/pages/community-lists";
 import CommunityListDetail from "@/pages/community-list-detail";
 import JourneysPage from "@/pages/journeys";
 import JourneyPage from "@/pages/journey";
+import Blog from "@/pages/blog";
+import BlogPost from "@/pages/blog-post";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -28,6 +30,8 @@ function Router() {
       <Route path="/journeys" component={JourneysPage} />
       <Route path="/musicaljourneys" component={() => <Redirect to="/journeys" />} />
       <Route path="/journeys/:slug" component={JourneyPage} />
+      <Route path="/blog" component={Blog} />
+      <Route path="/blog/:slug" component={BlogPost} />
       <Route component={NotFound} />
     </Switch>
   );

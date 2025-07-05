@@ -80,11 +80,11 @@ export function CommunityListsPreview() {
 
   if (isLoading) {
     return (
-      <Card className="max-w-6xl mx-auto bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 border-purple-200">
+      <Card className="max-w-6xl mx-auto bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-lg border border-white/20">
         <CardContent className="p-8">
           <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600"></div>
-            <span className="ml-3 text-purple-600">Loading community lists...</span>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-400"></div>
+            <span className="ml-3 text-white/80">Loading community lists...</span>
           </div>
         </CardContent>
       </Card>
@@ -93,19 +93,19 @@ export function CommunityListsPreview() {
 
   if (!listsWithEntries || listsWithEntries.length === 0) {
     return (
-      <Card className="max-w-6xl mx-auto bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 border-purple-200">
+      <Card className="max-w-6xl mx-auto bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-lg border border-white/20">
         <CardHeader className="text-center">
-          <CardTitle className="flex items-center justify-center gap-2 text-2xl">
-            <Users className="w-6 h-6 text-purple-600" />
+          <CardTitle className="flex items-center justify-center gap-2 text-2xl text-white">
+            <Users className="w-6 h-6 text-purple-400" />
             Community Lists Coming Soon
           </CardTitle>
         </CardHeader>
         <CardContent className="text-center pb-8">
-          <p className="text-gray-600 mb-6">
+          <p className="text-white/70 mb-6">
             Be the first to create viral music lists and get the community voting!
           </p>
           <Link href="/community-lists">
-            <Button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:opacity-90">
+            <Button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700">
               Create First List
             </Button>
           </Link>
@@ -115,14 +115,14 @@ export function CommunityListsPreview() {
   }
 
   return (
-    <Card className="max-w-6xl mx-auto bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 border-purple-200">
+    <Card className="max-w-6xl mx-auto bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-lg border border-white/20">
       <CardHeader className="text-center pb-4">
-        <CardTitle className="flex items-center justify-center gap-2 text-2xl">
-          <TrendingUp className="w-6 h-6 text-purple-600" />
-          Community Lists
+        <CardTitle className="flex items-center justify-center gap-2 text-2xl text-white">
+          <TrendingUp className="w-6 h-6 text-purple-400" />
+          Sacred Song Collections
         </CardTitle>
-        <p className="text-gray-600 text-lg">
-          Vote for your favourite songs and share the tracks that matter to you. See what the community thinks.
+        <p className="text-white/80 text-lg">
+          The songs that define us. Vote to elevate the tracks that matter, create lists that capture the soul of music.
         </p>
       </CardHeader>
       
@@ -135,14 +135,14 @@ export function CommunityListsPreview() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <Card className="bg-white/80 hover:bg-white transition-all duration-200 h-full">
+              <Card className="bg-white/10 backdrop-blur-sm hover:bg-white/15 transition-all duration-200 h-full border border-white/20">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="text-2xl">{list.emoji}</div>
                       <div>
-                        <h3 className="font-bold text-lg text-gray-800">{list.title}</h3>
-                        <div className="flex items-center gap-4 text-sm text-gray-500">
+                        <h3 className="font-bold text-lg text-white">{list.title}</h3>
+                        <div className="flex items-center gap-4 text-sm text-white/60">
                           <span className="flex items-center gap-1">
                             <Music className="w-3 h-3" />
                             {list.totalEntries} songs
@@ -155,11 +155,11 @@ export function CommunityListsPreview() {
                       </div>
                     </div>
                     {list.isWeeklyChallenge ? (
-                      <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+                      <Badge className="bg-gradient-to-r from-yellow-600 to-orange-600 text-white border-0">
                         Weekly Challenge
                       </Badge>
                     ) : (
-                      <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                      <Badge className="bg-gradient-to-r from-green-600 to-teal-600 text-white border-0">
                         Active
                       </Badge>
                     )}
@@ -171,10 +171,10 @@ export function CommunityListsPreview() {
                     <>
                       <div className="space-y-2">
                         {list.topEntries.map((entry, entryIndex) => (
-                          <div key={entry.id} className="flex items-center gap-3 p-2 bg-gray-50 rounded-lg">
+                          <div key={entry.id} className="flex items-center gap-3 p-2 bg-white/5 backdrop-blur-sm rounded-lg border border-white/10">
                             <div className="flex items-center gap-2 min-w-0">
-                              {entryIndex === 0 && <Crown className="w-4 h-4 text-yellow-500 flex-shrink-0" />}
-                              <span className="text-sm font-medium text-gray-500 flex-shrink-0">
+                              {entryIndex === 0 && <Crown className="w-4 h-4 text-yellow-400 flex-shrink-0" />}
+                              <span className="text-sm font-medium text-white/50 flex-shrink-0">
                                 #{entryIndex + 1}
                               </span>
                               {entry.imageUrl && (
@@ -185,22 +185,22 @@ export function CommunityListsPreview() {
                                 />
                               )}
                               <div className="min-w-0 flex-1">
-                                <p className="font-medium text-sm truncate">{entry.songTitle}</p>
-                                <p className="text-xs text-gray-500 truncate">{entry.artistName}</p>
+                                <p className="font-medium text-sm truncate text-white">{entry.songTitle}</p>
+                                <p className="text-xs text-white/60 truncate">{entry.artistName}</p>
                               </div>
                             </div>
                             <div className="text-right flex-shrink-0">
-                              <div className="font-bold text-sm text-purple-600">
+                              <div className="font-bold text-sm text-purple-400">
                                 {entry.voteScore > 0 ? `+${entry.voteScore}` : entry.voteScore}
                               </div>
-                              <div className="text-xs text-gray-400">votes</div>
+                              <div className="text-xs text-white/40">votes</div>
                             </div>
                           </div>
                         ))}
                       </div>
                       
                       <Link href={`/community-lists/${list.slug}`}>
-                        <Button variant="outline" className="w-full mt-3 border-purple-200 text-purple-700 hover:bg-purple-50">
+                        <Button className="w-full mt-3 bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20">
                           <Vote className="w-4 h-4 mr-2" />
                           Vote & Submit Songs
                           <ArrowRight className="w-4 h-4 ml-2" />
@@ -210,9 +210,9 @@ export function CommunityListsPreview() {
                   ) : (
                     <div className="text-center py-4">
                       <div className="text-2xl mb-2">🎵</div>
-                      <p className="text-sm text-gray-500 mb-3">No songs yet - be the first!</p>
+                      <p className="text-sm text-white/60 mb-3">No songs yet - be the first!</p>
                       <Link href={`/community-lists/${list.slug}`}>
-                        <Button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:opacity-90">
+                        <Button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700">
                           Submit First Song
                         </Button>
                       </Link>
@@ -225,15 +225,15 @@ export function CommunityListsPreview() {
         </div>
         
         {/* Call to Action */}
-        <div className="text-center pt-4 border-t border-purple-200">
+        <div className="text-center pt-4 border-t border-white/20">
           <div className="flex flex-col sm:flex-row gap-3 justify-center items-center">
-            <p className="text-gray-600">
-              <strong>{listsWithEntries.reduce((total, list) => total + list.totalEntries, 0)}</strong> songs submitted by the community
+            <p className="text-white/70">
+              <strong className="text-white">{listsWithEntries.reduce((total, list) => total + list.totalEntries, 0)}</strong> songs elevating the community
             </p>
             <Link href="/community-lists">
-              <Button className="bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:opacity-90">
+              <Button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700">
                 <TrendingUp className="w-4 h-4 mr-2" />
-                View All Lists & Vote
+                Explore All Sacred Lists
               </Button>
             </Link>
           </div>
