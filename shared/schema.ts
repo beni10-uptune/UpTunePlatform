@@ -170,6 +170,7 @@ export const listEntries = pgTable("list_entries", {
   listId: integer("list_id").notNull().references(() => communityLists.id),
   userId: integer("user_id"),
   guestSessionId: text("guest_session_id"),
+  submitterName: varchar("submitter_name", { length: 100 }),
   spotifyTrackId: varchar("spotify_track_id", { length: 255 }).notNull(),
   songTitle: varchar("song_title", { length: 255 }).notNull(),
   artistName: varchar("artist_name", { length: 255 }).notNull(),

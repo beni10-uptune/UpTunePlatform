@@ -12,6 +12,7 @@ import { Progress } from '@/components/ui/progress';
 import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { SongSearch } from '@/components/song-search';
+import { useGuestSession } from '@/hooks/useGuestSession';
 import { 
   Music, 
   ArrowLeft, 
@@ -96,12 +97,13 @@ export default function GameRoom() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const { playerName, updateGuestName } = useGuestSession();
   
   // Get room code from URL
   const roomCode = window.location.pathname.split('/').pop();
   
   // State
-  const [nickname, setNickname] = useState('');
+  const [nickname, setNickname] = useState(playerName);
   const [hasJoined, setHasJoined] = useState(false);
   const [selectedSong, setSelectedSong] = useState<SpotifyTrack | null>(null);
   const [songStory, setSongStory] = useState('');
@@ -418,6 +420,9 @@ export default function GameRoom() {
 
   const handleJoinRoom = () => {
     if (!nickname.trim() || !gameRoom) return;
+    
+    // Save nickname to guest session
+    updateGuestName(nickname);
     
     const playerExists = (players as Player[]).find(p => 
       p.nickname.toLowerCase() === nickname.toLowerCase()

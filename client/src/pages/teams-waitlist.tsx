@@ -149,23 +149,7 @@ const TeamsWaitlist = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
-      {/* Header */}
-      <header className="px-6 py-4">
-        <nav className="max-w-6xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 gradient-bg rounded-lg flex items-center justify-center">
-              <Music className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-2xl font-bold gradient-text">
-              Uptune
-            </span>
-          </div>
-          
-          <Navigation variant="header" className="text-gray-600" />
-          <Navigation variant="mobile" className="text-gray-600" />
-        </nav>
-      </header>
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50 pt-16">
 
       {/* Main Content */}
       <main className="px-6 py-8">

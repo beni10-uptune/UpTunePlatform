@@ -54,17 +54,7 @@ export default function CommunityLists() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400">
-      {/* Header */}
-      <div className="bg-white/10 backdrop-blur-sm border-b border-white/20">
-        <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between relative">
-            <div className="text-white font-bold text-xl">Uptune Community</div>
-            <Navigation variant="header" />
-            <Navigation variant="mobile" />
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 pt-16">
 
       {/* Hero Section */}
       <div className="max-w-6xl mx-auto px-4 py-12">
