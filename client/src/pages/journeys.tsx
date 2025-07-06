@@ -88,7 +88,7 @@ export default function JourneysPage() {
               <Music className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-white">Musical Journeys</h1>
+              <h1 className="text-3xl md:text-4xl font-bold text-white">Musical movements that changed the world</h1>
               <p className="text-purple-200 text-sm">Stories Worth Telling</p>
             </div>
           </div>
