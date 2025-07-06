@@ -270,7 +270,8 @@ Changelog:
   * All UI elements now have proper white text on dark backgrounds for excellent readability
 - January 6, 2025. Musical Journeys heading update:
   * Changed Musical Journeys heading to "When music connects people and changes societies"
-  * Updated main showcase component to reflect the deeper social impact of music
+  * Updated both headers on /journeys page to reflect the deeper social impact of music
+  * Updated main showcase component as well for consistency across the platform
 ```
 
 ## User Preferences

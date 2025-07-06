@@ -88,7 +88,7 @@ export default function JourneysPage() {
               <Music className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-white">Musical movements that changed the world</h1>
+              <h1 className="text-3xl md:text-4xl font-bold text-white">When music connects people and changes societies</h1>
               <p className="text-purple-200 text-sm">Stories Worth Telling</p>
             </div>
           </div>
@@ -100,9 +100,9 @@ export default function JourneysPage() {
             className="max-w-4xl mx-auto"
           >
             <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-              Underground movements that didn't just change music—
+              When music connects people and changes societies—
               <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                they rewrote the rules of society itself
+                these are the stories that matter
               </span>
             </h2>
             <p className="text-xl text-white/80 leading-relaxed">
