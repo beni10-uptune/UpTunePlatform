@@ -260,6 +260,14 @@ Changelog:
   * Enhanced song cards with glass-morphism effects and improved hover states
   * Added real-time vote counts and song statistics to each list preview
   * Created seamless navigation between main lists page and individual list details
+- January 6, 2025. Dashboard authentication debugging and improvements:
+  * Fixed dashboard readability by enhancing empty state design with proper contrast
+  * Improved stats display with colored accents (green for active games, purple for songs)
+  * Enhanced getUserGameRooms method to include player and song counts for accurate statistics
+  * Added comprehensive logging to track game creation → user account linking process
+  * Identified authentication flow issue that prevents games from being saved to user accounts
+  * Dashboard is ready for authentication - games will appear once auth environment is properly configured
+  * All UI elements now have proper white text on dark backgrounds for excellent readability
 ```
 
 ## User Preferences

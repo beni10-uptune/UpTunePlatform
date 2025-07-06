@@ -16,10 +16,11 @@ interface GameRoom {
   gameType: string;
   theme: string;
   hostNickname: string;
+  userId?: string;
   isActive: boolean;
   createdAt: string;
-  playerCount?: number;
-  songCount?: number;
+  playerCount: number;
+  songCount: number;
 }
 
 export default function Dashboard() {
@@ -41,7 +42,7 @@ export default function Dashboard() {
     }
   }, [isAuthenticated, isLoading, toast]);
 
-  const { data: gameRooms = [], isLoading: isLoadingRooms } = useQuery({
+  const { data: gameRooms = [], isLoading: isLoadingRooms, error: gameRoomsError } = useQuery({
     queryKey: ["/api/user/game-rooms"],
     enabled: isAuthenticated,
     retry: false,
@@ -191,10 +192,16 @@ export default function Dashboard() {
                               <Clock className="w-4 h-4" />
                               {new Date(room.createdAt).toLocaleDateString()}
                             </div>
-                            {room.playerCount && (
+                            {room.playerCount > 0 && (
                               <div className="flex items-center gap-2 text-sm mt-1">
                                 <Users className="w-4 h-4" />
                                 {room.playerCount} players
+                              </div>
+                            )}
+                            {room.songCount > 0 && (
+                              <div className="flex items-center gap-2 text-sm mt-1">
+                                <Music className="w-4 h-4" />
+                                {room.songCount} songs
                               </div>
                             )}
                           </div>
@@ -211,14 +218,16 @@ export default function Dashboard() {
                     )}
                   </div>
                 ) : (
-                  <div className="text-center py-8">
-                    <Users className="w-12 h-12 text-white/30 mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold text-white mb-2">No games yet</h3>
-                    <p className="text-white/60 mb-4">
-                      Start your first musical journey! Create a game and invite friends.
+                  <div className="text-center py-12 bg-white/5 rounded-xl">
+                    <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <Users className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-white mb-3">No games yet</h3>
+                    <p className="text-white/70 mb-6 max-w-md mx-auto">
+                      Start your first musical journey! Create a game and invite friends to discover music together.
                     </p>
                     <Button 
-                      className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700"
+                      className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 shadow-lg"
                       onClick={() => setLocation('/')}
                     >
                       <Play className="w-4 h-4 mr-2" />
@@ -247,23 +256,23 @@ export default function Dashboard() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="text-center">
+                <div className="text-center bg-white/5 rounded-lg p-4">
                   <div className="text-3xl font-bold text-white mb-2">
                     {Array.isArray(gameRooms) ? gameRooms.length : 0}
                   </div>
-                  <p className="text-white/60">Games Created</p>
+                  <p className="text-white/80">Games Created</p>
                 </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-white mb-2">
+                <div className="text-center bg-white/5 rounded-lg p-4">
+                  <div className="text-3xl font-bold text-green-400 mb-2">
                     {Array.isArray(gameRooms) ? gameRooms.filter((room: GameRoom) => room.isActive).length : 0}
                   </div>
-                  <p className="text-white/60">Active Games</p>
+                  <p className="text-white/80">Active Games</p>
                 </div>
-                <div className="text-center">
-                  <div className="text-3xl font-bold text-white mb-2">
+                <div className="text-center bg-white/5 rounded-lg p-4">
+                  <div className="text-3xl font-bold text-purple-400 mb-2">
                     {Array.isArray(gameRooms) ? gameRooms.reduce((total: number, room: GameRoom) => total + (room.songCount || 0), 0) : 0}
                   </div>
-                  <p className="text-white/60">Songs Shared</p>
+                  <p className="text-white/80">Songs Shared</p>
                 </div>
               </div>
             </CardContent>

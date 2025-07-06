@@ -60,7 +60,7 @@ export interface IStorage {
   createGameRoom(gameRoom: InsertGameRoom): Promise<GameRoom>;
   getGameRoomByCode(code: string): Promise<GameRoom | undefined>;
   getGameRoom(id: number): Promise<GameRoom | undefined>;
-  getUserGameRooms(userId: string): Promise<GameRoom[]>;
+  getUserGameRooms(userId: string): Promise<any[]>;
   
   // Players
   addPlayer(player: InsertPlayer): Promise<Player>;
@@ -193,12 +193,27 @@ export class DatabaseStorage implements IStorage {
     return room || undefined;
   }
 
-  async getUserGameRooms(userId: string): Promise<GameRoom[]> {
+  async getUserGameRooms(userId: string): Promise<any[]> {
     const rooms = await db
-      .select()
+      .select({
+        id: gameRooms.id,
+        code: gameRooms.code,
+        gameType: gameRooms.gameType,
+        theme: gameRooms.theme,
+        hostNickname: gameRooms.hostNickname,
+        userId: gameRooms.userId,
+        isActive: gameRooms.isActive,
+        createdAt: gameRooms.createdAt,
+        playerCount: sql<number>`cast(count(distinct ${players.id}) as integer)`,
+        songCount: sql<number>`cast(count(distinct ${songs.id}) as integer)`,
+      })
       .from(gameRooms)
+      .leftJoin(players, eq(gameRooms.id, players.gameRoomId))
+      .leftJoin(songs, eq(gameRooms.id, songs.gameRoomId))
       .where(eq(gameRooms.userId, userId))
+      .groupBy(gameRooms.id, gameRooms.code, gameRooms.gameType, gameRooms.theme, gameRooms.hostNickname, gameRooms.userId, gameRooms.isActive, gameRooms.createdAt)
       .orderBy(desc(gameRooms.createdAt));
+    
     return rooms;
   }
 
