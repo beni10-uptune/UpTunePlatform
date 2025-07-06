@@ -40,7 +40,7 @@ export function MusicalJourneysShowcase() {
             <Compass className="w-7 h-7 text-white" />
           </div>
           <div>
-            <h2 className="text-3xl font-bold text-white">Musical Journeys</h2>
+            <h2 className="text-3xl font-bold text-white">Musical movements that changed the world</h2>
             <p className="text-purple-300">Interactive Music History</p>
           </div>
         </div>
