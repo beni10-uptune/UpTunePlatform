@@ -14,6 +14,8 @@ import { SocialProofEngine } from "@/components/social-proof-engine";
 import { InteractiveDemo } from "@/components/interactive-demo";
 import { QuickStartTemplates } from "@/components/quick-start-templates";
 import { MusicalJourneysShowcase } from "@/components/musical-journeys-showcase";
+import { SavedGames } from "@/components/saved-games";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function LandingPage() {
   const [, navigate] = useLocation();
@@ -23,6 +25,7 @@ export default function LandingPage() {
   const [selectedGameType, setSelectedGameType] = useState('jam-sessions');
   const [selectedTheme, setSelectedTheme] = useState('');
   const [isHovered, setIsHovered] = useState(false);
+  const { isAuthenticated } = useAuth();
 
   const handleJoinGame = async () => {
     if (joinCode.trim()) {
@@ -378,6 +381,18 @@ export default function LandingPage() {
           >
             <QuickStartTemplates />
           </motion.div>
+
+          {/* Saved Games Section - Only for authenticated users */}
+          {isAuthenticated && (
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.55 }}
+              className="mt-8 max-w-6xl mx-auto"
+            >
+              <SavedGames />
+            </motion.div>
+          )}
 
           {/* Interactive Demo Section */}
           <motion.div

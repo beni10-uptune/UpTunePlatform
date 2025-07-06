@@ -13,6 +13,8 @@ import { useToast } from '@/hooks/use-toast';
 import { apiRequest } from '@/lib/queryClient';
 import { SongSearch } from '@/components/song-search';
 import { useGuestSession } from '@/hooks/useGuestSession';
+import { useAuth } from '@/hooks/useAuth';
+import { AuthSuggestion } from '@/components/auth-suggestion';
 import { 
   Music, 
   ArrowLeft, 
@@ -98,6 +100,7 @@ export default function GameRoom() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const { playerName, updateGuestName } = useGuestSession();
+  const { isAuthenticated } = useAuth();
   
   // Get room code from URL
   const roomCode = window.location.pathname.split('/').pop();
@@ -119,7 +122,10 @@ export default function GameRoom() {
   const [aiRecommendations, setAiRecommendations] = useState<string[]>([]);
   const [showAiInsights, setShowAiInsights] = useState(false);
   const [revealAllPlayers, setRevealAllPlayers] = useState(false);
-  
+  const [showAuthSuggestion, setShowAuthSuggestion] = useState(false);
+  const [authSuggestionDismissed, setAuthSuggestionDismissed] = useState(
+    localStorage.getItem('authSuggestionDismissed') === 'true'
+  );
 
 
   // Queries
@@ -182,6 +188,11 @@ export default function GameRoom() {
       setShowAddSong(false);
       setSelectedSong(null);
       setSongStory('');
+      
+      // Show auth suggestion after first song if not authenticated and not dismissed
+      if (!isAuthenticated && !authSuggestionDismissed && (songs as Song[]).length === 0 && isHost) {
+        setShowAuthSuggestion(true);
+      }
       
       // For Desert Island Discs, advance to next prompt automatically
       if (gameRoom?.gameType === 'desert-island') {
@@ -604,6 +615,32 @@ export default function GameRoom() {
             <p className="text-white/70 text-sm sm:text-base">Theme: {gameRoom.theme}</p>
           </div>
         </div>
+
+        {/* Auth Suggestion - Show after first song */}
+        {showAuthSuggestion && !authSuggestionDismissed && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6"
+          >
+            <AuthSuggestion
+              title="Save Your Game Room"
+              description="Sign in to keep your games and playlists forever"
+              benefits={[
+                "Access all your past game rooms and playlists",
+                "Get notified about new Musical Journeys",
+                "Receive personalized playlist recommendations",
+                "See your musical taste evolution over time",
+              ]}
+              onDismiss={() => {
+                setShowAuthSuggestion(false);
+                setAuthSuggestionDismissed(true);
+                localStorage.setItem('authSuggestionDismissed', 'true');
+              }}
+              compact
+            />
+          </motion.div>
+        )}
 
         <div className="grid lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Players & Achievements Panel */}

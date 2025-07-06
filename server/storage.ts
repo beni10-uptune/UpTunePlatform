@@ -60,6 +60,7 @@ export interface IStorage {
   createGameRoom(gameRoom: InsertGameRoom): Promise<GameRoom>;
   getGameRoomByCode(code: string): Promise<GameRoom | undefined>;
   getGameRoom(id: number): Promise<GameRoom | undefined>;
+  getUserGameRooms(userId: string): Promise<GameRoom[]>;
   
   // Players
   addPlayer(player: InsertPlayer): Promise<Player>;
@@ -190,6 +191,15 @@ export class DatabaseStorage implements IStorage {
       .from(gameRooms)
       .where(eq(gameRooms.id, id));
     return room || undefined;
+  }
+
+  async getUserGameRooms(userId: string): Promise<GameRoom[]> {
+    const rooms = await db
+      .select()
+      .from(gameRooms)
+      .where(eq(gameRooms.userId, userId))
+      .orderBy(desc(gameRooms.createdAt));
+    return rooms;
   }
 
   async addPlayer(player: InsertPlayer): Promise<Player> {

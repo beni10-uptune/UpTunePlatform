@@ -67,7 +67,7 @@ export function UniversalHeader() {
                 </Button>
               </Link>
               
-              {isAuthenticated && user && (
+              {isAuthenticated && user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="sm" className="text-white hover:bg-white/20 p-2">
@@ -101,6 +101,15 @@ export function UniversalHeader() {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
+              ) : (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-white/70 hover:text-white hover:bg-white/10 transition-all ml-2"
+                  onClick={() => window.location.href = '/api/login'}
+                >
+                  Sign In
+                </Button>
               )}
             </div>
           </nav>
@@ -148,7 +157,7 @@ export function UniversalHeader() {
                   </Button>
                 </Link>
                 
-                {isAuthenticated && user && (
+                {isAuthenticated && user ? (
                   <>
                     <div className="px-4 py-2 bg-white/10 rounded-lg">
                       <div className="flex items-center gap-3">
@@ -183,6 +192,17 @@ export function UniversalHeader() {
                       Sign Out
                     </Button>
                   </>
+                ) : (
+                  <Button
+                    variant="ghost"
+                    className="w-full justify-start text-white/70 hover:text-white hover:bg-white/20"
+                    onClick={() => {
+                      setIsMobileMenuOpen(false);
+                      window.location.href = '/api/login';
+                    }}
+                  >
+                    Sign In
+                  </Button>
                 )}
               </div>
             </nav>

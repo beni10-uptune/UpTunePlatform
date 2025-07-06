@@ -36,9 +36,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Game Rooms
-  app.post("/api/game-rooms", async (req, res) => {
+  app.post("/api/game-rooms", async (req: any, res) => {
     try {
       const gameRoomData = insertGameRoomSchema.parse(req.body);
+      
+      // If user is authenticated, save the game room to their account
+      if (req.user && req.user.claims && req.user.claims.sub) {
+        gameRoomData.userId = req.user.claims.sub;
+      }
+      
       const gameRoom = await storage.createGameRoom(gameRoomData);
       res.json(gameRoom);
     } catch (error: any) {
@@ -56,6 +62,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(gameRoom);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch game room" });
+    }
+  });
+
+  // Get user's saved games
+  app.get("/api/user/games", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const games = await storage.getUserGameRooms(userId);
+      res.json(games);
+    } catch (error) {
+      console.error("Error fetching user games:", error);
+      res.status(500).json({ error: "Failed to fetch saved games" });
     }
   });
 

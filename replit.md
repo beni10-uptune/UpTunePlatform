@@ -221,6 +221,18 @@ Changelog:
   * Replaced all gray text colors with white opacity variants for proper contrast
   * Updated all badge components to use gradient backgrounds instead of solid colors
   * Fixed progress indicators and form elements to match dark aesthetic
+- January 5, 2025. Non-intrusive authentication implementation:
+  * Implemented Replit OpenID Connect authentication without forcing login
+  * All users see the same home landing page - no separate auth/non-auth experiences
+  * Added subtle "Sign In" option to header that doesn't obstruct free usage
+  * Created optional authentication benefits: saved games, content updates for Musical Journeys/blog
+  * Added user_id field to game_rooms table to link games to authenticated users
+  * Created SavedGames component that only appears for authenticated users
+  * Added strategic authentication suggestions after first song in game rooms
+  * Authentication prompt is dismissable and remembers user preference via localStorage
+  * Implemented getUserGameRooms API endpoint for authenticated users to view their games
+  * Game rooms automatically save to user's account if they're authenticated when creating
+  * Maintained completely frictionless experience for non-authenticated users
 ```
 
 ## User Preferences

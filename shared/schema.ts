@@ -8,6 +8,7 @@ export const gameRooms = pgTable("game_rooms", {
   gameType: text("game_type").notNull(),
   theme: text("theme").notNull(),
   hostNickname: text("host_nickname").notNull(),
+  userId: varchar("user_id"), // Links to auth_users.id for saved games
   isActive: boolean("is_active").notNull().default(true),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
