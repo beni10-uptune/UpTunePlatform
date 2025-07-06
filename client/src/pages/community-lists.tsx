@@ -4,8 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Music, Users, TrendingUp, ArrowRight, Trophy } from "lucide-react";
+import { Music, Users, TrendingUp, ArrowRight, Trophy, Grid3X3, List, Eye } from "lucide-react";
 import { CommunityLeaderboard } from "@/components/community-leaderboard";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { motion } from "framer-motion";
 
 interface CommunityList {
   id: number;
@@ -17,8 +19,31 @@ interface CommunityList {
   createdAt: string;
 }
 
+interface ListEntry {
+  id: number;
+  listId: number;
+  userId?: number;
+  guestSessionId?: string;
+  spotifyTrackId: string;
+  trackTitle: string;
+  artistName: string;
+  albumName: string;
+  albumArt: string;
+  reason?: string;
+  voteCount: number;
+  submitterName?: string;
+  createdAt: string;
+}
+
+interface ListWithEntries extends CommunityList {
+  entries?: ListEntry[];
+  totalVotes?: number;
+}
+
 export default function CommunityLists() {
   const [, setLocation] = useLocation();
+  const [showAllLists, setShowAllLists] = useState(false);
+  const [listsWithEntries, setListsWithEntries] = useState<ListWithEntries[]>([]);
 
   const { data: lists, isLoading } = useQuery({
     queryKey: ["/api/community-lists"],
@@ -28,6 +53,45 @@ export default function CommunityLists() {
       return response.json() as Promise<CommunityList[]>;
     },
   });
+
+  // Fetch entries for each list
+  useEffect(() => {
+    const fetchEntriesForLists = async () => {
+      if (!lists || lists.length === 0) return;
+
+      const listsWithData = await Promise.all(
+        lists.map(async (list) => {
+          try {
+            const response = await fetch(`/api/community-lists/${list.id}/entries`);
+            if (!response.ok) throw new Error(`Failed to fetch entries for list ${list.id}`);
+            const entries: ListEntry[] = await response.json();
+            
+            // Calculate total votes
+            const totalVotes = entries.reduce((sum, entry) => sum + entry.voteCount, 0);
+            
+            return {
+              ...list,
+              entries,
+              totalVotes
+            };
+          } catch (error) {
+            console.error(`Error fetching entries for list ${list.id}:`, error);
+            return {
+              ...list,
+              entries: [],
+              totalVotes: 0
+            };
+          }
+        })
+      );
+
+      // Sort by total votes (descending)
+      const sortedLists = listsWithData.sort((a, b) => (b.totalVotes || 0) - (a.totalVotes || 0));
+      setListsWithEntries(sortedLists);
+    };
+
+    fetchEntriesForLists();
+  }, [lists]);
 
   // Add Google Tag Manager tracking
   useEffect(() => {
@@ -80,9 +144,26 @@ export default function CommunityLists() {
           </div>
         </div>
 
+        {/* View All Lists Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-8"
+        >
+          <Button
+            onClick={() => setShowAllLists(true)}
+            size="lg"
+            className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 shadow-lg transform hover:scale-105 transition-all duration-200"
+          >
+            <Eye className="w-5 h-5 mr-2" />
+            View All {listsWithEntries.length} Lists
+          </Button>
+        </motion.div>
+
         {/* Featured Lists - Top 6 */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {lists?.slice(0, 6).map((list) => (
+          {listsWithEntries.slice(0, 6).map((list) => (
             <Card 
               key={list.id} 
               className="bg-gradient-to-br from-slate-900/80 via-purple-900/80 to-slate-900/80 backdrop-blur-xl border border-white/20 hover:border-purple-400/50 transition-all duration-300 cursor-pointer group"
@@ -111,34 +192,48 @@ export default function CommunityLists() {
                     Top Submissions
                   </h4>
                   
-                  {/* Mock top 3 for preview */}
-                  {[
-                    { position: 1, title: "Bohemian Rhapsody", artist: "Queen", votes: 24 },
-                    { position: 2, title: "Stairway to Heaven", artist: "Led Zeppelin", votes: 18 },
-                    { position: 3, title: "Hotel California", artist: "Eagles", votes: 15 }
-                  ].slice(0, 3).map((song) => (
-                    <div key={song.position} className="flex items-center gap-3 p-2 bg-white/5 rounded-lg">
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-                        song.position === 1 ? 'bg-yellow-500 text-black' :
-                        song.position === 2 ? 'bg-gray-400 text-black' :
-                        'bg-orange-500 text-black'
-                      }`}>
-                        {song.position}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-white text-sm font-medium truncate">{song.title}</p>
-                        <p className="text-white/60 text-xs truncate">{song.artist}</p>
-                      </div>
-                      <div className="flex items-center gap-1 text-xs text-white/60">
-                        <TrendingUp className="w-3 h-3" />
-                        {song.votes}
-                      </div>
+                  {/* Show real top 3 songs */}
+                  {list.entries && list.entries.length > 0 ? (
+                    list.entries
+                      .sort((a, b) => b.voteCount - a.voteCount)
+                      .slice(0, 3)
+                      .map((entry, index) => (
+                        <div key={entry.id} className="flex items-center gap-3 p-2 bg-white/5 rounded-lg">
+                          <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                            index === 0 ? 'bg-yellow-500 text-black' :
+                            index === 1 ? 'bg-gray-400 text-black' :
+                            'bg-orange-500 text-black'
+                          }`}>
+                            {index + 1}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-white text-sm font-medium truncate">{entry.trackTitle}</p>
+                            <p className="text-white/60 text-xs truncate">{entry.artistName}</p>
+                          </div>
+                          <div className="flex items-center gap-1 text-xs text-white/60">
+                            <TrendingUp className="w-3 h-3" />
+                            {entry.voteCount}
+                          </div>
+                        </div>
+                      ))
+                  ) : (
+                    <div className="text-center py-4">
+                      <p className="text-white/50 text-sm">No songs submitted yet</p>
+                      <p className="text-white/40 text-xs mt-1">Be the first to add a song!</p>
                     </div>
-                  ))}
+                  )}
                 </div>
                 
                 <div className="flex items-center justify-between pt-3 border-t border-white/10">
-                  <span className="text-white/60 text-sm">Join the conversation</span>
+                  <div className="flex items-center gap-3">
+                    <span className="text-white/60 text-sm">
+                      {list.entries?.length || 0} songs
+                    </span>
+                    <span className="text-white/40">•</span>
+                    <span className="text-white/60 text-sm">
+                      {list.totalVotes || 0} total votes
+                    </span>
+                  </div>
                   <Button 
                     size="sm" 
                     className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700"
@@ -151,19 +246,70 @@ export default function CommunityLists() {
           ))}
         </div>
 
-        {/* Show More Button */}
-        {lists && lists.length > 6 && (
-          <div className="text-center mt-12">
-            <Button 
-              size="lg"
-              variant="outline" 
-              className="border-white/20 text-white hover:bg-white/10 px-8"
-            >
-              View All {lists.length} Lists
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          </div>
-        )}
+        {/* All Lists Dialog */}
+        <Dialog open={showAllLists} onOpenChange={setShowAllLists}>
+          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 border border-white/20">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-bold text-white flex items-center gap-3">
+                <Grid3X3 className="w-6 h-6 text-purple-400" />
+                All Community Lists ({listsWithEntries.length})
+              </DialogTitle>
+            </DialogHeader>
+            
+            <div className="mt-6 space-y-4">
+              {listsWithEntries.map((list, index) => (
+                <motion.div
+                  key={list.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  className="bg-white/5 backdrop-blur-sm rounded-lg p-4 hover:bg-white/10 transition-all duration-200 cursor-pointer border border-white/10 hover:border-purple-400/50"
+                  onClick={() => {
+                    setShowAllLists(false);
+                    setLocation(`/community-lists/${list.slug}`);
+                  }}
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex items-start gap-3">
+                      <div className="text-2xl">{list.emoji}</div>
+                      <div className="flex-1">
+                        <h3 className="text-white font-semibold text-lg">{list.title}</h3>
+                        <p className="text-white/60 text-sm mt-1">{list.description}</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0">
+                        {list.entries?.length || 0} songs
+                      </Badge>
+                      <Badge className="bg-gradient-to-r from-green-600 to-teal-600 text-white border-0">
+                        {list.totalVotes || 0} votes
+                      </Badge>
+                    </div>
+                  </div>
+                  
+                  {/* Top 3 Songs Mini Preview */}
+                  {list.entries && list.entries.length > 0 && (
+                    <div className="mt-3 flex gap-2">
+                      {list.entries
+                        .sort((a, b) => b.voteCount - a.voteCount)
+                        .slice(0, 3)
+                        .map((entry, idx) => (
+                          <div key={entry.id} className="flex items-center gap-2 bg-white/5 rounded px-2 py-1 text-xs">
+                            <span className={`font-bold ${
+                              idx === 0 ? 'text-yellow-400' :
+                              idx === 1 ? 'text-gray-300' :
+                              'text-orange-400'
+                            }`}>#{idx + 1}</span>
+                            <span className="text-white/80 truncate max-w-[150px]">{entry.trackTitle}</span>
+                          </div>
+                        ))}
+                    </div>
+                  )}
+                </motion.div>
+              ))}
+            </div>
+          </DialogContent>
+        </Dialog>
 
         {/* Empty State */}
         {lists && lists.length === 0 && (
