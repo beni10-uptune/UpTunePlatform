@@ -100,15 +100,15 @@ export default function JourneysPage() {
             className="max-w-4xl mx-auto"
           >
             <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-              When music connects people and changes societies—
+              Explore musical journeys that 
               <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                these are the stories that matter
+                connected people and changed the world
               </span>
             </h2>
             <p className="text-xl text-white/80 leading-relaxed">
-              In the shadows of mainstream culture, in the forgotten corners of decaying cities, 
-              revolutionary movements are born. These are stories of resistance and rebellion, 
-              of communities creating beauty from chaos.
+              Discover the movements, sounds, and communities that shaped generations. 
+              From underground scenes to global cultural shifts, these are the stories 
+              of music's power to unite and transform.
             </p>
           </motion.div>
         </motion.div>
