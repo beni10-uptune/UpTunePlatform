@@ -268,6 +268,9 @@ Changelog:
   * Identified authentication flow issue that prevents games from being saved to user accounts
   * Dashboard is ready for authentication - games will appear once auth environment is properly configured
   * All UI elements now have proper white text on dark backgrounds for excellent readability
+- January 6, 2025. Musical Journeys heading update:
+  * Changed Musical Journeys heading to "When music connects people and changes societies"
+  * Updated main showcase component to reflect the deeper social impact of music
 ```
 
 ## User Preferences
