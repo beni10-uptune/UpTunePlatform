@@ -53,69 +53,71 @@ export default function JourneysPage() {
         <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10"></div>
       </div>
       
-      {/* Navigation */}
-      <nav className="relative z-10 p-6">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <Link href="/">
-            <Button variant="ghost" className="text-white hover:bg-white/10">
-              ← Back to Uptune
-            </Button>
-          </Link>
-          <div className="flex items-center gap-4">
-            <Link href="/community-lists">
-              <Button variant="ghost" className="text-white hover:bg-white/10">
-                Community Lists
-              </Button>
-            </Link>
+      {/* Clean Hero Section */}
+      <header className="relative z-10 px-6 md:px-8 py-12">
+        <div className="max-w-7xl mx-auto">
+          {/* Navigation */}
+          <nav className="flex items-center justify-between mb-16">
             <Link href="/">
-              <Button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:opacity-90 border-0">
-                Create Game
+              <Button variant="ghost" className="text-white hover:bg-white/10">
+                ← Back to Uptune
               </Button>
             </Link>
-          </div>
-        </div>
-      </nav>
+            <div className="flex items-center gap-4">
+              <Link href="/community-lists">
+                <Button variant="ghost" className="text-white hover:bg-white/10">
+                  Community Lists
+                </Button>
+              </Link>
+              <Link href="/">
+                <Button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:opacity-90 border-0">
+                  Create Game
+                </Button>
+              </Link>
+            </div>
+          </nav>
 
-      {/* Header */}
-      <header className="relative z-10 px-6 md:px-8">
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="max-w-7xl mx-auto text-center"
-        >
-          <div className="flex items-center justify-center space-x-3 mb-6">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-              <Music className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-white">When music connects people and changes societies</h1>
-              <p className="text-purple-200 text-sm">Stories Worth Telling</p>
-            </div>
-          </div>
-          
-          <motion.div
+          {/* Hero Content */}
+          <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="max-w-4xl mx-auto"
+            className="text-center max-w-5xl mx-auto"
           >
-            <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight">
-              Explore musical journeys that 
-              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                connected people and changed the world
-              </span>
-            </h2>
-            <p className="text-xl text-white/80 leading-relaxed">
-              Discover the movements, sounds, and communities that shaped generations. 
-              From underground scenes to global cultural shifts, these are the stories 
-              of music's power to unite and transform.
-            </p>
+            <div className="flex items-center justify-center gap-4 mb-8">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+                <Music className="w-8 h-8 text-white" />
+              </div>
+              <div className="text-left">
+                <h1 className="text-5xl md:text-7xl font-bold text-white leading-tight">
+                  Musical Journeys
+                </h1>
+                <p className="text-purple-200 text-lg">Stories Worth Telling</p>
+              </div>
+            </div>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <p className="text-2xl md:text-3xl text-white mb-8 leading-relaxed font-medium">
+                Explore musical journeys that 
+                <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent font-bold">
+                  {" "}connected people and changed the world
+                </span>
+              </p>
+              <p className="text-xl text-white/70 leading-relaxed max-w-3xl mx-auto">
+                Discover the movements, sounds, and communities that shaped generations. 
+                From underground scenes to global cultural shifts, these are the stories 
+                of music's power to unite and transform.
+              </p>
+            </motion.div>
           </motion.div>
-        </motion.div>
+        </div>
       </header>
 
       {/* Featured Journeys */}
-      <section className="relative z-10 px-6 md:px-8 pb-12">
+      <section className="relative z-10 px-6 md:px-8 pb-12 pt-8">
         <div className="max-w-7xl mx-auto">
           <motion.div
             initial={{ opacity: 0 }}
