@@ -192,13 +192,13 @@ export default function CommunityLists() {
                     Top Submissions
                   </h4>
                   
-                  {/* Show real top 3 songs */}
+                  {/* Show real top 3 songs with album art */}
                   {list.entries && list.entries.length > 0 ? (
                     list.entries
                       .sort((a, b) => b.voteCount - a.voteCount)
                       .slice(0, 3)
                       .map((entry, index) => (
-                        <div key={entry.id} className="flex items-center gap-3 p-2 bg-white/5 rounded-lg">
+                        <div key={entry.id} className="flex items-center gap-3 p-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors">
                           <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
                             index === 0 ? 'bg-yellow-500 text-black' :
                             index === 1 ? 'bg-gray-400 text-black' :
@@ -206,6 +206,20 @@ export default function CommunityLists() {
                           }`}>
                             {index + 1}
                           </div>
+                          
+                          {/* Album Art */}
+                          <div className="w-10 h-10 bg-white/10 rounded flex items-center justify-center overflow-hidden flex-shrink-0">
+                            {entry.albumArt ? (
+                              <img 
+                                src={entry.albumArt} 
+                                alt={entry.albumName || entry.trackTitle}
+                                className="w-full h-full object-cover"
+                              />
+                            ) : (
+                              <Music className="w-5 h-5 text-white/40" />
+                            )}
+                          </div>
+                          
                           <div className="flex-1 min-w-0">
                             <p className="text-white text-sm font-medium truncate">{entry.trackTitle}</p>
                             <p className="text-white/60 text-xs truncate">{entry.artistName}</p>
@@ -217,7 +231,8 @@ export default function CommunityLists() {
                         </div>
                       ))
                   ) : (
-                    <div className="text-center py-4">
+                    <div className="text-center py-6">
+                      <Music className="w-8 h-8 text-white/30 mx-auto mb-2" />
                       <p className="text-white/50 text-sm">No songs submitted yet</p>
                       <p className="text-white/40 text-xs mt-1">Be the first to add a song!</p>
                     </div>

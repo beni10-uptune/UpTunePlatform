@@ -306,34 +306,38 @@ export default function CommunityListDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10"></div>
+      </div>
+      
       {/* Header */}
-      <div className="bg-white/10 backdrop-blur-sm border-b border-white/20">
+      <div className="relative z-10 bg-black/20 backdrop-blur-xl border-b border-white/20">
         <div className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex items-center justify-between relative">
+          <div className="flex items-center justify-between">
             <Link href="/community-lists">
-              <Button variant="ghost" className="text-white hover:bg-white/20">
-                ← Back to Lists
+              <Button variant="ghost" className="text-white hover:bg-white/10 transition-colors">
+                ← Back to Have Your Say
               </Button>
             </Link>
             <div className="text-white font-bold text-xl">Uptune Community</div>
-            <div className="w-20"></div>
+            <div className="w-32"></div>
           </div>
         </div>
       </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="relative z-10 max-w-6xl mx-auto px-4 py-8">
         {/* List Header */}
-        <div className="text-center mb-8">
-          <div className="text-6xl mb-4">{list.emoji}</div>
-          <h1 className="text-4xl font-bold text-white mb-4">{list.title}</h1>
-          <p className="text-xl text-white/90 mb-6 max-w-2xl mx-auto">{list.description}</p>
+        <div className="text-center mb-12">
+          <div className="text-6xl mb-6">{list.emoji}</div>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">{list.title}</h1>
+          <p className="text-xl text-white/80 mb-8 max-w-3xl mx-auto leading-relaxed">{list.description}</p>
           
-          <div className="flex flex-col items-center gap-4">
+          <div className="flex flex-col items-center gap-6">
             <div className="flex flex-wrap justify-center gap-4">
               <Dialog open={isSubmitDialogOpen} onOpenChange={setIsSubmitDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button className="bg-white text-purple-600 hover:bg-white/90 text-lg px-8 py-3">
+                  <Button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 text-lg px-8 py-3 shadow-lg">
                     <Plus className="w-5 h-5 mr-2" />
                     Submit Your Song
                   </Button>
@@ -529,7 +533,7 @@ export default function CommunityListDetail() {
             entries
               .sort((a: ListEntry, b: ListEntry) => b.voteScore - a.voteScore)
               .map((entry: ListEntry, index: number) => (
-                <Card key={entry.id} className="bg-white/10 backdrop-blur-lg border-white/20 hover:bg-white/20 transition-all duration-300">
+                <Card key={entry.id} className="bg-gradient-to-br from-slate-900/80 via-purple-900/80 to-slate-900/80 backdrop-blur-xl border border-white/20 hover:border-purple-400/50 transition-all duration-300">
                   <CardContent className="p-6">
                     <div className="flex items-center gap-4">
                       <div className="flex flex-col items-center gap-2">
