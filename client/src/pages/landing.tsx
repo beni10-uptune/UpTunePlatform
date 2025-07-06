@@ -86,37 +86,7 @@ export default function LandingPage() {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-gradient-to-br from-pink-600/10 to-purple-600/10 opacity-20 animate-spin" style={{ animationDuration: '20s' }}></div>
       </div>
 
-      {/* Header */}
-      <header className="relative z-10 px-6 py-4">
-        <nav className="max-w-7xl mx-auto flex items-center justify-between">
-          <motion.div 
-            className="flex items-center space-x-2"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
-              <Music className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-2xl font-bold text-white">Uptune</span>
-          </motion.div>
-          
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="flex items-center space-x-4"
-          >
-            <Link href="/community-lists" className="text-white/80 hover:text-white transition-colors hidden md:block">Community</Link>
-            <Link href="/journeys" className="text-white/80 hover:text-white transition-colors hidden md:block">Musical Journeys</Link>
-            <Link href="/teams">
-              <Button className="bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-lg">
-                For Teams
-              </Button>
-            </Link>
-          </motion.div>
-        </nav>
-      </header>
+
 
       {/* Hero Section */}
       <main className="relative z-10">

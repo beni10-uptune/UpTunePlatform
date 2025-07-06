@@ -233,6 +233,13 @@ Changelog:
   * Implemented getUserGameRooms API endpoint for authenticated users to view their games
   * Game rooms automatically save to user's account if they're authenticated when creating
   * Maintained completely frictionless experience for non-authenticated users
+- January 6, 2025. Navigation and section renaming updates:
+  * Fixed duplicate navigation bars - removed landing page's custom navigation
+  * Universal header background updated from translucent grey to match site's dark gradient aesthetic
+  * Renamed "Community Playlists" to "Have Your Say" throughout platform (navigation and sections)
+  * Ensured navigation order: Sign In second last, For Teams last with prominent gradient styling
+  * Mobile hamburger menu already implemented for responsive design
+  * Single universal navigation bar now consistent across all pages
 ```
 
 ## User Preferences

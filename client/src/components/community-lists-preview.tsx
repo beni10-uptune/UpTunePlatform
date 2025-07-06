@@ -124,7 +124,7 @@ export function CommunityListsPreview() {
         >
           <CardTitle className="flex items-center justify-center gap-3 text-3xl font-bold text-white mb-4">
             <TrendingUp className="w-8 h-8 text-purple-400" />
-            Community Playlists
+            Have Your Say
           </CardTitle>
           <p className="text-white/80 text-xl max-w-2xl mx-auto leading-relaxed">
             Vote for your favorite songs. Shape the playlists that define music moments.

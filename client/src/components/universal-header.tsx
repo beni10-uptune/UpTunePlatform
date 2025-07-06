@@ -19,7 +19,7 @@ export function UniversalHeader() {
   const navItems = [
     { href: "/", label: "Home", icon: Home },
     { href: "/journeys", label: "Musical Journeys", icon: Music },
-    { href: "/community-lists", label: "Community Playlists", icon: Users },
+    { href: "/community-lists", label: "Have Your Say", icon: Users },
     { href: "/blog", label: "Blog", icon: BookOpen },
   ];
 
@@ -29,7 +29,7 @@ export function UniversalHeader() {
   };
 
   return (
-    <header className="bg-black/20 backdrop-blur-lg border-b border-white/20 sticky top-0 z-50">
+    <header className="bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 backdrop-blur-lg border-b border-white/10 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
