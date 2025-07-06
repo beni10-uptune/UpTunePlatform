@@ -121,17 +121,23 @@ export default function LandingPage() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center"
             >
-              <Link href="/games" className="w-full sm:w-auto">
-                <Button 
-                  size="lg" 
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 transition-all text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 w-full sm:w-auto"
-                  onMouseEnter={() => setIsHovered(true)}
-                  onMouseLeave={() => setIsHovered(false)}
-                >
-                  <Play className={`w-4 h-4 sm:w-5 sm:h-5 mr-2 transition-transform ${isHovered ? 'scale-110' : ''}`} />
-                  <span className="truncate">Start Playing</span>
-                </Button>
-              </Link>
+              <Dialog open={showThemeDialog} onOpenChange={setShowThemeDialog}>
+                <DialogTrigger asChild>
+                  <Button 
+                    size="lg" 
+                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 transition-all text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 w-full sm:w-auto"
+                    onMouseEnter={() => setIsHovered(true)}
+                    onMouseLeave={() => setIsHovered(false)}
+                    onClick={() => {
+                      setSelectedGameType('jam-sessions');
+                      setShowThemeDialog(true);
+                    }}
+                  >
+                    <Play className={`w-4 h-4 sm:w-5 sm:h-5 mr-2 transition-transform ${isHovered ? 'scale-110' : ''}`} />
+                    <span className="truncate">Start Playing</span>
+                  </Button>
+                </DialogTrigger>
+              </Dialog>
               
               <Dialog open={showJoinDialog} onOpenChange={setShowJoinDialog}>
                 <DialogTrigger asChild>

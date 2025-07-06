@@ -77,6 +77,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get user's game rooms (alternative endpoint)
+  app.get("/api/user/game-rooms", isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const games = await storage.getUserGameRooms(userId);
+      res.json(games);
+    } catch (error) {
+      console.error("Error fetching user game rooms:", error);
+      res.status(500).json({ error: "Failed to fetch game rooms" });
+    }
+  });
+
   // Players
   app.post("/api/players", async (req, res) => {
     try {

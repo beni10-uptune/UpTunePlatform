@@ -240,6 +240,17 @@ Changelog:
   * Ensured navigation order: Sign In second last, For Teams last with prominent gradient styling
   * Mobile hamburger menu already implemented for responsive design
   * Single universal navigation bar now consistent across all pages
+- January 6, 2025. Comprehensive UX improvements and dashboard implementation:
+  * Fixed "Start Playing" button to show quick start dialog instead of redirecting to old game menu
+  * Changed "Home" to "Start Game" in navigation (still returns to homepage)
+  * Created dashboard page (/dashboard) for authenticated users showing saved games and stats
+  * Added dashboard to navigation for signed-in users with conditional rendering
+  * Completely redesigned "Have Your Say" section with dark gradient aesthetic matching site
+  * Fixed styling issues: removed white text on white backgrounds, consistent color scheme
+  * Reduced list display to top 6 with preview of top 3 songs for each list
+  * Added community impact stats section with real engagement metrics
+  * Added API endpoint /api/user/game-rooms for dashboard functionality
+  * Improved mobile responsiveness across all sections
 ```
 
 ## User Preferences

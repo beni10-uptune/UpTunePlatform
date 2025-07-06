@@ -7,6 +7,7 @@ import { UniversalHeader } from "@/components/universal-header";
 import LandingPage from "@/pages/landing";
 import GameMenu from "@/pages/game-menu";
 import GameRoom from "@/pages/game-room";
+import Dashboard from "@/pages/dashboard";
 
 import TeamsWaitlist from "@/pages/teams-waitlist";
 import CommunityLists from "@/pages/community-lists";
@@ -26,6 +27,7 @@ function Router() {
         <Route path="/games" component={GameMenu} />
         <Route path="/game/:gameType" component={GameRoom} />
         <Route path="/room/:code" component={GameRoom} />
+        <Route path="/dashboard" component={Dashboard} />
         <Route path="/have-your-say" component={TeamsWaitlist} />
         <Route path="/teams" component={TeamsWaitlist} />
         <Route path="/community-lists" component={CommunityLists} />

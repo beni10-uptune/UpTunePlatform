@@ -17,7 +17,8 @@ export function UniversalHeader() {
   const { user, isAuthenticated } = useAuth();
 
   const navItems = [
-    { href: "/", label: "Home", icon: Home },
+    { href: "/", label: "Start Game", icon: Home },
+    ...(isAuthenticated ? [{ href: "/dashboard", label: "Dashboard", icon: User }] : []),
     { href: "/journeys", label: "Musical Journeys", icon: Music },
     { href: "/community-lists", label: "Have Your Say", icon: Users },
     { href: "/blog", label: "Blog", icon: BookOpen },
@@ -57,16 +58,6 @@ export function UniversalHeader() {
             ))}
             
             <div className="ml-2 border-l border-white/20 pl-2 flex items-center gap-2">
-              <Link href="/teams">
-                <Button
-                  size="sm"
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg"
-                >
-                  <Trophy className="w-4 h-4 mr-2" />
-                  For Teams
-                </Button>
-              </Link>
-              
               {isAuthenticated && user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -105,12 +96,22 @@ export function UniversalHeader() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="text-white/70 hover:text-white hover:bg-white/10 transition-all ml-2"
+                  className="text-white/70 hover:text-white hover:bg-white/10 transition-all"
                   onClick={() => window.location.href = '/api/login'}
                 >
                   Sign In
                 </Button>
               )}
+              
+              <Link href="/teams">
+                <Button
+                  size="sm"
+                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg"
+                >
+                  <Trophy className="w-4 h-4 mr-2" />
+                  For Teams
+                </Button>
+              </Link>
             </div>
           </nav>
 
@@ -147,16 +148,6 @@ export function UniversalHeader() {
               ))}
               
               <div className="pt-2 border-t border-white/20 space-y-2">
-                <Link href="/teams">
-                  <Button
-                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <Trophy className="w-4 h-4 mr-2" />
-                    For Teams
-                  </Button>
-                </Link>
-                
                 {isAuthenticated && user ? (
                   <>
                     <div className="px-4 py-2 bg-white/10 rounded-lg">
@@ -204,6 +195,16 @@ export function UniversalHeader() {
                     Sign In
                   </Button>
                 )}
+                
+                <Link href="/teams">
+                  <Button
+                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <Trophy className="w-4 h-4 mr-2" />
+                    For Teams
+                  </Button>
+                </Link>
               </div>
             </nav>
           </div>
