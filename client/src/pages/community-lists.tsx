@@ -152,7 +152,7 @@ export default function CommunityLists() {
                   key={list.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 hover:border-purple-400/50 transition-all duration-300 cursor-pointer group"
+                  className="bg-gradient-to-br from-slate-800/80 via-purple-900/60 to-slate-800/80 backdrop-blur-sm rounded-lg p-6 border border-white/20 hover:border-purple-400/50 transition-all duration-300 cursor-pointer group"
                   onClick={() => setLocation(`/community-lists/${list.slug}`)}
                 >
                   <div className="flex items-start justify-between mb-4">
@@ -162,10 +162,10 @@ export default function CommunityLists() {
                         <h3 className="text-white font-semibold group-hover:text-purple-300 transition-colors">
                           {list.title}
                         </h3>
-                        <p className="text-white/60 text-sm">{list.entries?.length || 0} songs</p>
+                        <p className="text-white/70 text-sm">{list.entries?.length || 0} songs</p>
                       </div>
                     </div>
-                    <Badge className="bg-green-600/20 text-green-300 border-green-600/30">
+                    <Badge className="bg-green-600/80 text-green-100 border-green-600/50">
                       Active
                     </Badge>
                   </div>
@@ -177,7 +177,7 @@ export default function CommunityLists() {
                         .sort((a, b) => b.voteCount - a.voteCount)
                         .slice(0, 3)
                         .map((entry, index) => (
-                          <div key={entry.id} className="flex items-center gap-3 p-2 bg-white/5 rounded-lg">
+                          <div key={entry.id} className="flex items-center gap-3 p-3 bg-black/40 rounded-lg border border-white/10 hover:bg-black/60 transition-colors">
                             <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded flex items-center justify-center text-white text-xs font-bold">
                               #{index + 1}
                             </div>
@@ -190,16 +190,16 @@ export default function CommunityLists() {
                             )}
                             <div className="flex-1 min-w-0">
                               <p className="text-white text-sm font-medium truncate">{entry.trackTitle}</p>
-                              <p className="text-white/60 text-xs truncate">{entry.artistName}</p>
+                              <p className="text-white/70 text-xs truncate">{entry.artistName}</p>
                             </div>
-                            <div className="flex items-center gap-1 text-xs text-white/60">
+                            <div className="flex items-center gap-1 text-xs text-white/80">
                               <TrendingUp className="w-3 h-3" />
                               {entry.voteCount}
                             </div>
                           </div>
                         ))
                     ) : (
-                      <div className="text-center py-6 text-white/60">
+                      <div className="text-center py-6 text-white/70">
                         <Music className="w-8 h-8 mx-auto mb-2 opacity-50" />
                         <p className="text-sm">Be the first to add a song!</p>
                       </div>
@@ -262,7 +262,7 @@ export default function CommunityLists() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ duration: 0.3, delay: index * 0.05 }}
-                className="bg-white/5 backdrop-blur-sm rounded-lg p-4 hover:bg-white/10 transition-all duration-200 cursor-pointer border border-white/10 hover:border-purple-400/50"
+                className="bg-gradient-to-br from-slate-800/80 via-purple-900/60 to-slate-800/80 backdrop-blur-sm rounded-lg p-4 hover:bg-gradient-to-br hover:from-slate-700/80 hover:via-purple-800/60 hover:to-slate-700/80 transition-all duration-200 cursor-pointer border border-white/20 hover:border-purple-400/50"
                 onClick={() => {
                   setShowAllLists(false);
                   setLocation(`/community-lists/${list.slug}`);
@@ -273,7 +273,7 @@ export default function CommunityLists() {
                     <div className="text-2xl">{list.emoji}</div>
                     <div className="flex-1">
                       <h3 className="text-white font-semibold text-lg">{list.title}</h3>
-                      <p className="text-white/60 text-sm mt-1">{list.description}</p>
+                      <p className="text-white/70 text-sm mt-1">{list.description}</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
@@ -293,13 +293,13 @@ export default function CommunityLists() {
                       .sort((a, b) => b.voteCount - a.voteCount)
                       .slice(0, 3)
                       .map((entry, idx) => (
-                        <div key={entry.id} className="flex items-center gap-2 bg-white/5 rounded px-2 py-1 text-xs">
+                        <div key={entry.id} className="flex items-center gap-2 bg-black/40 rounded px-2 py-1 text-xs border border-white/10">
                           <span className={`font-bold ${
                             idx === 0 ? 'text-yellow-400' :
                             idx === 1 ? 'text-gray-300' :
                             'text-orange-400'
                           }`}>#{idx + 1}</span>
-                          <span className="text-white/80 truncate max-w-[150px]">{entry.trackTitle}</span>
+                          <span className="text-white/90 truncate max-w-[150px]">{entry.trackTitle}</span>
                         </div>
                       ))}
                   </div>

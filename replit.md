@@ -276,6 +276,13 @@ Changelog:
   * Replaced complex underground culture language with clear, accessible text about musical movements
   * Created single hero section with proper typography hierarchy and visual flow
   * Updated main showcase component as well for consistency across the platform
+- January 8, 2025. Community Lists page styling improvements:
+  * Redesigned "Have Your Say" page to match homepage experience with clean, focused layout
+  * Fixed color contrast issues by using darker backgrounds (slate-800/80 via purple-900/60) for better text readability
+  * Enhanced song preview cards with proper dark backgrounds (black/40) and improved borders
+  * Updated badges and text colors for better contrast (white/70, white/80, white/90)
+  * Improved dialog styling with consistent dark gradient backgrounds
+  * Maintained all functionality while achieving proper accessibility standards
 ```
 
 ## User Preferences
