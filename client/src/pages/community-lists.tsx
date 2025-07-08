@@ -118,131 +118,147 @@ export default function CommunityLists() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-16">
-      <div className="max-w-6xl mx-auto px-4 py-12">
-        {/* Clean Hero Section */}
+      <div className="max-w-7xl mx-auto px-4 py-8 sm:py-12">
+        {/* Hero Section */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="text-center mb-8 sm:mb-12"
         >
-          <h1 className="text-5xl font-bold text-white mb-6">
+          <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4 sm:mb-6">
             🎵 Have Your Say
           </h1>
-          <p className="text-xl text-white/80 mb-8 max-w-3xl mx-auto">
+          <p className="text-lg sm:text-xl text-white/80 mb-6 sm:mb-8 max-w-3xl mx-auto px-4">
             What's the best song ever? The perfect driving tune? Share your picks and see what the community thinks.
           </p>
+          
+          {/* Quick Stats */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="flex flex-wrap justify-center gap-4 sm:gap-8 text-white/70 mb-8"
+          >
+            <div className="flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
+              <span className="text-sm sm:text-base">Trending picks</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Users className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
+              <span className="text-sm sm:text-base">Community voted</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Music className="w-4 h-4 sm:w-5 sm:h-5 text-purple-400" />
+              <span className="text-sm sm:text-base">Spotify powered</span>
+            </div>
+          </motion.div>
+
+          {/* View All Button - Mobile Friendly */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
+            <Button
+              onClick={() => setShowAllLists(true)}
+              size="lg"
+              className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 shadow-lg transform hover:scale-105 transition-all duration-200 mb-8"
+            >
+              <Eye className="w-4 h-4 mr-2" />
+              View All {listsWithEntries.length} Lists
+            </Button>
+          </motion.div>
         </motion.div>
 
-        {/* Main Content Card - Dark Gradient Style */}
-        <Card className="max-w-6xl mx-auto bg-gradient-to-br from-slate-900/90 via-purple-900/80 to-slate-900/90 backdrop-blur-lg border border-white/20">
-          <CardHeader className="text-center pb-6">
-            <CardTitle className="flex items-center justify-center gap-2 text-2xl text-white">
-              <Users className="w-6 h-6 text-purple-400" />
-              Community Playlists
-            </CardTitle>
-            <p className="text-white/80 mt-2">
-              Vote on songs and build community-curated collections together
-            </p>
-          </CardHeader>
-          <CardContent className="p-8">
-            {/* Top 6 Lists Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-              {listsWithEntries.slice(0, 6).map((list) => (
-                <motion.div
-                  key={list.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-gradient-to-br from-slate-800/80 via-purple-900/60 to-slate-800/80 backdrop-blur-sm rounded-lg p-6 border border-white/20 hover:border-purple-400/50 transition-all duration-300 cursor-pointer group"
-                  onClick={() => setLocation(`/community-lists/${list.slug}`)}
-                >
-                  <div className="flex items-start justify-between mb-4">
+        {/* Community Lists Grid - Mobile Optimized */}
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 mb-8 sm:mb-12">
+          {listsWithEntries.slice(0, 6).map((list, index) => (
+            <motion.div
+              key={list.id}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.15 }}
+              className="group cursor-pointer"
+              onClick={() => setLocation(`/community-lists/${list.slug}`)}
+            >
+              <Card className="bg-gradient-to-br from-slate-800/90 via-purple-900/70 to-slate-800/90 backdrop-blur-sm border border-white/20 hover:border-purple-400/50 transition-all duration-300 h-full group-hover:scale-[1.02] shadow-lg hover:shadow-xl">
+                <CardHeader className="pb-3 sm:pb-4">
+                  <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center gap-3">
-                      <div className="text-2xl">{list.emoji}</div>
-                      <div>
-                        <h3 className="text-white font-semibold group-hover:text-purple-300 transition-colors">
+                      <div className="text-2xl sm:text-3xl p-2 bg-white/10 rounded-xl">{list.emoji}</div>
+                      <div className="min-w-0">
+                        <h3 className="font-bold text-lg sm:text-xl text-white mb-1 group-hover:text-purple-300 transition-colors truncate">
                           {list.title}
                         </h3>
-                        <p className="text-white/70 text-sm">{list.entries?.length || 0} songs</p>
+                        <p className="text-white/70 text-sm flex items-center gap-2">
+                          <Music className="w-3 h-3" />
+                          {list.entries?.length || 0} songs
+                        </p>
                       </div>
                     </div>
-                    <Badge className="bg-green-600/80 text-green-100 border-green-600/50">
+                    <Badge className="bg-green-600/80 text-green-100 border-green-600/50 text-xs px-2 py-1">
                       Active
                     </Badge>
                   </div>
-                  
-                  {/* Top 3 Songs Preview */}
-                  <div className="space-y-2">
-                    {list.entries && list.entries.length > 0 ? (
-                      list.entries
+                </CardHeader>
+                
+                <CardContent className="space-y-3 pt-0">
+                  {/* Top 3 Songs Preview - Mobile Optimized */}
+                  {list.entries && list.entries.length > 0 ? (
+                    <div className="space-y-2">
+                      {list.entries
                         .sort((a, b) => b.voteCount - a.voteCount)
                         .slice(0, 3)
-                        .map((entry, index) => (
-                          <div key={entry.id} className="flex items-center gap-3 p-3 bg-black/40 rounded-lg border border-white/10 hover:bg-black/60 transition-colors">
-                            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded flex items-center justify-center text-white text-xs font-bold">
-                              #{index + 1}
+                        .map((entry, entryIndex) => (
+                          <div key={entry.id} className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-black/40 rounded-lg border border-white/10 hover:bg-black/60 transition-colors">
+                            <div className="w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-purple-500 to-pink-500 rounded flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                              #{entryIndex + 1}
                             </div>
                             {entry.albumArt && (
                               <img
                                 src={entry.albumArt}
                                 alt={entry.trackTitle}
-                                className="w-8 h-8 rounded object-cover"
+                                className="w-6 h-6 sm:w-8 sm:h-8 rounded object-cover flex-shrink-0"
                               />
                             )}
                             <div className="flex-1 min-w-0">
-                              <p className="text-white text-sm font-medium truncate">{entry.trackTitle}</p>
+                              <p className="text-white text-xs sm:text-sm font-medium truncate">{entry.trackTitle}</p>
                               <p className="text-white/70 text-xs truncate">{entry.artistName}</p>
                             </div>
-                            <div className="flex items-center gap-1 text-xs text-white/80">
+                            <div className="flex items-center gap-1 text-xs text-white/80 flex-shrink-0">
                               <TrendingUp className="w-3 h-3" />
-                              {entry.voteCount}
+                              <span className="hidden sm:inline">{entry.voteCount}</span>
                             </div>
                           </div>
-                        ))
-                    ) : (
-                      <div className="text-center py-6 text-white/70">
-                        <Music className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                        <p className="text-sm">Be the first to add a song!</p>
-                      </div>
-                    )}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Community Stats */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.8 }}
-              className="text-center mb-8"
-            >
-              <p className="text-white/80 text-lg mb-2">
-                <strong className="text-2xl font-bold text-white bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  {listsWithEntries.reduce((total, list) => total + (list.entries?.length || 0), 0)}
-                </strong> 
-                <span className="ml-2">songs elevating the community</span>
-              </p>
-              <p className="text-white/60 text-sm">Join thousands creating the ultimate playlists</p>
+                        ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-4 sm:py-6 text-white/70">
+                      <Music className="w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-2 opacity-50" />
+                      <p className="text-xs sm:text-sm">Be the first to add a song!</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
             </motion.div>
+          ))}
+        </div>
 
-            {/* View All Lists Button */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.9 }}
-              className="text-center"
-            >
-              <Button
-                onClick={() => setShowAllLists(true)}
-                className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 px-8 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
-              >
-                <TrendingUp className="w-5 h-5 mr-3" />
-                View All {listsWithEntries.length} Playlists
-                <ArrowRight className="w-5 h-5 ml-3" />
-              </Button>
-            </motion.div>
-          </CardContent>
-        </Card>
+        {/* Community Stats */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+          className="text-center mb-8"
+        >
+          <p className="text-white/80 text-base sm:text-lg mb-2">
+            <strong className="text-xl sm:text-2xl font-bold text-white bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              {listsWithEntries.reduce((total, list) => total + (list.entries?.length || 0), 0)}
+            </strong> 
+            <span className="ml-2">songs elevating the community</span>
+          </p>
+          <p className="text-white/60 text-sm">Join thousands creating the ultimate playlists</p>
+        </motion.div>
       </div>
 
       {/* All Lists Dialog */}
