@@ -170,7 +170,7 @@ export default function CommunityLists() {
                 </CardHeader>
                 
                 <CardContent className="space-y-4">
-                  {/* Top 3 Songs with Voting - Exact Screenshot Style */}
+                  {/* Top 3 Songs with Voting - Exact Code from community-lists-preview */}
                   {list.entries && list.entries.length > 0 ? (
                     <>
                       <div className="space-y-3">

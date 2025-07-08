@@ -1,4 +1,4 @@
-import { Switch, Route, Redirect } from "wouter";
+import { Switch, Route, Redirect, useLocation } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
@@ -8,6 +8,7 @@ import LandingPage from "@/pages/landing";
 import GameMenu from "@/pages/game-menu";
 import GameRoom from "@/pages/game-room";
 import Dashboard from "@/pages/dashboard";
+import { useEffect } from "react";
 
 import TeamsWaitlist from "@/pages/teams-waitlist";
 import CommunityLists from "@/pages/community-lists";
@@ -19,6 +20,13 @@ import BlogPost from "@/pages/blog-post";
 import NotFound from "@/pages/not-found";
 
 function Router() {
+  const [location] = useLocation();
+
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
   return (
     <>
       <UniversalHeader />
