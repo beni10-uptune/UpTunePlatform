@@ -133,14 +133,14 @@ export default function CommunityLists() {
           </p>
         </motion.div>
 
-        {/* Main Content Card - Match Homepage Style */}
-        <Card className="max-w-6xl mx-auto bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-lg border border-white/20">
+        {/* Main Content Card - Dark Gradient Style */}
+        <Card className="max-w-6xl mx-auto bg-gradient-to-br from-slate-900/90 via-purple-900/80 to-slate-900/90 backdrop-blur-lg border border-white/20">
           <CardHeader className="text-center pb-6">
             <CardTitle className="flex items-center justify-center gap-2 text-2xl text-white">
               <Users className="w-6 h-6 text-purple-400" />
               Community Playlists
             </CardTitle>
-            <p className="text-white/70 mt-2">
+            <p className="text-white/80 mt-2">
               Vote on songs and build community-curated collections together
             </p>
           </CardHeader>
