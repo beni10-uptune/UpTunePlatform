@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Music, Users, TrendingUp, ArrowRight, Trophy, Grid3X3, List, Eye } from "lucide-react";
+import { Music, Users, TrendingUp, ArrowRight, Trophy, Grid3X3, List, Eye, Crown, Vote } from "lucide-react";
 import { CommunityLeaderboard } from "@/components/community-leaderboard";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { motion } from "framer-motion";
@@ -169,61 +169,76 @@ export default function CommunityLists() {
                   </div>
                 </CardHeader>
                 
-                <CardContent className="space-y-3">
-                  {/* Top 3 Songs with Voting */}
+                <CardContent className="space-y-4">
+                  {/* Top 3 Songs with Voting - Exact Screenshot Style */}
                   {list.entries && list.entries.length > 0 ? (
-                    <div className="space-y-3">
-                      {list.entries
-                        .sort((a, b) => b.voteCount - a.voteCount)
-                        .slice(0, 3)
-                        .map((entry, entryIndex) => (
-                          <div key={entry.id} className="flex items-center gap-3 p-3 bg-black/40 rounded-lg border border-white/10 hover:bg-black/60 transition-colors">
-                            <div className="flex items-center gap-2">
-                              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold ${
-                                entryIndex === 0 ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
-                                entryIndex === 1 ? 'bg-gradient-to-r from-gray-400 to-gray-500' :
-                                'bg-gradient-to-r from-purple-500 to-pink-500'
-                              }`}>
-                                {entryIndex + 1}
+                    <>
+                      <div className="space-y-3">
+                        {list.entries
+                          .sort((a, b) => b.voteCount - a.voteCount)
+                          .slice(0, 3)
+                          .map((entry, entryIndex) => (
+                            <motion.div 
+                              key={entry.id} 
+                              initial={{ opacity: 0, x: -20 }}
+                              animate={{ opacity: 1, x: 0 }}
+                              transition={{ duration: 0.4, delay: entryIndex * 0.1 }}
+                              className="flex items-center gap-4 p-3 bg-white/5 backdrop-blur-sm rounded-xl border border-white/20 hover:bg-white/10 transition-all duration-200"
+                            >
+                              <div className="flex items-center gap-3 min-w-0 flex-1">
+                                <div className="flex items-center gap-2">
+                                  {entryIndex === 0 && <Crown className="w-5 h-5 text-yellow-400 flex-shrink-0" />}
+                                  <span className={`text-sm font-bold flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center ${
+                                    entryIndex === 0 ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white' :
+                                    entryIndex === 1 ? 'bg-gradient-to-r from-gray-400 to-gray-500 text-white' :
+                                    'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
+                                  }`}>
+                                    {entryIndex + 1}
+                                  </span>
+                                </div>
+                                {entry.albumArt && (
+                                  <img 
+                                    src={entry.albumArt} 
+                                    alt={entry.trackTitle}
+                                    className="w-10 h-10 rounded-lg object-cover flex-shrink-0 shadow-md"
+                                  />
+                                )}
+                                <div className="min-w-0 flex-1">
+                                  <p className="font-semibold text-sm truncate text-white mb-1">{entry.trackTitle}</p>
+                                  <p className="text-xs text-white/70 truncate">{entry.artistName}</p>
+                                </div>
                               </div>
-                              {entryIndex === 0 && <span className="text-yellow-400">👑</span>}
-                            </div>
-                            {entry.albumArt && (
-                              <img
-                                src={entry.albumArt}
-                                alt={entry.trackTitle}
-                                className="w-10 h-10 rounded object-cover"
-                              />
-                            )}
-                            <div className="flex-1 min-w-0">
-                              <p className="text-white text-sm font-medium truncate">{entry.trackTitle}</p>
-                              <p className="text-white/70 text-xs truncate">{entry.artistName}</p>
-                            </div>
-                            <div className="flex items-center gap-2 text-white/80">
-                              <span className="text-lg font-bold text-green-400">+{entry.voteCount}</span>
-                              <span className="text-xs">votes</span>
-                            </div>
-                          </div>
-                        ))}
-                    </div>
+                              <div className="text-right flex-shrink-0">
+                                <div className="font-bold text-lg text-purple-300">
+                                  {entry.voteCount > 0 ? `+${entry.voteCount}` : entry.voteCount}
+                                </div>
+                                <div className="text-xs text-white/50">votes</div>
+                              </div>
+                            </motion.div>
+                          ))}
+                      </div>
+                      
+                      <Button
+                        onClick={() => setLocation(`/community-lists/${list.slug}`)}
+                        className="w-full mt-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 transition-all duration-200 py-3 font-semibold shadow-lg hover:shadow-xl"
+                      >
+                        <Vote className="w-5 h-5 mr-2" />
+                        Vote & Submit Songs
+                        <ArrowRight className="w-5 h-5 ml-2" />
+                      </Button>
+                    </>
                   ) : (
-                    <div className="text-center py-8 text-white/70">
-                      <Music className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                      <p className="text-sm">Be the first to add a song!</p>
+                    <div className="text-center py-8">
+                      <div className="text-4xl mb-4 p-4 bg-white/10 rounded-full inline-block">🎵</div>
+                      <p className="text-base text-white/70 mb-6 font-medium">No songs yet - be the first!</p>
+                      <Button
+                        onClick={() => setLocation(`/community-lists/${list.slug}`)}
+                        className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 px-6 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+                      >
+                        Submit First Song
+                      </Button>
                     </div>
                   )}
-                  
-                  {/* Vote & Submit Button */}
-                  <div className="pt-4">
-                    <Button
-                      onClick={() => setLocation(`/community-lists/${list.slug}`)}
-                      className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 py-3 font-semibold shadow-lg transition-all duration-200 hover:shadow-xl"
-                    >
-                      <Music className="w-4 h-4 mr-2" />
-                      Vote & Submit Songs
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </div>
                 </CardContent>
               </Card>
             </motion.div>
