@@ -53,7 +53,7 @@ const GameMenu = () => {
       return await response.json();
     },
     onSuccess: (gameRoom: any) => {
-      setLocation(`/game/${gameRoom.code}`);
+      setLocation(`/room/${gameRoom.code}`);
     },
     onError: () => {
       toast({

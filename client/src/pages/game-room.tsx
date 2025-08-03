@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useLocation } from 'wouter';
+import { useLocation, useParams } from 'wouter';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -101,9 +101,10 @@ export default function GameRoom() {
   const queryClient = useQueryClient();
   const { playerName, updateGuestName } = useGuestSession();
   const { isAuthenticated } = useAuth();
+  const params = useParams();
   
-  // Get room code from URL
-  const roomCode = window.location.pathname.split('/').pop();
+  // Get room code from URL params - supports both /room/:code and /game/:gameType routes
+  const roomCode = params.code || params.gameType;
   
   // State
   const [nickname, setNickname] = useState(playerName);
@@ -458,6 +459,7 @@ export default function GameRoom() {
   const handleAddSong = () => {
     if (!selectedSong || !currentPlayer || !gameRoom) return;
 
+    const gameConfig = GAME_TYPES[gameRoom.gameType as keyof typeof GAME_TYPES] || GAME_TYPES['jam-sessions'];
     const isDesertIsland = gameRoom.gameType === 'desert-island';
     const desertIslandConfig = gameConfig as typeof GAME_TYPES['desert-island'];
     const currentPrompt = isDesertIsland && desertIslandConfig.prompts ? 
@@ -532,7 +534,7 @@ export default function GameRoom() {
     );
   }
 
-  const gameConfig = GAME_TYPES[gameRoom.gameType as keyof typeof GAME_TYPES];
+  const gameConfig = GAME_TYPES[gameRoom.gameType as keyof typeof GAME_TYPES] || GAME_TYPES['jam-sessions'];
 
   if (!hasJoined) {
     return (
