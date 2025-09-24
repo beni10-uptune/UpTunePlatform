@@ -7,21 +7,29 @@ import {
   ArrowRight
 } from "lucide-react";
 
+// Import background images
+import madchesterImage from '@assets/stock_images/warehouse_nightclub__fd5e9db1.jpg';
+import acidHouseImage from '@assets/stock_images/acid_house_rave_part_25aac533.jpg';
+import detroitTechnoImage from '@assets/stock_images/detroit_skyline_with_5e6d435b.jpg';
+
 const featuredJourneys = [
   {
     title: "Madchester",
     subtitle: "When Factory Records ruled the world",
-    gradient: "from-purple-600 to-pink-600"
+    gradient: "from-purple-600 to-pink-600",
+    image: madchesterImage
   },
   {
     title: "Acid House", 
     subtitle: "The second summer of love",
-    gradient: "from-yellow-600 to-orange-600"
+    gradient: "from-yellow-600 to-orange-600",
+    image: acidHouseImage
   },
   {
     title: "Detroit Techno",
     subtitle: "From the motor city to global dancefloors",
-    gradient: "from-blue-600 to-purple-600"
+    gradient: "from-blue-600 to-purple-600",
+    image: detroitTechnoImage
   }
 ];
 
@@ -68,12 +76,19 @@ export function MusicalJourneysShowcase() {
               <motion.div
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="relative overflow-hidden rounded-lg cursor-pointer group"
+                className="relative overflow-hidden rounded-lg cursor-pointer group h-48"
               >
-                <div className={`absolute inset-0 bg-gradient-to-r ${journey.gradient} opacity-80`} />
-                <div className="relative bg-black/20 backdrop-blur-sm p-6 text-center">
+                {/* Background Image */}
+                <div 
+                  className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                  style={{ backgroundImage: `url(${journey.image})` }}
+                />
+                {/* Gradient Overlay */}
+                <div className={`absolute inset-0 bg-gradient-to-r ${journey.gradient} opacity-70 group-hover:opacity-60 transition-opacity`} />
+                {/* Content */}
+                <div className="relative bg-black/30 backdrop-blur-sm p-6 text-center h-full flex flex-col justify-center">
                   <h4 className="font-bold text-white text-lg mb-1">{journey.title}</h4>
-                  <p className="text-white/80 text-sm">{journey.subtitle}</p>
+                  <p className="text-white/90 text-sm">{journey.subtitle}</p>
                 </div>
               </motion.div>
             </Link>
