@@ -2,19 +2,18 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
-import { 
-  insertGameRoomSchema, 
-  insertPlayerSchema, 
-  insertSongSchema, 
-  insertChallengeSubmissionSchema, 
-  insertTeamsWaitlistSchema, 
-  insertListEntrySchema, 
-  insertEntryVoteSchema, 
+import {
+  insertGameRoomSchema,
+  insertPlayerSchema,
+  insertSongSchema,
+  insertTeamsWaitlistSchema,
+  insertListEntrySchema,
+  insertEntryVoteSchema,
   insertJourneySchema,
   insertCommunityMixtapeSchema,
   insertMixtapeSubmissionSchema,
   insertPollVoteSchema,
-  type AiConversation 
+  type AiConversation
 } from "@shared/schema";
 import { sendTeamContactEmail } from "./email";
 import { analyzePlaylist, enhanceStory, generateSongRecommendations, suggestGameMode, generateAiHostQuestion, generateSongSuggestionsFromResponse } from "./ai";
@@ -134,105 +133,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(songs);
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch songs" });
-    }
-  });
-
-  // Weekly Challenge
-  app.get("/api/weekly-challenge", async (req, res) => {
-    try {
-      const challenge = await storage.getCurrentChallenge();
-      if (!challenge) {
-        return res.status(404).json({ error: "No active challenge found" });
-      }
-      res.json(challenge);
-    } catch (error) {
-      console.error("Weekly challenge error:", error);
-      res.status(500).json({ error: "Failed to fetch weekly challenge" });
-    }
-  });
-
-  // Admin endpoint to force refresh weekly challenge
-  app.post("/api/admin/weekly-challenge/refresh", async (req, res) => {
-    try {
-      const { challengeManager } = await import("./weekly-challenge-manager.js");
-      const updatedChallenge = await challengeManager.forceRefresh();
-      if (updatedChallenge) {
-        res.json({ success: true, challenge: updatedChallenge });
-      } else {
-        res.json({ success: false, message: "No challenge available for current date" });
-      }
-    } catch (error) {
-      console.error("Challenge refresh error:", error);
-      res.status(500).json({ error: "Failed to refresh challenge" });
-    }
-  });
-
-  // Admin endpoint to get challenge stats
-  app.get("/api/admin/weekly-challenge/stats", async (req, res) => {
-    try {
-      const { challengeManager } = await import("./weekly-challenge-manager.js");
-      const stats = await challengeManager.getChallengeStats();
-      res.json(stats);
-    } catch (error) {
-      console.error("Challenge stats error:", error);
-      res.status(500).json({ error: "Failed to fetch challenge stats" });
-    }
-  });
-
-  // Get upcoming challenges
-  app.get("/api/weekly-challenge/upcoming", async (req, res) => {
-    try {
-      const { WeeklyChallengeScheduler } = await import("./weekly-challenge-scheduler.js");
-      const limit = parseInt(req.query.limit as string) || 5;
-      const upcoming = await WeeklyChallengeScheduler.getUpcomingChallenges(limit);
-      res.json(upcoming);
-    } catch (error) {
-      console.error("Upcoming challenges error:", error);
-      res.status(500).json({ error: "Failed to fetch upcoming challenges" });
-    }
-  });
-
-  // Challenge Submissions
-  app.post("/api/challenge-submissions", async (req, res) => {
-    try {
-      const submissionData = insertChallengeSubmissionSchema.parse(req.body);
-      const submission = await storage.addChallengeSubmission(submissionData);
-      res.json(submission);
-    } catch (error) {
-      res.status(400).json({ error: "Invalid submission data" });
-    }
-  });
-
-  app.get("/api/weekly-challenge/submissions", async (req, res) => {
-    try {
-      const challenge = await storage.getCurrentChallenge();
-      if (!challenge) {
-        return res.status(404).json({ error: "No active challenge found" });
-      }
-      const submissions = await storage.getChallengeSubmissions(challenge.id);
-      res.json(submissions);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to fetch submissions" });
-    }
-  });
-
-  app.get("/api/weekly-challenge/:challengeId/submissions", async (req, res) => {
-    try {
-      const challengeId = parseInt(req.params.challengeId);
-      const submissions = await storage.getChallengeSubmissions(challengeId);
-      res.json(submissions);
-    } catch (error) {
-      res.status(500).json({ error: "Failed to fetch submissions" });
-    }
-  });
-
-  app.post("/api/challenge-submissions/:submissionId/vote", async (req, res) => {
-    try {
-      const submissionId = parseInt(req.params.submissionId);
-      await storage.voteForSubmission(submissionId);
-      res.json({ success: true });
-    } catch (error) {
-      res.status(500).json({ error: "Failed to vote for submission" });
     }
   });
 

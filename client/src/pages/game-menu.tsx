@@ -110,35 +110,35 @@ const GameMenu = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-pink-50">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-pink-200 to-cyan-200">
       {/* Header */}
-      <header className="px-6 py-4">
+      <header className="px-6 py-4 bg-gradient-to-r from-pink-400 via-yellow-300 to-cyan-400 border-b-4 border-black shadow-[0_4px_0px_0px_rgba(0,0,0,1)]">
         <nav className="max-w-6xl mx-auto flex items-center justify-between">
           <Link href="/">
             <Button
-              variant="ghost"
-              className="flex items-center space-x-2 text-gray-600 hover:text-gray-800"
+              className="bg-white text-black hover:bg-gray-100 font-black border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
+              style={{ fontFamily: "'Arial Black', sans-serif" }}
             >
-              <ArrowLeft className="w-4 h-4" />
-              <span>Back to Home</span>
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              <span>BACK</span>
             </Button>
           </Link>
-          
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 gradient-bg rounded-lg flex items-center justify-center">
-              <Music className="w-5 h-5 text-white" />
+
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-white border-4 border-black flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rotate-12">
+              <Music className="w-6 h-6 text-black" />
             </div>
-            <span className="text-2xl font-bold gradient-text">
-              Uptune
+            <span className="text-3xl font-black text-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+              UPTUNE
             </span>
           </div>
-          
-          <Link href="/teams">
-            <Button 
-              variant="outline" 
-              className="border-purple-200 text-purple-700 hover:bg-purple-50"
+
+          <Link href="/groups">
+            <Button
+              className="bg-purple-400 hover:bg-purple-500 text-white border-3 border-black font-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
+              style={{ fontFamily: "'Arial Black', sans-serif" }}
             >
-              Uptune for Teams
+              FOR GROUPS
             </Button>
           </Link>
         </nav>
@@ -153,11 +153,16 @@ const GameMenu = () => {
             transition={{ duration: 0.8 }}
             className="text-center mb-12"
           >
-            <h1 className="text-5xl font-bold mb-4">
-              What Memory Will You <span className="gradient-text">Create Today?</span>
+            <h1 className="text-5xl md:text-6xl font-black mb-6 text-black" style={{ fontFamily: "'Arial Black', sans-serif", textTransform: 'uppercase' }}>
+              <span className="block" style={{ textShadow: '6px 6px 0px #FF1493' }}>
+                PICK YOUR
+              </span>
+              <span className="block bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-2 -rotate-2 inline-block my-2" style={{ boxShadow: '8px 8px 0px rgba(0,0,0,1)' }}>
+                MUSIC GAME
+              </span>
             </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Each game turns music into connection, laughter into memories, and friends into family. Pick your moment.
+            <p className="text-2xl font-bold text-black max-w-2xl mx-auto bg-white border-4 border-black p-4 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rotate-1">
+              Turn music into memories! 🎵
             </p>
           </motion.div>
 
@@ -169,40 +174,42 @@ const GameMenu = () => {
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.2 }}
+                whileHover={{ scale: 1.02, rotate: 0 }}
               >
-                <Card className="game-card card-hover h-full text-center cursor-pointer relative overflow-hidden">
-                  <div className="music-wave h-2 absolute top-0 left-0 right-0"></div>
-                  
-                  <CardHeader className="pb-6">
-                    <div className={`w-20 h-20 bg-${game.color}-100 rounded-full flex items-center justify-center mx-auto mb-6`}>
-                      <game.icon className={`w-10 h-10 text-${game.color}-600`} />
+                <Card className={`bg-gradient-to-br from-${game.color}-300 to-${game.color}-400 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-4px] hover:translate-y-[-4px]] transition-all h-full cursor-pointer ${index % 2 === 0 ? 'rotate-1' : '-rotate-1'}`}>
+
+                  <CardHeader className="pb-6 bg-white border-b-4 border-black">
+                    <div className={`w-20 h-20 bg-${game.color}-200 border-4 border-black flex items-center justify-center mx-auto mb-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rotate-12`}>
+                      <game.icon className="w-10 h-10 text-black" />
                     </div>
-                    <CardTitle className="text-2xl">{game.title}</CardTitle>
-                    <CardDescription className="text-base">
+                    <CardTitle className="text-3xl font-black text-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+                      {game.title.toUpperCase()}
+                    </CardTitle>
+                    <CardDescription className="text-black/80 font-bold text-base mt-2">
                       {game.description}
                     </CardDescription>
                   </CardHeader>
-                  
-                  <CardContent className="space-y-6">
+
+                  <CardContent className="space-y-6 pt-6 bg-white">
                     <div className="flex flex-wrap gap-2 justify-center">
                       {game.exampleThemes.slice(0, 3).map((theme: string) => (
                         <Badge
                           key={theme}
-                          variant="secondary"
-                          className={`bg-${game.color}-100 text-${game.color}-700`}
+                          className={`bg-${game.color}-200 text-black border-2 border-black font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]`}
                         >
                           {theme}
                         </Badge>
                       ))}
                     </div>
-                    
-                    <Button 
+
+                    <Button
                       onClick={() => handleStartGame(game.id)}
                       disabled={createGameMutation.isPending}
-                      className="gradient-bg text-white hover:opacity-90 transition-opacity w-full"
+                      className="w-full bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 font-black text-lg py-6 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
+                      style={{ fontFamily: "'Arial Black', sans-serif" }}
                     >
-                      <Play className="w-4 h-4 mr-2" />
-                      {createGameMutation.isPending ? 'Creating...' : 'Start Game'}
+                      <Play className="w-5 h-5 mr-2" />
+                      {createGameMutation.isPending ? 'CREATING...' : 'START NOW'}
                     </Button>
                   </CardContent>
                 </Card>
@@ -250,71 +257,71 @@ const GameMenu = () => {
 
       {/* Theme Selection Dialog */}
       <Dialog open={showThemeDialog} onOpenChange={setShowThemeDialog}>
-        <DialogContent className="max-w-lg w-[95vw] max-h-[90vh] overflow-y-auto mx-4">
+        <DialogContent className="max-w-lg bg-gradient-to-br from-yellow-200 to-pink-200 border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-purple-600" />
-              Choose Your Theme
+            <DialogTitle className="flex items-center gap-3 text-3xl text-black font-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+              <div className="w-12 h-12 bg-yellow-400 border-4 border-black flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                <Sparkles className="w-7 h-7 text-black" />
+              </div>
+              CHOOSE THEME
             </DialogTitle>
-            <DialogDescription>
-              {selectedGame && games.find(g => g.id === selectedGame)?.title}: What's the vibe for your playlist?
+            <DialogDescription className="text-black/80 font-bold text-lg">
+              {selectedGame && games.find(g => g.id === selectedGame)?.title}: What's the vibe? 🎵
             </DialogDescription>
           </DialogHeader>
-          
-          <div className="space-y-6">
+
+          <div className="space-y-4 mt-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
-                Create your own theme or pick from examples
+              <label className="text-sm font-black text-black mb-3 block" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+                CREATE YOUR OWN
               </label>
               <Input
-                placeholder="Enter your theme (e.g., 'Songs for a Road Trip to the Beach')"
+                placeholder="e.g., 'Songs for a Road Trip to the Beach'"
                 value={customTheme}
                 onChange={(e) => setCustomTheme(e.target.value)}
-                className="w-full"
+                className="w-full bg-white border-4 border-black text-black placeholder:text-black/40 font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
               />
             </div>
-            
+
             {selectedGame && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3">
-                  Or choose from these examples:
+                <label className="text-sm font-black text-black mb-3 block" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+                  OR PICK AN EXAMPLE:
                 </label>
-                <div className="grid grid-cols-1 gap-2">
+                <div className="space-y-2 max-h-60 overflow-y-auto">
                   {games.find(g => g.id === selectedGame)?.exampleThemes.map((theme: string) => (
-                    <Button
+                    <button
                       key={theme}
-                      variant="outline"
                       onClick={() => handleSelectExampleTheme(theme)}
-                      className="justify-start text-left h-auto p-3 hover:bg-purple-50 hover:border-purple-200"
+                      className="w-full text-left p-3 bg-white border-3 border-black hover:bg-cyan-200 hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center gap-3 text-black font-bold"
                     >
-                      <div className="flex items-center gap-2">
-                        <ArrowRight className="w-4 h-4 text-purple-500" />
-                        <span>{theme}</span>
-                      </div>
-                    </Button>
+                      <div className="w-2 h-2 bg-black"></div>
+                      {theme}
+                    </button>
                   ))}
                 </div>
               </div>
             )}
-            
-            <div className="flex flex-col sm:flex-row gap-3 pt-4">
+
+            <div className="flex gap-3 pt-4">
               <Button
-                variant="outline"
                 onClick={() => {
                   setShowThemeDialog(false);
                   setCustomTheme('');
                   setSelectedGame(null);
                 }}
-                className="flex-1 sm:flex-none"
+                className="flex-1 bg-white hover:bg-gray-100 text-black border-4 border-black font-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                style={{ fontFamily: "'Arial Black', sans-serif" }}
               >
-                Cancel
+                CANCEL
               </Button>
               <Button
                 onClick={handleCreateGame}
                 disabled={!customTheme.trim() || createGameMutation.isPending}
-                className="flex-1 sm:flex-none gradient-bg text-white"
+                className="flex-1 bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 border-4 border-black font-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
+                style={{ fontFamily: "'Arial Black', sans-serif" }}
               >
-                {createGameMutation.isPending ? 'Creating...' : 'Create Game'}
+                {createGameMutation.isPending ? 'CREATING...' : 'CREATE GAME'}
               </Button>
             </div>
           </div>

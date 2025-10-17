@@ -138,14 +138,14 @@ export default function JourneyPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-200 via-pink-200 to-cyan-200">
         <div className="text-center">
-          <motion.div 
+          <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            className="w-16 h-16 border-4 border-white/20 border-t-white rounded-full mx-auto mb-6"
+            className="w-16 h-16 border-4 border-black mx-auto mb-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
           />
-          <p className="text-white/80 text-xl">Loading musical journey...</p>
+          <p className="text-black font-black text-xl" style={{ fontFamily: "'Arial Black', sans-serif" }}>LOADING MUSICAL JOURNEY...</p>
         </div>
       </div>
     );
@@ -153,14 +153,16 @@ export default function JourneyPage() {
 
   if (!journey) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
-        <div className="text-center text-white">
-          <h1 className="text-4xl font-bold mb-4">Journey Not Found</h1>
-          <p className="text-white/80 mb-8 text-xl">The musical journey you're looking for doesn't exist.</p>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-200 via-pink-200 to-cyan-200">
+        <div className="text-center">
+          <h1 className="text-5xl font-black text-black mb-6 bg-gradient-to-r from-purple-400 to-pink-400 px-8 py-4 inline-block border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] -rotate-2" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+            JOURNEY NOT FOUND
+          </h1>
+          <p className="text-black/80 font-bold mb-8 text-xl">The musical journey you're looking for doesn't exist. 😞</p>
           <Link href="/journeys">
-            <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100">
+            <Button size="lg" className="bg-cyan-400 hover:bg-cyan-500 text-black font-black border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] px-8 py-4" style={{ fontFamily: "'Arial Black', sans-serif" }}>
               <ArrowLeft className="w-5 h-5 mr-2" />
-              Back to Journeys
+              BACK TO JOURNEYS
             </Button>
           </Link>
         </div>
@@ -174,14 +176,16 @@ export default function JourneyPage() {
   } catch (error) {
     console.error("Failed to parse journey content:", error);
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
-        <div className="text-center text-white">
-          <h1 className="text-4xl font-bold mb-4">Journey Content Error</h1>
-          <p className="text-white/80 mb-8 text-xl">There was an error loading this journey's content.</p>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-yellow-200 via-pink-200 to-cyan-200">
+        <div className="text-center">
+          <h1 className="text-5xl font-black text-black mb-6 bg-gradient-to-r from-red-400 to-orange-400 px-8 py-4 inline-block border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rotate-2" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+            CONTENT ERROR
+          </h1>
+          <p className="text-black/80 font-bold mb-8 text-xl">There was an error loading this journey's content. 😞</p>
           <Link href="/journeys">
-            <Button size="lg" className="bg-white text-gray-900 hover:bg-gray-100">
+            <Button size="lg" className="bg-cyan-400 hover:bg-cyan-500 text-black font-black border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] px-8 py-4" style={{ fontFamily: "'Arial Black', sans-serif" }}>
               <ArrowLeft className="w-5 h-5 mr-2" />
-              Back to Journeys
+              BACK TO JOURNEYS
             </Button>
           </Link>
         </div>
@@ -190,23 +194,23 @@ export default function JourneyPage() {
   }
 
   return (
-    <div ref={containerRef} className="relative bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div ref={containerRef} className="relative bg-gradient-to-br from-yellow-200 via-pink-200 to-cyan-200">
       {/* Fixed Navigation */}
-      <motion.div 
+      <motion.div
         style={{ opacity: headerOpacity }}
-        className="fixed top-0 left-0 right-0 z-50 bg-black/80 backdrop-blur-lg border-b border-white/10"
+        className="fixed top-0 left-0 right-0 z-50 bg-white border-b-4 border-black shadow-[0_4px_0px_0px_rgba(0,0,0,1)]"
       >
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <Link href="/journeys">
-              <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
+              <Button size="sm" className="bg-cyan-400 hover:bg-cyan-500 text-black font-bold border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Journeys
+                Back
               </Button>
             </Link>
             <div className="flex items-center gap-3">
               <Link href="/">
-                <Button variant="ghost" size="sm" className="text-white hover:bg-white/10">
+                <Button size="sm" className="bg-gradient-to-r from-purple-400 to-pink-400 text-white font-bold border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                   <Users className="w-4 h-4 mr-2" />
                   Start Session
                 </Button>
@@ -237,21 +241,19 @@ export default function JourneyPage() {
 
         {/* Gallery Navigation */}
         <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-20">
-          <Button 
-            size="sm" 
-            variant="ghost" 
+          <Button
+            size="sm"
             onClick={prevImage}
-            className="text-white hover:bg-white/20 p-2"
+            className="bg-yellow-400 hover:bg-yellow-500 text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-3"
           >
             <ChevronLeft className="w-6 h-6" />
           </Button>
         </div>
         <div className="absolute right-4 top-1/2 transform -translate-y-1/2 z-20">
-          <Button 
-            size="sm" 
-            variant="ghost" 
+          <Button
+            size="sm"
             onClick={nextImage}
-            className="text-white hover:bg-white/20 p-2"
+            className="bg-yellow-400 hover:bg-yellow-500 text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-3"
           >
             <ChevronRight className="w-6 h-6" />
           </Button>
@@ -265,27 +267,27 @@ export default function JourneyPage() {
             transition={{ duration: 1, delay: 0.5 }}
             className="max-w-4xl"
           >
-            <Badge className="mb-6 bg-white/20 text-white border-white/30 text-lg px-4 py-2">
+            <Badge className="mb-6 bg-yellow-400 text-black border-4 border-black font-black text-lg px-6 py-3 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]" style={{ fontFamily: "'Arial Black', sans-serif" }}>
               <Music className="w-5 h-5 mr-2" />
-              Musical Journey
+              MUSICAL JOURNEY
             </Badge>
-            
-            <h1 className="text-4xl md:text-6xl font-bold mb-8 leading-tight">
-              {journey.title}
+
+            <h1 className="text-5xl md:text-7xl font-black mb-8 leading-tight" style={{ fontFamily: "'Arial Black', sans-serif", textShadow: '8px 8px 0px rgba(0,0,0,0.8)' }}>
+              {journey.title.toUpperCase()}
             </h1>
-            
-            <p className="text-xl md:text-2xl text-white/90 leading-relaxed mb-12">
+
+            <p className="text-xl md:text-2xl text-white font-bold leading-relaxed mb-12 bg-black/60 backdrop-blur-sm px-8 py-4 inline-block border-4 border-white shadow-[4px_4px_0px_0px_rgba(0,0,0,0.5)]">
               {journey.introduction}
             </p>
 
             {/* Gallery Indicators */}
-            <div className="flex justify-center gap-2">
+            <div className="flex justify-center gap-3">
               {galleryImages.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentImageIndex(index)}
-                  className={`w-3 h-3 rounded-full transition-all ${
-                    index === currentImageIndex ? 'bg-white' : 'bg-white/40'
+                  className={`w-4 h-4 border-2 border-black transition-all shadow-[2px_2px_0px_0px_rgba(0,0,0,0.8)] ${
+                    index === currentImageIndex ? 'bg-yellow-400 scale-125' : 'bg-white'
                   }`}
                 />
               ))}
@@ -297,27 +299,39 @@ export default function JourneyPage() {
       {/* Three-Tab Layout */}
       <section className="max-w-7xl mx-auto px-6 py-12">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-3 bg-white/10 border border-white/20">
-            <TabsTrigger 
-              value="story" 
-              className="journey-tab text-white data-[state=active]:bg-purple-600 data-[state=active]:text-white"
-              style={activeTab === 'story' ? { backgroundColor: 'rgb(147 51 234)', color: 'white' } : {}}
+          <TabsList className="grid w-full grid-cols-3 bg-white border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-2 gap-2">
+            <TabsTrigger
+              value="story"
+              className={`font-black border-3 border-black transition-all ${
+                activeTab === 'story'
+                  ? 'bg-gradient-to-r from-purple-400 to-pink-400 text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
+                  : 'bg-yellow-200 text-black hover:bg-yellow-300'
+              }`}
+              style={{ fontFamily: "'Arial Black', sans-serif" }}
             >
-              Story
+              📖 STORY
             </TabsTrigger>
-            <TabsTrigger 
-              value="playlist" 
-              className="journey-tab text-white data-[state=active]:bg-purple-600 data-[state=active]:text-white"
-              style={activeTab === 'playlist' ? { backgroundColor: 'rgb(147 51 234)', color: 'white' } : {}}
+            <TabsTrigger
+              value="playlist"
+              className={`font-black border-3 border-black transition-all ${
+                activeFilter === 'playlist'
+                  ? 'bg-gradient-to-r from-green-400 to-cyan-400 text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
+                  : 'bg-cyan-200 text-black hover:bg-cyan-300'
+              }`}
+              style={{ fontFamily: "'Arial Black', sans-serif" }}
             >
-              Playlist
+              🎵 PLAYLIST
             </TabsTrigger>
-            <TabsTrigger 
-              value="gallery" 
-              className="journey-tab text-white data-[state=active]:bg-purple-600 data-[state=active]:text-white"
-              style={activeTab === 'gallery' ? { backgroundColor: 'rgb(147 51 234)', color: 'white' } : {}}
+            <TabsTrigger
+              value="gallery"
+              className={`font-black border-3 border-black transition-all ${
+                activeTab === 'gallery'
+                  ? 'bg-gradient-to-r from-yellow-400 to-orange-400 text-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
+                  : 'bg-pink-200 text-black hover:bg-pink-300'
+              }`}
+              style={{ fontFamily: "'Arial Black', sans-serif" }}
             >
-              Gallery
+              📷 GALLERY
             </TabsTrigger>
           </TabsList>
 

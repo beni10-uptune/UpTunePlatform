@@ -1,13 +1,10 @@
-import { 
-  type GameRoom, 
+import {
+  type GameRoom,
   type InsertGameRoom,
   type Player,
   type InsertPlayer,
   type Song,
   type InsertSong,
-  type WeeklyChallenge,
-  type ChallengeSubmission,
-  type InsertChallengeSubmission,
   type TeamsWaitlist,
   type InsertTeamsWaitlist,
   type ContactSubmission,
@@ -33,9 +30,7 @@ import {
   gameRooms,
   players,
   songs,
-  challengeSubmissions,
   teamsWaitlist,
-  weeklyChallenge,
   contactSubmissions,
   aiConversations,
   communityLists,
@@ -69,15 +64,7 @@ export interface IStorage {
   // Songs
   addSong(song: InsertSong): Promise<Song>;
   getSongsByGameRoom(gameRoomId: number): Promise<Song[]>;
-  
-  // Weekly Challenge
-  getCurrentChallenge(): Promise<WeeklyChallenge | undefined>;
-  
-  // Challenge Submissions
-  addChallengeSubmission(submission: InsertChallengeSubmission): Promise<ChallengeSubmission>;
-  getChallengeSubmissions(challengeId: number): Promise<ChallengeSubmission[]>;
-  voteForSubmission(submissionId: number): Promise<void>;
-  
+
   // Teams Waitlist
   addToTeamsWaitlist(entry: InsertTeamsWaitlist): Promise<TeamsWaitlist>;
   
@@ -251,47 +238,6 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(songs)
       .where(eq(songs.gameRoomId, gameRoomId));
-  }
-
-  async getCurrentChallenge(): Promise<WeeklyChallenge | undefined> {
-    // Use the automated challenge manager for consistent challenge rotation
-    const { challengeManager } = await import("./weekly-challenge-manager.js");
-    const challenge = await challengeManager.getCurrentChallenge();
-    return challenge ? challenge : undefined;
-  }
-
-  async addChallengeSubmission(submission: InsertChallengeSubmission): Promise<ChallengeSubmission> {
-    const [newSubmission] = await db
-      .insert(challengeSubmissions)
-      .values({
-        ...submission,
-        story: submission.story ?? null,
-        votes: submission.votes ?? 0
-      })
-      .returning();
-    return newSubmission;
-  }
-
-  async getChallengeSubmissions(challengeId: number): Promise<ChallengeSubmission[]> {
-    return await db
-      .select()
-      .from(challengeSubmissions)
-      .where(eq(challengeSubmissions.challengeId, challengeId))
-      .orderBy(desc(challengeSubmissions.votes));
-  }
-
-  async voteForSubmission(submissionId: number): Promise<void> {
-    const [submission] = await db
-      .select()
-      .from(challengeSubmissions)
-      .where(eq(challengeSubmissions.id, submissionId));
-    
-    if (submission) {
-      await db
-        .update(challengeSubmissions)
-        .set({ votes: submission.votes + 1 })
-        .where(eq(challengeSubmissions.id, submissionId));
-    }
   }
 
   async addToTeamsWaitlist(entry: InsertTeamsWaitlist): Promise<TeamsWaitlist> {

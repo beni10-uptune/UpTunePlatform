@@ -280,10 +280,10 @@ export default function CommunityListDetail() {
 
   if (listLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto"></div>
-          <p className="text-white mt-4">Loading community list...</p>
+      <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-pink-200 to-cyan-200 flex items-center justify-center p-4">
+        <div className="text-center bg-white border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rotate-2">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-black border-t-transparent mx-auto"></div>
+          <p className="text-black font-black mt-4" style={{ fontFamily: "'Arial Black', sans-serif" }}>LOADING...</p>
         </div>
       </div>
     );
@@ -291,13 +291,13 @@ export default function CommunityListDetail() {
 
   if (!list) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-600 via-pink-500 to-orange-400 flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-white mb-4">List Not Found</h1>
-          <p className="text-white/80 mb-6">The community list you're looking for doesn't exist.</p>
+      <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-pink-200 to-cyan-200 flex items-center justify-center p-4">
+        <div className="text-center bg-white border-4 border-black p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] -rotate-1 max-w-md">
+          <h1 className="text-4xl font-black text-black mb-4 bg-gradient-to-r from-purple-400 to-pink-400 px-4 py-2 inline-block border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] rotate-2" style={{ fontFamily: "'Arial Black', sans-serif" }}>LIST NOT FOUND</h1>
+          <p className="text-black/80 font-bold mb-6">This community list doesn't exist 😢</p>
           <Link href="/community-lists">
-            <Button className="bg-white text-purple-600 hover:bg-white/90">
-              Back to Community Lists
+            <Button className="bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+              BACK TO LISTS
             </Button>
           </Link>
         </div>
@@ -306,21 +306,17 @@ export default function CommunityListDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 to-pink-500/10"></div>
-      </div>
-      
+    <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-pink-200 to-cyan-200">
       {/* Header */}
-      <div className="relative z-10 bg-black/20 backdrop-blur-xl border-b border-white/20">
+      <div className="relative z-10 bg-white border-b-4 border-black">
         <div className="max-w-6xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <Link href="/community-lists">
-              <Button variant="ghost" className="text-white hover:bg-white/10 transition-colors">
-                ← Back to Have Your Say
+              <Button className="bg-cyan-300 hover:bg-cyan-400 text-black font-black border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+                ← BACK
               </Button>
             </Link>
-            <div className="text-white font-bold text-xl">Uptune Community</div>
+            <div className="text-black font-black text-xl" style={{ fontFamily: "'Arial Black', sans-serif" }}>UPTUNE COMMUNITY</div>
             <div className="w-32"></div>
           </div>
         </div>
@@ -328,78 +324,79 @@ export default function CommunityListDetail() {
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 py-8">
         {/* List Header */}
-        <div className="text-center mb-12">
-          <div className="text-6xl mb-6">{list.emoji}</div>
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">{list.title}</h1>
-          <p className="text-xl text-white/80 mb-8 max-w-3xl mx-auto leading-relaxed">{list.description}</p>
-          
+        <div className="text-center mb-12 bg-white border-4 border-black p-8 shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] -rotate-1">
+          <div className="text-6xl mb-6 bg-yellow-300 border-4 border-black p-4 inline-block shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rotate-6">{list.emoji}</div>
+          <h1 className="text-4xl md:text-5xl font-black text-black mb-6" style={{ fontFamily: "'Arial Black', sans-serif", textTransform: 'uppercase' }}>{list.title}</h1>
+          <p className="text-xl text-black/80 font-bold mb-8 max-w-3xl mx-auto leading-relaxed">{list.description} 🎵</p>
+
           <div className="flex flex-col items-center gap-6">
             <div className="flex flex-wrap justify-center gap-4">
               <Dialog open={isSubmitDialogOpen} onOpenChange={setIsSubmitDialogOpen}>
                 <DialogTrigger asChild>
-                  <Button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 text-lg px-8 py-3 shadow-lg">
+                  <Button className="bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 font-black border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all text-lg px-8 py-3" style={{ fontFamily: "'Arial Black', sans-serif" }}>
                     <Plus className="w-5 h-5 mr-2" />
-                    Submit Your Song
+                    SUBMIT YOUR SONG
                   </Button>
                 </DialogTrigger>
                 
-                <DialogContent className="max-w-2xl w-[calc(100vw-2rem)] sm:w-auto mx-auto max-h-[90vh] overflow-y-auto p-4 sm:p-6">
+                <DialogContent className="max-w-2xl w-[calc(100vw-2rem)] sm:w-auto mx-auto max-h-[90vh] overflow-y-auto p-4 sm:p-6 bg-gradient-to-br from-yellow-100 to-pink-100 border-4 border-black">
                   <DialogHeader>
-                    <DialogTitle>Submit a Song to {list.title}</DialogTitle>
+                    <DialogTitle className="text-2xl font-black text-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>SUBMIT TO {list.title.toUpperCase()}</DialogTitle>
                   </DialogHeader>
-                  
+
                   <div className="space-y-6">
                     {!selectedSong ? (
                       <div>
-                        <h3 className="font-semibold mb-3">
-                          {list.title.toLowerCase().includes('favourite album') 
-                            ? "Step 1: Search for an album"
-                            : "Step 1: Search for a song"
+                        <h3 className="font-black mb-3 text-black bg-cyan-300 px-3 py-2 inline-block border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] rotate-1" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+                          {list.title.toLowerCase().includes('favourite album')
+                            ? "STEP 1: SEARCH ALBUM"
+                            : "STEP 1: SEARCH SONG"
                           }
                         </h3>
                         <SongSearch
                           onSongSelect={handleSongSelect}
                           placeholder={
-                            list.title.toLowerCase().includes('favourite album') 
+                            list.title.toLowerCase().includes('favourite album')
                               ? "Search for your favourite album..."
                               : "Search for the perfect song..."
                           }
                           searchMode={
-                            list.title.toLowerCase().includes('favourite album') 
-                              ? 'albums' 
+                            list.title.toLowerCase().includes('favourite album')
+                              ? 'albums'
                               : 'songs'
                           }
                         />
                       </div>
                     ) : (
                       <div>
-                        <h3 className="font-semibold mb-3">
-                          {list.title.toLowerCase().includes('favourite album') 
-                            ? "Selected Album:"
-                            : "Selected Song:"
+                        <h3 className="font-black mb-3 text-black bg-green-300 px-3 py-2 inline-block border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] rotate-1" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+                          {list.title.toLowerCase().includes('favourite album')
+                            ? "SELECTED ALBUM:"
+                            : "SELECTED SONG:"
                           }
                         </h3>
-                        <div className="flex items-center gap-4 p-4 bg-white/10 rounded-lg">
+                        <div className="flex items-center gap-4 p-4 bg-white border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                           {selectedSong.imageUrl && (
-                            <img 
-                              src={selectedSong.imageUrl} 
+                            <img
+                              src={selectedSong.imageUrl}
                               alt={selectedSong.title}
-                              className="w-16 h-16 rounded-lg object-cover"
+                              className="w-16 h-16 border-2 border-black object-cover shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                             />
                           )}
                           <div className="flex-1">
-                            <h4 className="font-medium text-gray-900">{selectedSong.title}</h4>
-                            <p className="text-gray-600">{selectedSong.artist}</p>
-                            <p className="text-gray-500 text-sm">{selectedSong.album}</p>
+                            <h4 className="font-black text-black">{selectedSong.title}</h4>
+                            <p className="text-black/70 font-bold">{selectedSong.artist}</p>
+                            <p className="text-black/50 text-sm font-bold">{selectedSong.album}</p>
                           </div>
-                          <Button 
-                            variant="outline" 
+                          <Button
                             size="sm"
                             onClick={() => setSelectedSong(null)}
+                            className="bg-yellow-400 hover:bg-yellow-500 text-black font-black border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+                            style={{ fontFamily: "'Arial Black', sans-serif" }}
                           >
-                            {list.title.toLowerCase().includes('favourite album') 
-                              ? "Change Album"
-                              : "Change Song"
+                            {list.title.toLowerCase().includes('favourite album')
+                              ? "CHANGE"
+                              : "CHANGE"
                             }
                           </Button>
                         </div>
@@ -451,23 +448,25 @@ export default function CommunityListDetail() {
                             />
 
                             <div className="flex gap-4">
-                              <Button 
-                                type="submit" 
-                                className="flex-1"
+                              <Button
+                                type="submit"
+                                className="flex-1 bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
+                                style={{ fontFamily: "'Arial Black', sans-serif" }}
                                 disabled={submitEntryMutation.isPending}
                               >
-                                {submitEntryMutation.isPending ? "Submitting..." : "Submit Song"}
+                                {submitEntryMutation.isPending ? "SUBMITTING..." : "SUBMIT SONG"}
                               </Button>
-                              <Button 
-                                type="button" 
-                                variant="outline"
+                              <Button
+                                type="button"
                                 onClick={() => {
                                   setIsSubmitDialogOpen(false);
                                   setSelectedSong(null);
                                   form.reset();
                                 }}
+                                className="bg-gray-300 hover:bg-gray-400 text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
+                                style={{ fontFamily: "'Arial Black', sans-serif" }}
                               >
-                                Cancel
+                                CANCEL
                               </Button>
                             </div>
                           </form>
@@ -477,44 +476,46 @@ export default function CommunityListDetail() {
                   </div>
                 </DialogContent>
               </Dialog>
-              
+
               <Link href={`/?gameType=soundtrack&theme=${encodeURIComponent(list.title)}`}>
-                <Button className="bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 text-lg px-6 py-3">
+                <Button className="bg-cyan-300 hover:bg-cyan-400 text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all text-lg px-6 py-3" style={{ fontFamily: "'Arial Black', sans-serif" }}>
                   <Users className="w-5 h-5 mr-2" />
-                  Build This List with Friends
+                  BUILD WITH FRIENDS
                 </Button>
               </Link>
-              
+
               {entries && entries.length > 0 && (
-                <Button 
-                  className="bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 text-lg px-6 py-3"
+                <Button
+                  className="bg-green-400 hover:bg-green-500 text-white font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all text-lg px-6 py-3"
+                  style={{ fontFamily: "'Arial Black', sans-serif" }}
                   onClick={createSpotifyPlaylist}
                   disabled={createPlaylistMutation.isPending}
                 >
                   <ListMusic className="w-5 h-5 mr-2" />
-                  {createPlaylistMutation.isPending ? "Creating..." : "Create Spotify Playlist"}
+                  {createPlaylistMutation.isPending ? "CREATING..." : "CREATE PLAYLIST"}
                 </Button>
               )}
-              
-              <Button 
-                className="bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 text-lg px-6 py-3"
+
+              <Button
+                className="bg-yellow-400 hover:bg-yellow-500 text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all text-lg px-6 py-3"
+                style={{ fontFamily: "'Arial Black', sans-serif" }}
                 onClick={shareList}
               >
                 <Share2 className="w-5 h-5 mr-2" />
-                Get Your Friends' Opinion
+                SHARE LIST
               </Button>
             </div>
-            
-            <div className="flex items-center gap-6 text-white/80 text-sm justify-center mt-4">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+
+            <div className="flex items-center gap-6 text-black font-bold text-sm justify-center mt-4 flex-wrap">
+              <div className="flex items-center gap-2 bg-green-200 px-3 py-2 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse border border-black"></div>
                 <span>Live voting</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 bg-pink-200 px-3 py-2 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                 <Vote className="w-4 h-4" />
                 <span>Vote on every song</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 bg-cyan-200 px-3 py-2 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                 <Music className="w-4 h-4" />
                 <span>Real community picks</span>
               </div>
@@ -525,85 +526,88 @@ export default function CommunityListDetail() {
         {/* Entries List */}
         <div className="space-y-4">
           {entriesLoading ? (
-            <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto"></div>
-              <p className="text-white mt-4">Loading songs...</p>
+            <div className="text-center py-12 bg-white border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rotate-1">
+              <div className="animate-spin rounded-full h-8 w-8 border-4 border-black border-t-transparent mx-auto"></div>
+              <p className="text-black font-black mt-4" style={{ fontFamily: "'Arial Black', sans-serif" }}>LOADING SONGS...</p>
             </div>
           ) : entries && entries.length > 0 ? (
             entries
               .sort((a: ListEntry, b: ListEntry) => b.voteScore - a.voteScore)
               .map((entry: ListEntry, index: number) => (
-                <Card key={entry.id} className="bg-gradient-to-br from-slate-900/80 via-purple-900/80 to-slate-900/80 backdrop-blur-xl border border-white/20 hover:border-purple-400/50 transition-all duration-300">
-                  <CardContent className="p-6">
+                <Card key={entry.id} className={`bg-gradient-to-br from-cyan-200 to-purple-200 border-4 border-black hover:from-cyan-300 hover:to-purple-300 transition-all duration-300 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] ${index % 2 === 0 ? 'rotate-1' : '-rotate-1'}`}>
+                  <CardContent className="p-6 bg-white">
                     <div className="flex items-center gap-4">
-                      <div className="flex flex-col items-center gap-2">
+                      <div className="flex flex-col items-center gap-2 bg-yellow-100 border-3 border-black p-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                         <Button
-                          variant="ghost"
                           size="sm"
                           onClick={() => voteMutation.mutate({ entryId: entry.id, voteType: 'up' })}
-                          className="text-white/60 hover:text-green-400 p-1"
+                          className="bg-green-400 hover:bg-green-500 text-white p-1 h-8 w-8 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                           disabled={voteMutation.isPending}
                         >
                           <ChevronUp className="w-5 h-5" />
                         </Button>
-                        <span className="font-bold text-lg text-white">{entry.voteScore}</span>
+                        <span className="font-black text-lg text-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>{entry.voteScore > 0 ? `+${entry.voteScore}` : entry.voteScore}</span>
                         <Button
-                          variant="ghost"
                           size="sm"
                           onClick={() => voteMutation.mutate({ entryId: entry.id, voteType: 'down' })}
-                          className="text-white/60 hover:text-red-400 p-1"
+                          className="bg-red-400 hover:bg-red-500 text-white p-1 h-8 w-8 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                           disabled={voteMutation.isPending}
                         >
                           <ChevronDown className="w-5 h-5" />
                         </Button>
                       </div>
-                      
-                      <div className="w-16 h-16 bg-white/10 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0">
+
+                      <div className="w-16 h-16 border-3 border-black flex items-center justify-center overflow-hidden flex-shrink-0 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] bg-gray-200">
                         {entry.imageUrl ? (
-                          <img 
-                            src={entry.imageUrl} 
+                          <img
+                            src={entry.imageUrl}
                             alt={entry.albumName || entry.songTitle}
                             className="w-full h-full object-cover"
                           />
                         ) : (
-                          <Music className="w-8 h-8 text-white/40" />
+                          <Music className="w-8 h-8 text-black/40" />
                         )}
                       </div>
-                      
+
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between">
                           <div>
-                            <h3 className="font-semibold text-white truncate">{entry.songTitle}</h3>
-                            <p className="text-white/70 truncate">{entry.artistName}</p>
+                            <h3 className="font-black text-black truncate" style={{ fontFamily: "'Arial Black', sans-serif" }}>{entry.songTitle}</h3>
+                            <p className="text-black/70 font-bold truncate">{entry.artistName}</p>
                             {entry.albumName && (
-                              <p className="text-white/50 text-sm truncate">{entry.albumName}</p>
+                              <p className="text-black/50 text-sm font-bold truncate">{entry.albumName}</p>
                             )}
                           </div>
                           <div className="flex items-center gap-2 ml-4">
                             {index < 3 && (
-                              <Badge variant="secondary" className="bg-gradient-to-r from-yellow-600 to-orange-600 text-white border-0">
+                              <Badge className={`${
+                                index === 0 ? 'bg-yellow-400' :
+                                index === 1 ? 'bg-gray-300' :
+                                'bg-pink-400'
+                              } text-black border-3 border-black font-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]`} style={{ fontFamily: "'Arial Black', sans-serif" }}>
                                 #{index + 1}
                               </Badge>
                             )}
                           </div>
                         </div>
-                        
-                        <div className="mt-3 p-3 bg-white/5 rounded-lg">
-                          <p className="text-white/80 text-sm">{entry.contextReason}</p>
+
+                        <div className="mt-3 p-3 bg-pink-100 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+                          <p className="text-black/80 text-sm font-bold">{entry.contextReason}</p>
                           {entry.submitterName && (
-                            <p className="text-white/60 text-xs mt-2">— {entry.submitterName}</p>
+                            <p className="text-black/60 text-xs font-bold mt-2">— {entry.submitterName}</p>
                           )}
                         </div>
-                        
+
                         <div className="mt-3 flex items-center gap-4">
                           <a
                             href={`https://open.spotify.com/track/${entry.spotifyTrackId}`}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-green-400 hover:text-green-300 text-sm font-medium flex items-center gap-1"
+                            className="text-black bg-green-400 hover:bg-green-500 px-3 py-1 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all text-sm font-black flex items-center gap-1"
+                            style={{ fontFamily: "'Arial Black', sans-serif" }}
                           >
                             <ExternalLink className="w-4 h-4" />
-                            Open in Spotify
+                            SPOTIFY
                           </a>
                         </div>
                       </div>
@@ -612,18 +616,19 @@ export default function CommunityListDetail() {
                 </Card>
               ))
           ) : (
-            <div className="text-center py-12">
-              <div className="text-4xl mb-4">🎵</div>
-              <h3 className="text-2xl font-bold text-white mb-2">No Songs Yet</h3>
-              <p className="text-white/80 mb-6">
-                Be the first to submit a song to this community list!
+            <div className="text-center py-12 bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] -rotate-1">
+              <div className="text-4xl mb-4 bg-yellow-300 border-4 border-black p-4 inline-block shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] rotate-6">🎵</div>
+              <h3 className="text-2xl font-black text-black mb-2" style={{ fontFamily: "'Arial Black', sans-serif" }}>NO SONGS YET</h3>
+              <p className="text-black/80 font-bold mb-6">
+                Be the first to submit a song! 🚀
               </p>
-              <Button 
-                className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700"
+              <Button
+                className="bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
+                style={{ fontFamily: "'Arial Black', sans-serif" }}
                 onClick={() => setIsSubmitDialogOpen(true)}
               >
                 <Plus className="w-4 h-4 mr-2" />
-                Submit First Song
+                SUBMIT FIRST SONG
               </Button>
             </div>
           )}

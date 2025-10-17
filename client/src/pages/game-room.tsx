@@ -512,21 +512,24 @@ export default function GameRoom() {
 
   if (!gameRoom) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
-        <Card className="w-full max-w-md mx-4">
-          <CardHeader className="text-center">
-            <CardTitle className="text-red-600">Room Not Found</CardTitle>
-            <CardDescription>
-              The room code "{roomCode}" doesn't exist or has expired.
+      <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-pink-200 to-cyan-200 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md bg-gradient-to-br from-pink-300 to-red-300 border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] rotate-2">
+          <CardHeader className="text-center bg-white border-b-4 border-black">
+            <CardTitle className="text-3xl font-black text-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+              ROOM NOT FOUND
+            </CardTitle>
+            <CardDescription className="text-black/80 font-bold text-lg mt-2">
+              The room code "{roomCode}" doesn't exist or has expired. 😞
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <Button 
-              onClick={() => setLocation('/')} 
-              className="w-full"
+          <CardContent className="pt-6 bg-white">
+            <Button
+              onClick={() => setLocation('/')}
+              className="w-full bg-cyan-400 hover:bg-cyan-500 text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all text-xl py-6"
+              style={{ fontFamily: "'Arial Black', sans-serif" }}
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Home
+              <ArrowLeft className="w-5 h-5 mr-2" />
+              BACK TO HOME
             </Button>
           </CardContent>
         </Card>
@@ -538,44 +541,52 @@ export default function GameRoom() {
 
   if (!hasJoined) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
-        <Card className="w-full max-w-md mx-4">
-          <CardHeader className="text-center">
-            <div className={`w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-r ${gameConfig.color} flex items-center justify-center`}>
-              <gameConfig.icon className="w-8 h-8 text-white" />
+      <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-pink-200 to-cyan-200 flex items-center justify-center p-4">
+        <Card className="w-full max-w-md bg-gradient-to-br from-cyan-300 to-purple-300 border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] -rotate-1">
+          <CardHeader className="text-center bg-white border-b-4 border-black">
+            <div className={`w-20 h-20 mx-auto mb-4 bg-gradient-to-r ${gameConfig.color} border-4 border-black flex items-center justify-center shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rotate-6`}>
+              <gameConfig.icon className="w-10 h-10 text-white" />
             </div>
-            <CardTitle>{gameConfig.title}</CardTitle>
-            <CardDescription>
-              Theme: {gameRoom.theme}
+            <CardTitle className="text-3xl font-black text-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+              {gameConfig.title.toUpperCase()}
+            </CardTitle>
+            <CardDescription className="text-black/80 font-bold text-lg mt-2">
+              Theme: {gameRoom.theme} 🎵
             </CardDescription>
-            <Badge variant="secondary" className="mt-2">
-              Room: {gameRoom.code}
+            <Badge className="mt-3 bg-yellow-400 text-black border-3 border-black font-black text-base px-4 py-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+              ROOM: {gameRoom.code}
             </Badge>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 pt-6 bg-white">
             <div>
+              <label className="text-sm font-black text-black mb-2 block" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+                YOUR NICKNAME
+              </label>
               <Input
-                placeholder="Enter your nickname"
+                placeholder="Enter your nickname..."
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleJoinRoom()}
                 maxLength={20}
+                className="bg-white border-4 border-black text-black placeholder:text-black/40 font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-lg"
               />
             </div>
-            <Button 
+            <Button
               onClick={handleJoinRoom}
               disabled={!nickname.trim() || joinRoomMutation.isPending}
-              className="w-full"
+              className="w-full bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 font-black text-xl py-6 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
+              style={{ fontFamily: "'Arial Black', sans-serif" }}
             >
-              {joinRoomMutation.isPending ? 'Joining...' : 'Join Room'}
+              {joinRoomMutation.isPending ? 'JOINING...' : 'JOIN ROOM'}
             </Button>
-            <Button 
-              variant="outline" 
-              onClick={() => setLocation('/')} 
-              className="w-full"
+            <Button
+              variant="outline"
+              onClick={() => setLocation('/')}
+              className="w-full bg-white hover:bg-gray-100 text-black border-4 border-black font-black text-lg py-6 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+              style={{ fontFamily: "'Arial Black', sans-serif" }}
             >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Home
+              <ArrowLeft className="w-5 h-5 mr-2" />
+              BACK TO HOME
             </Button>
           </CardContent>
         </Card>

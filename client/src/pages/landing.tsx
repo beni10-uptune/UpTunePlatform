@@ -78,12 +78,39 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
-      {/* Background Elements */}
+    <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-pink-200 to-cyan-200 relative overflow-hidden">
+      {/* Memphis Pattern Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 rounded-full bg-gradient-to-br from-purple-600/20 to-pink-600/20 opacity-30 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 rounded-full bg-gradient-to-br from-blue-600/20 to-purple-600/20 opacity-30 animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-gradient-to-br from-pink-600/10 to-purple-600/10 opacity-20 animate-spin" style={{ animationDuration: '20s' }}></div>
+        {/* Squiggles and shapes */}
+        <div className="absolute top-20 left-10 w-32 h-32 border-8 border-black rotate-12"></div>
+        <div className="absolute top-40 right-20 w-24 h-24 rounded-full bg-pink-500"></div>
+        <div className="absolute bottom-32 left-1/4 w-40 h-40 bg-cyan-400 rounded-full"></div>
+        <div className="absolute top-60 right-1/3 w-20 h-20 bg-yellow-400" style={{clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)'}}></div>
+        <div className="absolute bottom-20 right-10 w-28 h-28 border-8 border-dashed border-black rounded-full"></div>
+        <div className="absolute top-1/3 left-1/2 w-16 h-16 bg-purple-400" style={{clipPath: 'polygon(50% 0%, 100% 100%, 0% 100%)'}}></div>
+
+        {/* Squiggle lines */}
+        <svg className="absolute top-10 left-1/3 w-64 h-32" viewBox="0 0 200 100">
+          <path d="M 0 50 Q 25 0, 50 50 T 100 50 T 150 50 T 200 50" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round"/>
+        </svg>
+        <svg className="absolute bottom-40 right-1/4 w-48 h-24" viewBox="0 0 200 100">
+          <path d="M 0 50 Q 25 100, 50 50 T 100 50 T 150 50 T 200 50" stroke="black" strokeWidth="6" fill="none" strokeLinecap="round"/>
+        </svg>
+        <svg className="absolute top-1/2 left-10 w-40 h-20" viewBox="0 0 200 100">
+          <path d="M 0 50 Q 25 0, 50 50 T 100 50" stroke="black" strokeWidth="5" fill="none" strokeLinecap="round"/>
+        </svg>
+
+        {/* Dots pattern */}
+        {[...Array(25)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute w-3 h-3 bg-black rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+            }}
+          ></div>
+        ))}
       </div>
 
 
@@ -98,20 +125,39 @@ export default function LandingPage() {
               transition={{ duration: 0.8 }}
               className="space-y-6"
             >
-              <Badge className="bg-white/10 text-white border-white/20 px-4 py-2 backdrop-blur-lg">
-                <Sparkles className="w-4 h-4 mr-2" />
-                Made with Love for Music
+              <Badge className="bg-white border-4 border-black text-black px-6 py-3 text-sm font-black tracking-wider shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rotate-2">
+                <Sparkles className="w-5 h-5 mr-2" />
+                MADE WITH ♥ FOR MUSIC
               </Badge>
-              
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight text-white">
-                Where Music{' '}
-                <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                  Brings Us Together
-                </span>
-              </h1>
-              
-              <p className="text-base sm:text-lg lg:text-xl text-white/80 leading-relaxed">
-                Share your musical soul. Create playlists that tell stories, discover what moves your friends, and celebrate the soundtracks of your lives.
+
+              <div className="relative inline-block">
+                <h1
+                  className="text-5xl sm:text-6xl lg:text-7xl xl:text-8xl font-black leading-none text-black"
+                  style={{
+                    fontFamily: "'Arial Black', sans-serif",
+                    textTransform: 'uppercase'
+                  }}
+                >
+                  <span className="block" style={{
+                    textShadow: '6px 6px 0px #FF1493, 12px 12px 0px #00CED1'
+                  }}>
+                    WHERE
+                  </span>
+                  <span className="block bg-gradient-to-r from-pink-500 to-yellow-400 text-white px-8 py-2 -rotate-1 inline-block my-2" style={{
+                    boxShadow: '8px 8px 0px rgba(0,0,0,1)'
+                  }}>
+                    MUSIC
+                  </span>
+                  <span className="block" style={{
+                    textShadow: '6px 6px 0px #FFD700, 12px 12px 0px #FF69B4'
+                  }}>
+                    CONNECTS
+                  </span>
+                </h1>
+              </div>
+
+              <p className="text-xl sm:text-2xl font-bold text-black max-w-2xl mx-auto bg-white border-4 border-black p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rotate-1">
+                Play together. Discover culture. Connect groups. 🎵
               </p>
             </motion.div>
 
@@ -123,9 +169,10 @@ export default function LandingPage() {
             >
               <Dialog open={showThemeDialog} onOpenChange={setShowThemeDialog}>
                 <DialogTrigger asChild>
-                  <Button 
-                    size="lg" 
-                    className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 transition-all text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 w-full sm:w-auto"
+                  <Button
+                    size="lg"
+                    className="bg-pink-500 text-white hover:bg-pink-600 font-black text-xl px-10 py-8 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-4px] hover:translate-y-[-4px] transition-all rotate-1 w-full sm:w-auto"
+                    style={{ fontFamily: "'Arial Black', sans-serif" }}
                     onMouseEnter={() => setIsHovered(true)}
                     onMouseLeave={() => setIsHovered(false)}
                     onClick={() => {
@@ -133,51 +180,56 @@ export default function LandingPage() {
                       setShowThemeDialog(true);
                     }}
                   >
-                    <Play className={`w-4 h-4 sm:w-5 sm:h-5 mr-2 transition-transform ${isHovered ? 'scale-110' : ''}`} />
-                    <span className="truncate">Start Playing</span>
+                    <Play className="w-6 h-6 mr-3" />
+                    <span className="truncate">START PLAYING</span>
                   </Button>
                 </DialogTrigger>
               </Dialog>
-              
+
               <Dialog open={showJoinDialog} onOpenChange={setShowJoinDialog}>
                 <DialogTrigger asChild>
-                  <Button 
-                    size="lg" 
-                    className="bg-white/10 hover:bg-white/20 text-white border border-white/20 backdrop-blur-lg text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 w-full sm:w-auto"
+                  <Button
+                    size="lg"
+                    className="bg-cyan-400 text-black hover:bg-cyan-500 font-black text-xl px-10 py-8 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-4px] hover:translate-y-[-4px] transition-all -rotate-1 w-full sm:w-auto"
+                    style={{ fontFamily: "'Arial Black', sans-serif" }}
                   >
-                    <Users className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                    <span className="truncate">Join Game</span>
+                    <Users className="w-6 h-6 mr-3" />
+                    <span className="truncate">JOIN GAME</span>
                   </Button>
                 </DialogTrigger>
                 
-                <DialogContent className="max-w-md bg-slate-900/95 backdrop-blur-lg border border-white/20">
+                <DialogContent className="max-w-md bg-gradient-to-br from-cyan-200 to-purple-200 border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]">
                   <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2 text-xl text-white">
-                      <Users className="w-5 h-5 text-purple-400" />
-                      Join Game
+                    <DialogTitle className="flex items-center gap-3 text-3xl text-black font-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+                      <div className="w-12 h-12 bg-purple-400 border-4 border-black flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                        <Users className="w-7 h-7 text-white" />
+                      </div>
+                      JOIN GAME
                     </DialogTitle>
-                    <DialogDescription className="text-white/80">
-                      Enter a game code to join your friends
+                    <DialogDescription className="text-black/80 font-bold text-lg">
+                      Enter a game code to join your friends! 🎮
                     </DialogDescription>
                   </DialogHeader>
-                  
-                  <div className="space-y-4">
+
+                  <div className="space-y-4 mt-4">
                     <div>
                       <Input
-                        placeholder="Enter game code (e.g. ABC123)"
+                        placeholder="ABC123"
                         value={joinCode}
                         onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
                         onKeyPress={(e) => e.key === 'Enter' && handleJoinGame()}
-                        className="text-center text-lg tracking-wider bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                        className="text-center text-2xl font-black tracking-widest bg-white border-4 border-black text-black placeholder:text-black/40 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                        style={{ fontFamily: "'Arial Black', sans-serif" }}
                         maxLength={6}
                       />
                     </div>
-                    <Button 
+                    <Button
                       onClick={handleJoinGame}
                       disabled={!joinCode.trim()}
-                      className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700"
+                      className="w-full bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 font-black text-xl py-6 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
+                      style={{ fontFamily: "'Arial Black', sans-serif" }}
                     >
-                      Join Game
+                      LET'S GO!
                     </Button>
                   </div>
                 </DialogContent>
@@ -185,64 +237,70 @@ export default function LandingPage() {
 
               {/* Theme Selection Dialog */}
               <Dialog open={showThemeDialog} onOpenChange={setShowThemeDialog}>
-                <DialogContent className="max-w-md bg-slate-900/95 backdrop-blur-lg border border-white/20">
+                <DialogContent className="max-w-lg bg-gradient-to-br from-yellow-200 to-pink-200 border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)]">
                   <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2 text-xl text-white">
-                      <Sparkles className="w-5 h-5 text-purple-400" />
-                      Choose Your Theme
+                    <DialogTitle className="flex items-center gap-3 text-3xl text-black font-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+                      <div className="w-12 h-12 bg-yellow-400 border-4 border-black flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                        <Sparkles className="w-7 h-7 text-black" />
+                      </div>
+                      CHOOSE THEME
                     </DialogTitle>
-                    <DialogDescription className="text-white/80">
-                      {selectedGameType === 'jam-sessions' 
-                        ? "Jam Sessions: What's the vibe for your playlist?"
+                    <DialogDescription className="text-black/80 font-bold text-lg">
+                      {selectedGameType === 'jam-sessions'
+                        ? "What's the vibe for your playlist? 🎵"
                         : selectedGameType === 'guess-who'
-                        ? "Guess Who: Pick a theme for anonymous sharing"
-                        : "Pick a theme that inspires your group's music choices"
+                        ? "Pick a theme for anonymous sharing 🎭"
+                        : "Pick a theme that inspires your music! ✨"
                       }
                     </DialogDescription>
                   </DialogHeader>
-                  
-                  <div className="space-y-4">
+
+                  <div className="space-y-4 mt-4">
                     <div>
-                      <label className="text-sm font-medium text-white/80 mb-3 block">
-                        Create your own theme or pick from examples
+                      <label className="text-sm font-black text-black mb-3 block" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+                        CREATE YOUR OWN
                       </label>
                       <Input
-                        placeholder="Enter your theme (e.g., 'Songs for a Road Trip to the Beach')"
+                        placeholder="e.g., 'Songs for a Road Trip to the Beach'"
                         value={selectedTheme}
                         onChange={(e) => setSelectedTheme(e.target.value)}
-                        className="mb-4 bg-white/10 border-white/20 text-white placeholder:text-white/60"
+                        className="mb-4 bg-white border-4 border-black text-black placeholder:text-black/40 font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
                       />
                     </div>
-                    
+
                     <div>
-                      <p className="text-sm text-white/60 mb-2">Or choose from these examples:</p>
-                      <div className="space-y-2">
+                      <p className="text-sm font-black text-black mb-3" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+                        OR PICK AN EXAMPLE:
+                      </p>
+                      <div className="space-y-2 max-h-60 overflow-y-auto">
                         {getThemeOptions(selectedGameType).map((theme) => (
                           <button
                             key={theme}
                             onClick={() => setSelectedTheme(theme)}
-                            className="w-full text-left p-3 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-colors flex items-center gap-2 text-white"
+                            className="w-full text-left p-3 bg-white border-3 border-black hover:bg-cyan-200 hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all flex items-center gap-3 text-black font-bold"
                           >
-                            <ArrowRight className="w-4 h-4 text-purple-400" />
+                            <div className="w-2 h-2 bg-black"></div>
                             {theme}
                           </button>
                         ))}
                       </div>
                     </div>
-                    
+
                     <div className="flex gap-3 pt-4">
-                      <Button 
+                      <Button
                         onClick={() => setShowThemeDialog(false)}
-                        className="flex-1 bg-white/10 hover:bg-white/20 text-white border border-white/20"
+                        className="flex-1 bg-white hover:bg-gray-100 text-black border-4 border-black font-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                        style={{ fontFamily: "'Arial Black', sans-serif" }}
                       >
-                        Cancel
+                        CANCEL
                       </Button>
-                      <Button 
+                      <Button
                         onClick={handleCreateGame}
                         disabled={!selectedTheme.trim() || createGameMutation.isPending}
-                        className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700"
+                        className="flex-1 bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 border-4 border-black font-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
+                        style={{ fontFamily: "'Arial Black', sans-serif" }}
                       >
-                        {createGameMutation.isPending ? 'Creating...' : 'Create Game'}
+                        {createGameMutation.isPending ? 'CREATING...' : 'CREATE GAME'}
                       </Button>
                     </div>
                   </div>
@@ -269,80 +327,82 @@ export default function LandingPage() {
             className="mt-20 space-y-8"
           >
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-white mb-2">Musical Adventures Await</h2>
-              <p className="text-white/80">Every song has a story, every playlist a journey</p>
+              <h2 className="text-4xl font-black text-black mb-4" style={{ fontFamily: "'Arial Black', sans-serif", textTransform: 'uppercase' }}>
+                Choose Your Game Mode!
+              </h2>
+              <p className="text-2xl font-bold text-black">Pick a way to play and connect through music 🎶</p>
             </div>
 
-            <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-              <motion.div 
-                className="bg-gradient-to-r from-blue-600/20 to-cyan-600/20 backdrop-blur-lg rounded-2xl p-6 border border-blue-400/20 cursor-pointer group hover:scale-105 transition-all duration-300"
+            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+              <motion.div
+                className="bg-gradient-to-br from-blue-400 to-purple-400 border-4 border-black rounded-none p-8 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] rotate-2 hover:rotate-0 transition-transform cursor-pointer"
                 onClick={() => handleGameModeClick('jam-sessions')}
-                whileHover={{ y: -5 }}
+                whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <div className="flex items-center gap-4 mb-4">
-                  <Headphones className="w-8 h-8 text-blue-400" />
-                  <div>
-                    <h3 className="text-xl font-bold text-white">Jam Sessions</h3>
-                    <p className="text-blue-200">Creative Collaboration</p>
-                  </div>
+                <div className="bg-white w-16 h-16 border-4 border-black flex items-center justify-center mb-4 rounded-full">
+                  <Headphones className="w-8 h-8 text-black" />
                 </div>
-                <p className="text-white/80 mb-6 leading-relaxed">
-                  Pour your hearts into a shared playlist. Each song becomes part of your collective story.
+                <h3 className="text-3xl font-black text-white mb-3" style={{ fontFamily: "'Arial Black', sans-serif", textShadow: '3px 3px 0px rgba(0,0,0,0.5)' }}>
+                  JAM SESSIONS
+                </h3>
+                <p className="text-white font-bold text-lg mb-6">
+                  Build playlists together!
                 </p>
-                <Button 
-                  className="w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white hover:from-blue-700 hover:to-cyan-700"
+                <Button
+                  className="w-full bg-white text-black hover:bg-gray-100 font-black text-lg py-6 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
                   disabled={createGameMutation.isPending}
+                  style={{ fontFamily: "'Arial Black', sans-serif" }}
                 >
-                  {createGameMutation.isPending ? 'Creating...' : 'Start Jam Session'}
+                  {createGameMutation.isPending ? 'CREATING...' : 'START NOW'}
                 </Button>
               </motion.div>
 
-              <motion.div 
-                className="bg-gradient-to-r from-emerald-600/20 to-teal-600/20 backdrop-blur-lg rounded-2xl p-6 border border-emerald-400/20 cursor-pointer group hover:scale-105 transition-all duration-300"
+              <motion.div
+                className="bg-gradient-to-br from-pink-400 to-orange-400 border-4 border-black rounded-none p-8 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] -rotate-1 hover:rotate-0 transition-transform cursor-pointer"
                 onClick={() => handleGameModeClick('desert-island')}
-                whileHover={{ y: -5 }}
+                whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <div className="flex items-center gap-4 mb-4">
-                  <Radio className="w-8 h-8 text-emerald-400" />
-                  <div>
-                    <h3 className="text-xl font-bold text-white">Desert Island Discs</h3>
-                    <p className="text-emerald-200">Deeper Connection</p>
-                  </div>
+                <div className="bg-white w-16 h-16 border-4 border-black flex items-center justify-center mb-4" style={{clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)'}}>
+                  <Radio className="w-8 h-8 text-black" />
                 </div>
-                <p className="text-white/80 mb-6 leading-relaxed">
-                  The songs that shaped you, the melodies that move you. Reveal your musical DNA.
+                <h3 className="text-3xl font-black text-white mb-3" style={{ fontFamily: "'Arial Black', sans-serif", textShadow: '3px 3px 0px rgba(0,0,0,0.5)' }}>
+                  DESERT ISLAND
+                </h3>
+                <p className="text-white font-bold text-lg mb-6">
+                  Your soundtrack, revealed!
                 </p>
-                <Button 
-                  className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white hover:from-emerald-700 hover:to-teal-700"
+                <Button
+                  className="w-full bg-white text-black hover:bg-gray-100 font-black text-lg py-6 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
                   disabled={createGameMutation.isPending}
+                  style={{ fontFamily: "'Arial Black', sans-serif" }}
                 >
-                  {createGameMutation.isPending ? 'Creating...' : 'Start Desert Island'}
+                  {createGameMutation.isPending ? 'CREATING...' : 'START NOW'}
                 </Button>
               </motion.div>
 
-              <motion.div 
-                className="bg-gradient-to-r from-amber-600/20 to-orange-600/20 backdrop-blur-lg rounded-2xl p-6 border border-amber-400/20 cursor-pointer group hover:scale-105 transition-all duration-300"
+              <motion.div
+                className="bg-gradient-to-br from-yellow-400 to-pink-400 border-4 border-black rounded-none p-8 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] rotate-1 hover:rotate-0 transition-transform cursor-pointer"
                 onClick={() => handleGameModeClick('guess-who')}
-                whileHover={{ y: -5 }}
+                whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <div className="flex items-center gap-4 mb-4">
-                  <Heart className="w-8 h-8 text-amber-400" />
-                  <div>
-                    <h3 className="text-xl font-bold text-white">Guess Who</h3>
-                    <p className="text-amber-200">Hilarious Reveals</p>
-                  </div>
+                <div className="bg-white w-16 h-16 border-4 border-black flex items-center justify-center mb-4">
+                  <Heart className="w-8 h-8 text-black" />
                 </div>
-                <p className="text-white/80 mb-6 leading-relaxed">
-                  Musical mysteries and surprising revelations. Let your songs speak while your identity hides.
+                <h3 className="text-3xl font-black text-white mb-3" style={{ fontFamily: "'Arial Black', sans-serif", textShadow: '3px 3px 0px rgba(0,0,0,0.5)' }}>
+                  GUESS WHO
+                </h3>
+                <p className="text-white font-bold text-lg mb-6">
+                  Musical mystery fun!
                 </p>
-                <Button 
-                  className="w-full bg-gradient-to-r from-amber-600 to-orange-600 text-white hover:from-amber-700 hover:to-orange-700"
+                <Button
+                  className="w-full bg-white text-black hover:bg-gray-100 font-black text-lg py-6 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
                   disabled={createGameMutation.isPending}
+                  style={{ fontFamily: "'Arial Black', sans-serif" }}
                 >
-                  {createGameMutation.isPending ? 'Creating...' : 'Start Guess Who'}
+                  {createGameMutation.isPending ? 'CREATING...' : 'START NOW'}
                 </Button>
               </motion.div>
             </div>
@@ -419,40 +479,46 @@ export default function LandingPage() {
             transition={{ duration: 0.8, delay: 0.8 }}
             className="mt-20"
           >
-            <div className="max-w-4xl mx-auto bg-gradient-to-r from-indigo-600/20 to-blue-600/20 backdrop-blur-lg rounded-2xl p-8 border border-indigo-400/20">
-              <div className="text-center space-y-6">
+            <div className="max-w-4xl mx-auto bg-gradient-to-br from-purple-400 to-pink-400 border-4 border-black p-10 shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] rotate-1">
+              <div className="text-center space-y-6 bg-white p-8 border-4 border-black">
                 <div className="flex items-center justify-center gap-4 mb-6">
-                  <Users className="w-10 h-10 text-indigo-400" />
+                  <div className="w-16 h-16 bg-purple-400 border-4 border-black flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                    <Users className="w-10 h-10 text-white" />
+                  </div>
                   <div>
-                    <h2 className="text-3xl font-bold text-white">Ready for Your Team?</h2>
-                    <p className="text-indigo-200">Transform your workplace culture with music</p>
+                    <h2 className="text-4xl font-black text-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>FOR GROUPS</h2>
+                    <p className="text-lg font-bold text-black">Music that brings people together!</p>
                   </div>
                 </div>
-                
-                <p className="text-white/80 leading-relaxed max-w-2xl mx-auto text-lg">
-                  Perfect for team building, onboarding, and breaking the ice.
+
+                <p className="text-black/80 font-bold leading-relaxed max-w-2xl mx-auto text-lg">
+                  From workplace teams to weddings, celebrations to memorials—create unforgettable musical moments! 🎉
                 </p>
-                
-                <div className="grid md:grid-cols-3 gap-4 text-sm">
-                  <div className="flex items-center gap-2 justify-center">
-                    <div className="w-2 h-2 bg-indigo-400 rounded-full"></div>
-                    <span className="text-white">Seamless Slack & Teams Integration</span>
+
+                <div className="grid md:grid-cols-4 gap-3 text-sm">
+                  <div className="flex items-center gap-2 justify-center bg-blue-200 border-3 border-black p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                    <div className="w-3 h-3 bg-black"></div>
+                    <span className="text-black font-bold">Workplace</span>
                   </div>
-                  <div className="flex items-center gap-2 justify-center">
-                    <div className="w-2 h-2 bg-indigo-400 rounded-full"></div>
-                    <span className="text-white">Spark Authentic Connections</span>
+                  <div className="flex items-center gap-2 justify-center bg-pink-200 border-3 border-black p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                    <div className="w-3 h-3 bg-black"></div>
+                    <span className="text-black font-bold">Celebrations</span>
                   </div>
-                  <div className="flex items-center gap-2 justify-center">
-                    <div className="w-2 h-2 bg-indigo-400 rounded-full"></div>
-                    <span className="text-white">Fun for Everyone</span>
+                  <div className="flex items-center gap-2 justify-center bg-purple-200 border-3 border-black p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                    <div className="w-3 h-3 bg-black"></div>
+                    <span className="text-black font-bold">Memorials</span>
+                  </div>
+                  <div className="flex items-center gap-2 justify-center bg-orange-200 border-3 border-black p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+                    <div className="w-3 h-3 bg-black"></div>
+                    <span className="text-black font-bold">Events</span>
                   </div>
                 </div>
-                
-                <Link href="/teams">
-                  <Button size="lg" className="bg-gradient-to-r from-indigo-600 to-blue-600 text-white hover:from-indigo-700 hover:to-blue-700">
-                    <Users className="w-5 h-5 mr-2" />
-                    Get Early Access for Teams
-                    <ArrowRight className="w-5 h-5 ml-2" />
+
+                <Link href="/groups">
+                  <Button size="lg" className="bg-gradient-to-r from-purple-400 to-pink-500 text-white font-black border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all text-xl px-8 py-6" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+                    <Users className="w-6 h-6 mr-3" />
+                    EXPLORE FOR GROUPS
+                    <ArrowRight className="w-6 h-6 ml-3" />
                   </Button>
                 </Link>
               </div>

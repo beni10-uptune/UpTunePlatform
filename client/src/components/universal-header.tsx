@@ -1,9 +1,12 @@
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Home, Music, Users, BookOpen, Trophy, LogOut, User } from "lucide-react";
+import { Menu, X, Play, Sparkles, Users, LogOut, User } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
-import { 
+import { PlayMegaMenu } from "@/components/play-mega-menu";
+import { DiscoverMegaMenu } from "@/components/discover-mega-menu";
+import { ForGroupsMegaMenu } from "@/components/for-groups-mega-menu";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -14,78 +17,116 @@ import {
 export function UniversalHeader() {
   const [location] = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [playMenuOpen, setPlayMenuOpen] = useState(false);
+  const [discoverMenuOpen, setDiscoverMenuOpen] = useState(false);
+  const [groupsMenuOpen, setGroupsMenuOpen] = useState(false);
   const { user, isAuthenticated } = useAuth();
 
-  const navItems = [
-    { href: "/", label: "Start Game", icon: Home },
-    ...(isAuthenticated ? [{ href: "/dashboard", label: "Dashboard", icon: User }] : []),
-    { href: "/journeys", label: "Musical Journeys", icon: Music },
-    { href: "/community-lists", label: "Have Your Say", icon: Users },
-    { href: "/blog", label: "Blog", icon: BookOpen },
-  ];
-
-  const isActive = (href: string) => {
-    if (href === "/") return location === "/";
-    return location.startsWith(href);
-  };
+  const isPlayActive = location === "/" || location.startsWith("/game") || location.startsWith("/room");
+  const isDiscoverActive = location.startsWith("/discover") ||
+    location.startsWith("/journeys") ||
+    location.startsWith("/community-lists");
+  const isGroupsActive = location.startsWith("/groups") || location.startsWith("/teams");
 
   return (
-    <header className="bg-gradient-to-r from-slate-900 via-purple-900 to-slate-900 backdrop-blur-lg border-b border-white/10 sticky top-0 z-50">
+    <>
+      <PlayMegaMenu isOpen={playMenuOpen} onClose={() => setPlayMenuOpen(false)} />
+      <DiscoverMegaMenu isOpen={discoverMenuOpen} onClose={() => setDiscoverMenuOpen(false)} />
+      <ForGroupsMegaMenu isOpen={groupsMenuOpen} onClose={() => setGroupsMenuOpen(false)} />
+      <header className="bg-gradient-to-r from-pink-400 via-yellow-300 to-cyan-400 border-b-4 border-black sticky top-0 z-50 shadow-[0_4px_0px_0px_rgba(0,0,0,1)]">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/">
-            <div className="text-white font-bold text-xl hover:text-purple-300 transition-colors cursor-pointer">
-              Uptune
+            <div className="text-black font-black text-2xl hover:scale-110 transition-transform cursor-pointer bg-white px-4 py-2 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rotate-2" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+              UPTUNE
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-2">
-            {navItems.map(({ href, label, icon: Icon }) => (
-              <Link key={href} href={href}>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={`text-white hover:bg-white/20 transition-colors ${
-                    isActive(href) ? "bg-white/10" : ""
-                  }`}
-                >
-                  <Icon className="w-4 h-4 mr-2" />
-                  {label}
-                </Button>
-              </Link>
-            ))}
+          <nav className="hidden md:flex items-center gap-3">
+            {/* Play Mega Menu Trigger */}
+            <Button
+              size="sm"
+              className={`font-black text-black border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all ${
+                isPlayActive
+                  ? "bg-white rotate-2"
+                  : "bg-cyan-400 hover:bg-cyan-500 -rotate-1"
+              }`}
+              style={{ fontFamily: "'Arial Black', sans-serif" }}
+              onClick={() => setPlayMenuOpen(!playMenuOpen)}
+            >
+              <Play className="w-4 h-4 mr-2" />
+              PLAY
+            </Button>
+
+            {/* Discover Mega Menu Trigger */}
+            <Button
+              size="sm"
+              className={`font-black text-black border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all ${
+                isDiscoverActive
+                  ? "bg-white rotate-2"
+                  : "bg-pink-400 hover:bg-pink-500 rotate-1"
+              }`}
+              style={{ fontFamily: "'Arial Black', sans-serif" }}
+              onClick={() => setDiscoverMenuOpen(!discoverMenuOpen)}
+            >
+              <Sparkles className="w-4 h-4 mr-2" />
+              DISCOVER
+            </Button>
+
+            {/* For Groups Mega Menu Trigger */}
+            <Button
+              size="sm"
+              className={`font-black text-black border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all ${
+                isGroupsActive
+                  ? "bg-white rotate-2"
+                  : "bg-purple-400 hover:bg-purple-500 -rotate-1"
+              }`}
+              style={{ fontFamily: "'Arial Black', sans-serif" }}
+              onClick={() => setGroupsMenuOpen(!groupsMenuOpen)}
+            >
+              <Users className="w-4 h-4 mr-2" />
+              FOR GROUPS
+            </Button>
             
-            <div className="ml-2 border-l border-white/20 pl-2 flex items-center gap-2">
+            {/* User Menu */}
+            <div className="ml-2 border-l-4 border-black pl-3 flex items-center gap-3">
               {isAuthenticated && user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="text-white hover:bg-white/20 p-2">
+                    <Button size="sm" className="bg-yellow-400 hover:bg-yellow-500 border-3 border-black p-2 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                       {user.profileImageUrl ? (
-                        <img 
-                          src={user.profileImageUrl} 
-                          alt="Profile" 
-                          className="w-6 h-6 rounded-full object-cover"
+                        <img
+                          src={user.profileImageUrl}
+                          alt="Profile"
+                          className="w-6 h-6 object-cover border-2 border-black"
                         />
                       ) : (
-                        <User className="w-5 h-5" />
+                        <User className="w-5 h-5 text-black" />
                       )}
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-48 bg-slate-900/95 backdrop-blur-lg border border-white/20">
-                    <div className="px-3 py-2">
-                      <p className="text-sm font-medium text-white">
+                  <DropdownMenuContent align="end" className="w-48 bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]">
+                    <div className="px-3 py-2 bg-yellow-200 border-b-4 border-black">
+                      <p className="text-sm font-black text-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>
                         {user.firstName || user.email || 'User'}
                       </p>
                       {user.email && (
-                        <p className="text-xs text-white/60">{user.email}</p>
+                        <p className="text-xs text-black/70 font-bold">{user.email}</p>
                       )}
                     </div>
-                    <DropdownMenuSeparator className="bg-white/20" />
-                    <DropdownMenuItem 
+                    {isAuthenticated && (
+                      <Link href="/dashboard">
+                        <DropdownMenuItem className="text-black hover:bg-cyan-200 cursor-pointer font-bold">
+                          <User className="w-4 h-4 mr-2" />
+                          Dashboard
+                        </DropdownMenuItem>
+                      </Link>
+                    )}
+                    <DropdownMenuItem
                       onClick={() => window.location.href = '/api/logout'}
-                      className="text-white hover:bg-white/10 cursor-pointer"
+                      className="text-black hover:bg-pink-200 cursor-pointer font-bold"
                     >
                       <LogOut className="w-4 h-4 mr-2" />
                       Sign Out
@@ -94,33 +135,22 @@ export function UniversalHeader() {
                 </DropdownMenu>
               ) : (
                 <Button
-                  variant="ghost"
                   size="sm"
-                  className="text-white/70 hover:text-white hover:bg-white/10 transition-all"
+                  className="bg-yellow-400 hover:bg-yellow-500 text-black font-black border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[5px_5px_0px_0px_rgba(0,0,0,1)] transition-all"
+                  style={{ fontFamily: "'Arial Black', sans-serif" }}
                   onClick={() => window.location.href = '/api/login'}
                 >
-                  Sign In
+                  SIGN IN
                 </Button>
               )}
-              
-              <Link href="/teams">
-                <Button
-                  size="sm"
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 transition-all shadow-lg"
-                >
-                  <Trophy className="w-4 h-4 mr-2" />
-                  For Teams
-                </Button>
-              </Link>
             </div>
           </nav>
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
             <Button
-              variant="ghost"
               size="sm"
-              className="text-white hover:bg-white/20"
+              className="bg-white text-black font-black border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             >
               {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -130,50 +160,77 @@ export function UniversalHeader() {
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-white/20">
-            <nav className="space-y-2">
-              {navItems.map(({ href, label, icon: Icon }) => (
-                <Link key={href} href={href}>
-                  <Button
-                    variant="ghost"
-                    className={`w-full justify-start text-white hover:bg-white/20 ${
-                      isActive(href) ? "bg-white/10" : ""
-                    }`}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <Icon className="w-4 h-4 mr-2" />
-                    {label}
-                  </Button>
-                </Link>
-              ))}
+          <div className="md:hidden py-4 border-t-4 border-black bg-yellow-200">
+            <nav className="space-y-3 px-4">
+              {/* Play Button */}
+              <Link href="/">
+                <Button
+                  className={`w-full justify-start font-black text-black border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] ${
+                    isPlayActive ? "bg-white" : "bg-cyan-300 hover:bg-cyan-400"
+                  }`}
+                  style={{ fontFamily: "'Arial Black', sans-serif" }}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Play className="w-4 h-4 mr-2" />
+                  PLAY
+                </Button>
+              </Link>
+
+              {/* Discover Button */}
+              <Link href="/discover">
+                <Button
+                  className={`w-full justify-start font-black text-black border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] ${
+                    isDiscoverActive ? "bg-white" : "bg-pink-300 hover:bg-pink-400"
+                  }`}
+                  style={{ fontFamily: "'Arial Black', sans-serif" }}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  DISCOVER
+                </Button>
+              </Link>
+
+              {/* For Groups Button */}
+              <Link href="/groups">
+                <Button
+                  className={`w-full justify-start font-black text-black border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] ${
+                    isGroupsActive ? "bg-white" : "bg-purple-300 hover:bg-purple-400"
+                  }`}
+                  style={{ fontFamily: "'Arial Black', sans-serif" }}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  <Users className="w-4 h-4 mr-2" />
+                  FOR GROUPS
+                </Button>
+              </Link>
               
-              <div className="pt-2 border-t border-white/20 space-y-2">
+              <div className="pt-3 border-t-4 border-black space-y-3 mt-3">
                 {isAuthenticated && user ? (
                   <>
-                    <div className="px-4 py-2 bg-white/10 rounded-lg">
+                    <div className="px-4 py-3 bg-white border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                       <div className="flex items-center gap-3">
                         {user.profileImageUrl ? (
-                          <img 
-                            src={user.profileImageUrl} 
-                            alt="Profile" 
-                            className="w-8 h-8 rounded-full object-cover"
+                          <img
+                            src={user.profileImageUrl}
+                            alt="Profile"
+                            className="w-10 h-10 object-cover border-3 border-black"
                           />
                         ) : (
-                          <User className="w-8 h-8 text-white/70" />
+                          <User className="w-10 h-10 text-black" />
                         )}
                         <div>
-                          <p className="text-sm font-medium text-white">
+                          <p className="text-sm font-black text-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>
                             {user.firstName || user.email || 'User'}
                           </p>
                           {user.email && (
-                            <p className="text-xs text-white/60">{user.email}</p>
+                            <p className="text-xs text-black/70 font-bold">{user.email}</p>
                           )}
                         </div>
                       </div>
                     </div>
                     <Button
-                      variant="ghost"
-                      className="w-full justify-start text-white hover:bg-white/20"
+                      className="w-full justify-start bg-red-400 hover:bg-red-500 text-white font-black border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
+                      style={{ fontFamily: "'Arial Black', sans-serif" }}
                       onClick={() => {
                         setIsMobileMenuOpen(false);
                         window.location.href = '/api/logout';
@@ -185,8 +242,8 @@ export function UniversalHeader() {
                   </>
                 ) : (
                   <Button
-                    variant="ghost"
-                    className="w-full justify-start text-white/70 hover:text-white hover:bg-white/20"
+                    className="w-full justify-start bg-cyan-400 hover:bg-cyan-500 text-black font-black border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
+                    style={{ fontFamily: "'Arial Black', sans-serif" }}
                     onClick={() => {
                       setIsMobileMenuOpen(false);
                       window.location.href = '/api/login';
@@ -195,21 +252,12 @@ export function UniversalHeader() {
                     Sign In
                   </Button>
                 )}
-                
-                <Link href="/teams">
-                  <Button
-                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    <Trophy className="w-4 h-4 mr-2" />
-                    For Teams
-                  </Button>
-                </Link>
               </div>
             </nav>
           </div>
         )}
       </div>
     </header>
+    </>
   );
 }

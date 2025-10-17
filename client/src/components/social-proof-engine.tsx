@@ -41,10 +41,10 @@ export function SocialProofEngine() {
 
   if (isLoading || !socialData) {
     return (
-      <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-white/10 rounded-lg p-6">
-        <div className="animate-pulse">
-          <div className="h-4 bg-white/20 rounded w-48 mb-2"></div>
-          <div className="h-3 bg-white/10 rounded w-32"></div>
+      <div className="bg-gradient-to-r from-cyan-300 to-purple-300 border-4 border-black p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rotate-1">
+        <div className="animate-pulse bg-white border-3 border-black p-4">
+          <div className="h-4 bg-black/20 w-48 mb-2"></div>
+          <div className="h-3 bg-black/10 w-32"></div>
         </div>
       </div>
     );
@@ -55,25 +55,29 @@ export function SocialProofEngine() {
       icon: Users,
       value: socialData.activeUsers,
       label: "Active Users",
-      color: "text-blue-400"
+      bgColor: "bg-blue-300",
+      iconColor: "text-blue-700"
     },
     {
       icon: Play,
       value: socialData.gamesCreatedToday,
       label: "Games Today",
-      color: "text-green-400"
+      bgColor: "bg-green-300",
+      iconColor: "text-green-700"
     },
     {
       icon: Music,
       value: socialData.songsAddedToday,
       label: "Songs Added",
-      color: "text-purple-400"
+      bgColor: "bg-purple-300",
+      iconColor: "text-purple-700"
     },
     {
       icon: Heart,
       value: socialData.totalCommunityLists,
       label: "Community Lists",
-      color: "text-pink-400"
+      bgColor: "bg-pink-300",
+      iconColor: "text-pink-700"
     }
   ];
 
@@ -81,53 +85,55 @@ export function SocialProofEngine() {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-white/10 rounded-lg p-6"
+      className="bg-gradient-to-r from-cyan-300 to-purple-300 border-4 border-black p-6 shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rotate-1"
     >
-      {/* Live Activity Banner */}
-      <div className="flex items-center gap-2 mb-4">
-        <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-        <span className="text-sm text-white/80 font-medium">Live Activity</span>
-        <Badge variant="secondary" className="bg-white/10 text-white border-white/20">
-          <TrendingUp className="w-3 h-3 mr-1" />
-          Growing
-        </Badge>
-      </div>
+      <div className="bg-white border-3 border-black p-4">
+        {/* Live Activity Banner */}
+        <div className="flex items-center gap-2 mb-4 flex-wrap">
+          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse border-2 border-black"></div>
+          <span className="text-sm text-black font-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>LIVE ACTIVITY</span>
+          <Badge className="bg-yellow-400 text-black border-2 border-black font-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+            <TrendingUp className="w-3 h-3 mr-1" />
+            GROWING
+          </Badge>
+        </div>
 
-      {/* Rotating Activity Feed */}
-      <div className="mb-6 h-8">
-        <AnimatePresence mode="wait">
-          {socialData.recentActivity.length > 0 && (
+        {/* Rotating Activity Feed */}
+        <div className="mb-6 min-h-[2rem] bg-cyan-100 border-2 border-black p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
+          <AnimatePresence mode="wait">
+            {socialData.recentActivity.length > 0 && (
+              <motion.div
+                key={currentActivityIndex}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
+                className="text-black font-bold text-sm"
+              >
+                {socialData.recentActivity[currentActivityIndex]?.description}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {stats.map((stat) => (
             <motion.div
-              key={currentActivityIndex}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.3 }}
-              className="text-white/90 text-sm"
+              key={stat.label}
+              whileHover={{ scale: 1.05, rotate: 0 }}
+              className={`text-center ${stat.bgColor} border-3 border-black p-3 shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] rotate-2`}
             >
-              {socialData.recentActivity[currentActivityIndex]?.description}
+              <div className="flex items-center justify-center mb-2">
+                <stat.icon className={`w-6 h-6 ${stat.iconColor}`} />
+              </div>
+              <div className="text-2xl font-black text-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+                {stat.value.toLocaleString()}
+              </div>
+              <div className="text-xs font-bold text-black/70">{stat.label}</div>
             </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {stats.map((stat) => (
-          <motion.div
-            key={stat.label}
-            whileHover={{ scale: 1.05 }}
-            className="text-center"
-          >
-            <div className="flex items-center justify-center mb-2">
-              <stat.icon className={`w-5 h-5 ${stat.color}`} />
-            </div>
-            <div className="text-lg font-bold text-white">
-              {stat.value.toLocaleString()}
-            </div>
-            <div className="text-xs text-white/60">{stat.label}</div>
-          </motion.div>
-        ))}
+          ))}
+        </div>
       </div>
     </motion.div>
   );

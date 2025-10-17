@@ -35,31 +35,6 @@ export const songs = pgTable("songs", {
   addedAt: timestamp("added_at").defaultNow().notNull(),
 });
 
-export const weeklyChallenge = pgTable("weekly_challenges", {
-  id: serial("id").primaryKey(),
-  title: text("title").notNull(),
-  description: text("description").notNull(),
-  emoji: text("emoji").notNull(),
-  startDate: timestamp("start_date").notNull(),
-  endDate: timestamp("end_date").notNull(),
-  isActive: boolean("is_active").notNull().default(true),
-});
-
-export const challengeSubmissions = pgTable("challenge_submissions", {
-  id: serial("id").primaryKey(),
-  challengeId: integer("challenge_id").notNull(),
-  nickname: text("nickname").notNull(),
-  songTitle: text("song_title").notNull(),
-  songArtist: text("song_artist").notNull(),
-  spotifyId: text("spotify_id"),
-  album: text("album"),
-  imageUrl: text("image_url"),
-  previewUrl: text("preview_url"),
-  story: text("story"),
-  votes: integer("votes").notNull().default(0),
-  submittedAt: timestamp("submitted_at").defaultNow().notNull(),
-});
-
 export const teamsWaitlist = pgTable("teams_waitlist", {
   id: serial("id").primaryKey(),
   name: text("name").notNull(),
@@ -111,11 +86,6 @@ export const insertSongSchema = createInsertSchema(songs).omit({
   addedAt: true,
 });
 
-export const insertChallengeSubmissionSchema = createInsertSchema(challengeSubmissions).omit({
-  id: true,
-  submittedAt: true,
-});
-
 export const insertTeamsWaitlistSchema = createInsertSchema(teamsWaitlist).omit({
   id: true,
   submittedAt: true,
@@ -134,11 +104,6 @@ export type InsertPlayer = z.infer<typeof insertPlayerSchema>;
 
 export type Song = typeof songs.$inferSelect;
 export type InsertSong = z.infer<typeof insertSongSchema>;
-
-export type WeeklyChallenge = typeof weeklyChallenge.$inferSelect;
-
-export type ChallengeSubmission = typeof challengeSubmissions.$inferSelect;
-export type InsertChallengeSubmission = z.infer<typeof insertChallengeSubmissionSchema>;
 
 export type TeamsWaitlist = typeof teamsWaitlist.$inferSelect;
 export type InsertTeamsWaitlist = z.infer<typeof insertTeamsWaitlistSchema>;
@@ -162,7 +127,6 @@ export const communityLists = pgTable("community_lists", {
   slug: varchar("slug", { length: 255 }).notNull().unique(),
   emoji: varchar("emoji", { length: 10 }).notNull().default("🎵"),
   isActive: boolean("is_active").default(true),
-  isWeeklyChallenge: boolean("is_weekly_challenge").default(false),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 

@@ -14,7 +14,6 @@ interface CommunityList {
   slug: string;
   emoji: string;
   isActive: boolean;
-  isWeeklyChallenge: boolean;
   createdAt: string;
 }
 
@@ -80,11 +79,11 @@ export function CommunityListsPreview() {
 
   if (isLoading) {
     return (
-      <Card className="max-w-6xl mx-auto bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-lg border border-white/20">
-        <CardContent className="p-8">
+      <Card className="max-w-6xl mx-auto bg-gradient-to-r from-cyan-300 to-purple-300 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rotate-1">
+        <CardContent className="p-8 bg-white">
           <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-400"></div>
-            <span className="ml-3 text-white/80">Loading community lists...</span>
+            <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-black"></div>
+            <span className="ml-3 text-black font-bold">Loading community lists...</span>
           </div>
         </CardContent>
       </Card>
@@ -93,20 +92,22 @@ export function CommunityListsPreview() {
 
   if (!listsWithEntries || listsWithEntries.length === 0) {
     return (
-      <Card className="max-w-6xl mx-auto bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-lg border border-white/20">
-        <CardHeader className="text-center">
-          <CardTitle className="flex items-center justify-center gap-2 text-2xl text-white">
-            <Users className="w-6 h-6 text-purple-400" />
-            Community Lists Coming Soon
+      <Card className="max-w-6xl mx-auto bg-gradient-to-br from-yellow-300 to-pink-300 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] -rotate-1">
+        <CardHeader className="text-center bg-white border-b-4 border-black">
+          <CardTitle className="flex items-center justify-center gap-3 text-3xl text-black font-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+            <div className="w-12 h-12 bg-purple-400 border-4 border-black flex items-center justify-center shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] rotate-12">
+              <Users className="w-6 h-6 text-white" />
+            </div>
+            COMING SOON
           </CardTitle>
         </CardHeader>
-        <CardContent className="text-center pb-8">
-          <p className="text-white/70 mb-6">
-            Be the first to create viral music lists and get the community voting!
+        <CardContent className="text-center pb-8 bg-white pt-6">
+          <p className="text-black/80 font-bold mb-6 text-lg">
+            Be the first to create viral music lists and get the community voting! 🎵
           </p>
           <Link href="/community-lists">
-            <Button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700">
-              Create First List
+            <Button className="bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-6 py-3" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+              CREATE FIRST LIST
             </Button>
           </Link>
         </CardContent>
@@ -115,24 +116,28 @@ export function CommunityListsPreview() {
   }
 
   return (
-    <Card className="max-w-7xl mx-auto bg-gradient-to-br from-slate-900/80 via-purple-900/80 to-slate-900/80 backdrop-blur-xl border border-white/20 shadow-2xl">
-      <CardHeader className="text-center pb-8">
+    <Card className="max-w-7xl mx-auto bg-gradient-to-br from-pink-300 via-yellow-300 to-cyan-300 border-4 border-black shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] rotate-1">
+      <CardHeader className="text-center pb-8 bg-white border-b-4 border-black">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <CardTitle className="flex items-center justify-center gap-3 text-3xl font-bold text-white mb-4">
-            <TrendingUp className="w-8 h-8 text-purple-400" />
-            Have Your Say
+          <CardTitle className="flex items-center justify-center gap-3 text-4xl md:text-5xl font-black text-black mb-4" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+            <div className="w-14 h-14 bg-pink-400 border-4 border-black flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rotate-12">
+              <TrendingUp className="w-8 h-8 text-white" />
+            </div>
+            <span className="bg-gradient-to-r from-purple-400 to-pink-400 px-6 py-2 -rotate-1 inline-block border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+              HAVE YOUR SAY
+            </span>
           </CardTitle>
-          <p className="text-white/80 text-xl max-w-2xl mx-auto leading-relaxed">
-            Vote for your favorite songs. Shape the playlists that define music moments.
+          <p className="text-black/80 font-bold text-xl max-w-2xl mx-auto leading-relaxed">
+            Vote for your favorite songs. Shape the playlists that define music moments. 🎵
           </p>
         </motion.div>
       </CardHeader>
-      
-      <CardContent className="space-y-8 pb-12">
+
+      <CardContent className="space-y-8 pb-12 bg-white">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {listsWithEntries.slice(0, 4).map((list, index) => (
             <motion.div
@@ -142,97 +147,94 @@ export function CommunityListsPreview() {
               transition={{ duration: 0.6, delay: index * 0.15 }}
               className="group"
             >
-              <Card className="bg-white/5 backdrop-blur-lg hover:bg-white/10 transition-all duration-300 h-full border border-white/30 hover:border-purple-400/50 shadow-lg hover:shadow-xl group-hover:scale-[1.02]">
-                <CardHeader className="pb-4">
-                  <div className="flex items-start justify-between mb-3">
+              <Card className={`bg-gradient-to-br from-cyan-200 to-purple-200 hover:from-cyan-300 hover:to-purple-300 transition-all duration-300 h-full border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-4px] hover:translate-y-[-4px] ${index % 2 === 0 ? 'rotate-1' : '-rotate-1'}`}>
+                <CardHeader className="pb-4 bg-white border-b-4 border-black">
+                  <div className="flex items-start justify-between mb-3 flex-wrap gap-3">
                     <div className="flex items-center gap-4">
-                      <div className="text-3xl p-2 bg-white/10 rounded-xl">{list.emoji}</div>
+                      <div className="text-3xl p-2 bg-yellow-300 border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] rotate-6">{list.emoji}</div>
                       <div>
-                        <h3 className="font-bold text-xl text-white mb-2">{list.title}</h3>
-                        <div className="flex items-center gap-6 text-sm text-white/70">
-                          <span className="flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full">
+                        <h3 className="font-black text-xl text-black mb-2" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+                          {list.title.toUpperCase()}
+                        </h3>
+                        <div className="flex items-center gap-3 text-sm text-black/80 flex-wrap">
+                          <span className="flex items-center gap-2 bg-cyan-300 px-3 py-1 border-2 border-black font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                             <Music className="w-4 h-4" />
                             {list.totalEntries} songs
                           </span>
-                          <span className="flex items-center gap-2 bg-white/10 px-3 py-1 rounded-full">
+                          <span className="flex items-center gap-2 bg-pink-300 px-3 py-1 border-2 border-black font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                             <Vote className="w-4 h-4" />
                             Live voting
                           </span>
                         </div>
                       </div>
                     </div>
-                    {list.isWeeklyChallenge ? (
-                      <Badge className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white border-0 text-sm px-3 py-1 shadow-lg">
-                        Weekly Challenge
-                      </Badge>
-                    ) : (
-                      <Badge className="bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0 text-sm px-3 py-1 shadow-lg">
-                        Active
-                      </Badge>
-                    )}
+                    <Badge className="bg-green-400 text-white border-3 border-black text-sm px-3 py-1 font-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+                      ACTIVE
+                    </Badge>
                   </div>
                 </CardHeader>
-                
-                <CardContent className="space-y-4">
+
+
+                <CardContent className="space-y-4 bg-white">
                   {list.topEntries.length > 0 ? (
                     <>
                       <div className="space-y-3">
                         {list.topEntries.map((entry, entryIndex) => (
-                          <motion.div 
-                            key={entry.id} 
+                          <motion.div
+                            key={entry.id}
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.4, delay: entryIndex * 0.1 }}
-                            className="flex items-center gap-4 p-3 bg-white/5 backdrop-blur-sm rounded-xl border border-white/20 hover:bg-white/10 transition-all duration-200"
+                            className="flex items-center gap-4 p-3 bg-yellow-100 hover:bg-yellow-200 border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all duration-200"
                           >
                             <div className="flex items-center gap-3 min-w-0 flex-1">
                               <div className="flex items-center gap-2">
-                                {entryIndex === 0 && <Crown className="w-5 h-5 text-yellow-400 flex-shrink-0" />}
-                                <span className={`text-sm font-bold flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center ${
-                                  entryIndex === 0 ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white' :
-                                  entryIndex === 1 ? 'bg-gradient-to-r from-gray-400 to-gray-500 text-white' :
-                                  'bg-gradient-to-r from-purple-500 to-pink-500 text-white'
-                                }`}>
+                                {entryIndex === 0 && <Crown className="w-5 h-5 text-yellow-600 flex-shrink-0" />}
+                                <span className={`text-sm font-black flex-shrink-0 w-7 h-7 flex items-center justify-center border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ${
+                                  entryIndex === 0 ? 'bg-yellow-400 text-black' :
+                                  entryIndex === 1 ? 'bg-gray-300 text-black' :
+                                  'bg-pink-400 text-white'
+                                }`} style={{ fontFamily: "'Arial Black', sans-serif" }}>
                                   {entryIndex + 1}
                                 </span>
                               </div>
                               {entry.imageUrl && (
-                                <img 
-                                  src={entry.imageUrl} 
+                                <img
+                                  src={entry.imageUrl}
                                   alt={entry.songTitle}
-                                  className="w-10 h-10 rounded-lg object-cover flex-shrink-0 shadow-md"
+                                  className="w-10 h-10 object-cover flex-shrink-0 border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
                                 />
                               )}
                               <div className="min-w-0 flex-1">
-                                <p className="font-semibold text-sm truncate text-white mb-1">{entry.songTitle}</p>
-                                <p className="text-xs text-white/70 truncate">{entry.artistName}</p>
+                                <p className="font-black text-sm truncate text-black mb-1">{entry.songTitle}</p>
+                                <p className="text-xs text-black/70 font-bold truncate">{entry.artistName}</p>
                               </div>
                             </div>
                             <div className="text-right flex-shrink-0">
-                              <div className="font-bold text-lg text-purple-300">
+                              <div className="font-black text-lg text-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>
                                 {entry.voteScore > 0 ? `+${entry.voteScore}` : entry.voteScore}
                               </div>
-                              <div className="text-xs text-white/50">votes</div>
+                              <div className="text-xs text-black/60 font-bold">votes</div>
                             </div>
                           </motion.div>
                         ))}
                       </div>
-                      
+
                       <Link href={`/community-lists/${list.slug}`}>
-                        <Button className="w-full mt-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 transition-all duration-200 py-3 font-semibold shadow-lg hover:shadow-xl">
+                        <Button className="w-full mt-4 bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 transition-all duration-200 py-4 font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px]" style={{ fontFamily: "'Arial Black', sans-serif" }}>
                           <Vote className="w-5 h-5 mr-2" />
-                          Vote & Submit Songs
+                          VOTE & SUBMIT SONGS
                           <ArrowRight className="w-5 h-5 ml-2" />
                         </Button>
                       </Link>
                     </>
                   ) : (
                     <div className="text-center py-8">
-                      <div className="text-4xl mb-4 p-4 bg-white/10 rounded-full inline-block">🎵</div>
-                      <p className="text-base text-white/70 mb-6 font-medium">No songs yet - be the first!</p>
+                      <div className="text-4xl mb-4 p-4 bg-yellow-300 border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] inline-block">🎵</div>
+                      <p className="text-base text-black/80 font-bold mb-6">No songs yet - be the first! 🎸</p>
                       <Link href={`/community-lists/${list.slug}`}>
-                        <Button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 px-6 py-3 font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
-                          Submit First Song
+                        <Button className="bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 px-6 py-3 font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+                          SUBMIT FIRST SONG
                         </Button>
                       </Link>
                     </div>
@@ -242,28 +244,29 @@ export function CommunityListsPreview() {
             </motion.div>
           ))}
         </div>
-        
+
+
         {/* Call to Action */}
-        <div className="text-center pt-8 border-t border-white/30">
-          <motion.div 
+        <div className="text-center pt-8 border-t-4 border-black">
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.8 }}
             className="flex flex-col sm:flex-row gap-6 justify-center items-center"
           >
             <div className="text-center sm:text-left">
-              <p className="text-white/80 text-lg">
-                <strong className="text-2xl font-bold text-white bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <p className="text-black font-bold text-lg">
+                <strong className="text-3xl font-black bg-gradient-to-r from-yellow-400 to-pink-400 px-4 py-1 inline-block border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] rotate-2" style={{ fontFamily: "'Arial Black', sans-serif" }}>
                   {listsWithEntries.reduce((total, list) => total + list.totalEntries, 0)}
-                </strong> 
-                <span className="ml-2">songs elevating the community</span>
+                </strong>
+                <span className="ml-2">songs elevating the community 🚀</span>
               </p>
-              <p className="text-white/60 text-sm mt-1">Join thousands creating the ultimate playlists</p>
+              <p className="text-black/70 font-bold text-sm mt-2">Join thousands creating the ultimate playlists</p>
             </div>
             <Link href="/community-lists">
-              <Button className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 px-8 py-4 text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105">
+              <Button className="bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 px-8 py-4 text-lg font-black border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-4px] hover:translate-y-[-4px] transition-all" style={{ fontFamily: "'Arial Black', sans-serif" }}>
                 <TrendingUp className="w-5 h-5 mr-3" />
-                Explore All Playlists
+                EXPLORE ALL PLAYLISTS
                 <ArrowRight className="w-5 h-5 ml-3" />
               </Button>
             </Link>

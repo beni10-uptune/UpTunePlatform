@@ -43,19 +43,25 @@ export function MusicalJourneysShowcase() {
         transition={{ duration: 0.6 }}
         className="text-center mb-10"
       >
-        <div className="flex items-center justify-center gap-3 mb-6">
-          <div className="w-12 h-12 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-full flex items-center justify-center">
-            <Compass className="w-7 h-7 text-white" />
+        <div className="flex flex-col items-center gap-4 mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-16 h-16 bg-purple-400 border-4 border-black flex items-center justify-center shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rotate-12">
+              <Compass className="w-8 h-8 text-white" />
+            </div>
+            <h2 className="text-4xl md:text-5xl font-black text-black" style={{ fontFamily: "'Arial Black', sans-serif", textTransform: 'uppercase' }}>
+              <span className="block bg-gradient-to-r from-purple-400 to-pink-400 px-6 py-2 -rotate-1 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)]">
+                MUSICAL JOURNEYS
+              </span>
+            </h2>
           </div>
-          <div>
-            <h2 className="text-3xl font-bold text-white">When music connects people and changes societies</h2>
-            <p className="text-purple-300">Interactive Music History</p>
-          </div>
+          <p className="text-lg font-black text-black/90 bg-yellow-300 px-6 py-2 border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] rotate-1" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+            INTERACTIVE MUSIC HISTORY
+          </p>
         </div>
-        
-        <p className="text-white/80 leading-relaxed max-w-2xl mx-auto text-lg">
-          Step into the moments when music changed everything. From Manchester warehouses 
-          to Detroit basements, experience the stories, sounds, and culture that shaped generations.
+
+        <p className="text-black/80 font-bold leading-relaxed max-w-2xl mx-auto text-lg">
+          Step into the moments when music changed everything. From Manchester warehouses
+          to Detroit basements, experience the stories, sounds, and culture that shaped generations. 🎵
         </p>
       </motion.div>
 
@@ -66,29 +72,33 @@ export function MusicalJourneysShowcase() {
         transition={{ duration: 0.6, delay: 0.3 }}
         className="mb-8"
       >
-        <p className="text-center text-white/60 mb-6 text-sm uppercase tracking-wider">
-          Explore These Musical Eras
+        <p className="text-center text-black font-black mb-6 text-sm uppercase tracking-wider bg-cyan-300 inline-block px-4 py-2 border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] mx-auto block w-fit" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+          EXPLORE THESE MUSICAL ERAS
         </p>
-        
-        <div className="grid md:grid-cols-3 gap-4 max-w-3xl mx-auto">
+
+        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {featuredJourneys.map((journey, index) => (
             <Link key={journey.title} href={`/journeys/${journey.title.toLowerCase().replace(/\s+/g, '-')}`}>
               <motion.div
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ scale: 1.05, rotate: 0 }}
                 whileTap={{ scale: 0.98 }}
-                className="relative overflow-hidden rounded-lg cursor-pointer group h-48"
+                className={`relative overflow-hidden cursor-pointer group h-56 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-4px] hover:translate-y-[-4px] transition-all ${index % 2 === 0 ? 'rotate-2' : '-rotate-2'}`}
               >
                 {/* Background Image */}
-                <div 
+                <div
                   className="absolute inset-0 bg-cover bg-center bg-no-repeat"
                   style={{ backgroundImage: `url(${journey.image})` }}
                 />
                 {/* Gradient Overlay */}
-                <div className={`absolute inset-0 bg-gradient-to-r ${journey.gradient} opacity-70 group-hover:opacity-60 transition-opacity`} />
+                <div className={`absolute inset-0 bg-gradient-to-r ${journey.gradient} opacity-70 group-hover:opacity-80 transition-opacity`} />
                 {/* Content */}
-                <div className="relative bg-black/30 backdrop-blur-sm p-6 text-center h-full flex flex-col justify-center">
-                  <h4 className="font-bold text-white text-lg mb-1">{journey.title}</h4>
-                  <p className="text-white/90 text-sm">{journey.subtitle}</p>
+                <div className="relative bg-black/40 backdrop-blur-sm p-6 text-center h-full flex flex-col justify-center border-4 border-white/20">
+                  <h4 className="font-black text-white text-2xl mb-2" style={{ fontFamily: "'Arial Black', sans-serif", textTransform: 'uppercase', textShadow: '3px 3px 0px rgba(0,0,0,0.5)' }}>
+                    {journey.title}
+                  </h4>
+                  <p className="text-white font-bold text-sm" style={{ textShadow: '2px 2px 0px rgba(0,0,0,0.5)' }}>
+                    {journey.subtitle}
+                  </p>
                 </div>
               </motion.div>
             </Link>
@@ -104,13 +114,14 @@ export function MusicalJourneysShowcase() {
         className="text-center"
       >
         <Link href="/journeys">
-          <Button 
-            size="lg" 
-            className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700 shadow-lg hover:shadow-xl transition-all"
+          <Button
+            size="lg"
+            className="bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 font-black text-xl px-8 py-6 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-4px] hover:translate-y-[-4px] transition-all"
+            style={{ fontFamily: "'Arial Black', sans-serif" }}
           >
-            <Music2 className="w-5 h-5 mr-2" />
-            Explore All Journeys
-            <ArrowRight className="w-5 h-5 ml-2" />
+            <Music2 className="w-6 h-6 mr-2" />
+            EXPLORE ALL JOURNEYS
+            <ArrowRight className="w-6 h-6 ml-2" />
           </Button>
         </Link>
       </motion.div>
