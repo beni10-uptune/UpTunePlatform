@@ -4,19 +4,6 @@
 
 SET client_encoding = 'UTF8';
 
--- =====================================================
--- CLEAR EXISTING DATA (prevents duplicate key errors)
--- =====================================================
-
-TRUNCATE TABLE entry_votes CASCADE;
-TRUNCATE TABLE list_entries CASCADE;
-TRUNCATE TABLE community_lists CASCADE;
-TRUNCATE TABLE community_mixtapes CASCADE;
-TRUNCATE TABLE songs CASCADE;
-TRUNCATE TABLE players CASCADE;
-TRUNCATE TABLE game_rooms CASCADE;
-TRUNCATE TABLE teams_waitlist CASCADE;
-TRUNCATE TABLE journeys CASCADE;
 
 -- =====================================================
 -- JOURNEYS (5 records)
@@ -111,32 +98,32 @@ SELECT setval('journeys_id_seq', (SELECT MAX(id) FROM journeys));
 -- COMMUNITY_LISTS (25 records)
 -- =====================================================
 
-INSERT INTO community_lists (id, title, description, slug, emoji, is_active, created_at) VALUES
-(1, 'The Greatest Songs of All Time', 'The ultimate collection of the most legendary tracks ever recorded', 'greatest-songs-all-time', '🌟', true, '2025-06-12T13:56:00.300Z'),
-(2, 'The Best Movie Soundtrack Moments', 'Iconic songs that defined unforgettable movie scenes', 'best-movie-soundtrack-moments', '🎬', true, '2025-06-12T13:56:00.300Z'),
-(3, 'The Most Epic Guitar Riffs', 'The guitar riffs that changed music forever', 'most-epic-guitar-riffs', '🎸', true, '2025-06-12T13:56:00.300Z'),
-(4, 'The Best Live Performances', 'Concert moments that became legend', 'best-live-performances', '🎤', true, '2025-06-12T13:56:00.300Z'),
-(5, 'The Ultimate Love Songs', 'Songs that capture the essence of love and romance', 'ultimate-love-songs', '❤️', true, '2025-06-12T13:56:00.300Z'),
-(6, 'Road Trip Essentials', 'The ultimate songs for your next adventure on the open road. Share the tracks that make every mile memorable.', 'road-trip-essentials', '🚗', true, '2025-06-12T14:03:56.027Z'),
-(7, 'Workout Motivation', 'High-energy songs that push you through your toughest workouts. What gets your heart pumping?', 'workout-motivation', '💪', true, '2025-06-12T14:03:56.027Z'),
-(8, 'Rainy Day Vibes', 'Perfect songs for cozy, contemplative moments when the weather keeps you inside.', 'rainy-day-vibes', '🌧️', true, '2025-06-12T14:03:56.027Z'),
-(9, 'Songs That Make You Cry', 'Emotional tracks that hit you right in the feels. Warning: tissues may be required.', 'songs-that-make-you-cry', '😭', true, '2025-06-12T14:03:56.027Z'),
-(10, 'Confidence Boosters', 'Songs that make you feel unstoppable and ready to take on the world.', 'confidence-boosters', '✨', true, '2025-06-12T14:03:56.027Z'),
-(11, 'Nostalgia Hits', 'Songs that instantly transport you back to simpler times and cherished memories.', 'nostalgia-hits', '📼', true, '2025-06-12T14:03:56.027Z'),
-(12, 'Favourite Song of the 60s', 'Share the iconic tracks that defined the swinging sixties - from The Beatles to The Rolling Stones', 'favourite-song-60s', '🎭', true, '2025-06-12T15:14:15.336Z'),
-(13, 'Favourite Song of the 70s', 'The decade of disco, rock, and soul - what''s your ultimate 70s anthem?', 'favourite-song-70s', '🕺', true, '2025-06-12T15:14:15.336Z'),
-(14, 'Favourite Song of the 80s', 'Neon lights, synthesizers, and unforgettable hooks - pick your definitive 80s classic', 'favourite-song-80s', '🎹', true, '2025-06-12T15:14:15.336Z'),
-(15, 'Favourite Song of the 90s', 'Grunge, Britpop, and hip-hop evolution - what song captures the 90s spirit for you?', 'favourite-song-90s', '📻', true, '2025-06-12T15:14:15.336Z'),
-(16, 'Favourite Song of the 2000s', 'The millennium''s biggest hits - from pop-punk to R&B, what defined your 2000s?', 'favourite-song-2000s', '💿', true, '2025-06-12T15:14:15.336Z'),
-(17, 'Favourite Song of the 2010s', 'The streaming decade - EDM drops, indie hits, and viral sensations', 'favourite-song-2010s', '📱', true, '2025-06-12T15:14:15.336Z'),
-(18, 'Favourite Song of the 2020s', 'TikTok anthems, pandemic playlists, and the sounds of now', 'favourite-song-2020s', '🎧', true, '2025-06-12T15:14:15.336Z'),
-(19, 'Madchester Anthem', 'The baggy beats and swagger of Manchester''s legendary music scene - Stone Roses, Happy Mondays and beyond', 'madchester-anthem', '🏭', true, '2025-06-12T15:14:15.336Z'),
-(20, 'Disco Classics', 'Saturday Night Fever lives on - share the disco tracks that still get everyone on the dancefloor', 'disco-classics', '🕺', true, '2025-06-12T15:14:15.336Z'),
-(23, 'Favourite Album of All Time', 'The one album you would take to a desert island - share your most treasured complete musical experience', 'favourite-album-all-time', '💿', true, '2025-06-14T06:39:47.384Z'),
-(24, 'Favourite Lyrics', 'The words that speak to your soul - share songs with lyrics that move, inspire, or perfectly capture how you feel', 'favourite-lyrics', '✍️', true, '2025-06-14T06:39:47.384Z'),
-(25, 'Acid House Classics', 'The underground UK rave scene that changed everything - from warehouse parties to the Second Summer of Love', 'acid-house-classics', '🏠', true, '2025-06-30T14:58:47.869Z'),
-(26, 'Berlin Electronic Revolution', 'The electronic sounds that emerged from post-wall Berlin - techno, minimal, and underground club culture', 'berlin-electronic-revolution', '🔊', true, '2025-06-30T14:58:47.869Z'),
-(27, 'Detroit Techno Pioneers', 'The Belleville Three and the birth of techno - Juan Atkins, Derrick May, Kevin Saunderson and beyond', 'detroit-techno-pioneers', '🏭', true, '2025-06-30T14:58:47.869Z');
+INSERT INTO community_lists (id, title, description, slug, emoji, is_active, created_at, is_weekly_challenge) VALUES
+(1, 'The Greatest Songs of All Time', 'The ultimate collection of the most legendary tracks ever recorded', 'greatest-songs-all-time', '🌟', true, '2025-06-12T13:56:00.300Z', false),
+(2, 'The Best Movie Soundtrack Moments', 'Iconic songs that defined unforgettable movie scenes', 'best-movie-soundtrack-moments', '🎬', true, '2025-06-12T13:56:00.300Z', false),
+(3, 'The Most Epic Guitar Riffs', 'The guitar riffs that changed music forever', 'most-epic-guitar-riffs', '🎸', true, '2025-06-12T13:56:00.300Z', false),
+(4, 'The Best Live Performances', 'Concert moments that became legend', 'best-live-performances', '🎤', true, '2025-06-12T13:56:00.300Z', false),
+(5, 'The Ultimate Love Songs', 'Songs that capture the essence of love and romance', 'ultimate-love-songs', '❤️', true, '2025-06-12T13:56:00.300Z', false),
+(6, 'Road Trip Essentials', 'The ultimate songs for your next adventure on the open road. Share the tracks that make every mile memorable.', 'road-trip-essentials', '🚗', true, '2025-06-12T14:03:56.027Z', false),
+(7, 'Workout Motivation', 'High-energy songs that push you through your toughest workouts. What gets your heart pumping?', 'workout-motivation', '💪', true, '2025-06-12T14:03:56.027Z', false),
+(8, 'Rainy Day Vibes', 'Perfect songs for cozy, contemplative moments when the weather keeps you inside.', 'rainy-day-vibes', '🌧️', true, '2025-06-12T14:03:56.027Z', false),
+(9, 'Songs That Make You Cry', 'Emotional tracks that hit you right in the feels. Warning: tissues may be required.', 'songs-that-make-you-cry', '😭', true, '2025-06-12T14:03:56.027Z', false),
+(10, 'Confidence Boosters', 'Songs that make you feel unstoppable and ready to take on the world.', 'confidence-boosters', '✨', true, '2025-06-12T14:03:56.027Z', false),
+(11, 'Nostalgia Hits', 'Songs that instantly transport you back to simpler times and cherished memories.', 'nostalgia-hits', '📼', true, '2025-06-12T14:03:56.027Z', false),
+(12, 'Favourite Song of the 60s', 'Share the iconic tracks that defined the swinging sixties - from The Beatles to The Rolling Stones', 'favourite-song-60s', '🎭', true, '2025-06-12T15:14:15.336Z', false),
+(13, 'Favourite Song of the 70s', 'The decade of disco, rock, and soul - what''s your ultimate 70s anthem?', 'favourite-song-70s', '🕺', true, '2025-06-12T15:14:15.336Z', false),
+(14, 'Favourite Song of the 80s', 'Neon lights, synthesizers, and unforgettable hooks - pick your definitive 80s classic', 'favourite-song-80s', '🎹', true, '2025-06-12T15:14:15.336Z', false),
+(15, 'Favourite Song of the 90s', 'Grunge, Britpop, and hip-hop evolution - what song captures the 90s spirit for you?', 'favourite-song-90s', '📻', true, '2025-06-12T15:14:15.336Z', false),
+(16, 'Favourite Song of the 2000s', 'The millennium''s biggest hits - from pop-punk to R&B, what defined your 2000s?', 'favourite-song-2000s', '💿', true, '2025-06-12T15:14:15.336Z', false),
+(17, 'Favourite Song of the 2010s', 'The streaming decade - EDM drops, indie hits, and viral sensations', 'favourite-song-2010s', '📱', true, '2025-06-12T15:14:15.336Z', false),
+(18, 'Favourite Song of the 2020s', 'TikTok anthems, pandemic playlists, and the sounds of now', 'favourite-song-2020s', '🎧', true, '2025-06-12T15:14:15.336Z', false),
+(19, 'Madchester Anthem', 'The baggy beats and swagger of Manchester''s legendary music scene - Stone Roses, Happy Mondays and beyond', 'madchester-anthem', '🏭', true, '2025-06-12T15:14:15.336Z', false),
+(20, 'Disco Classics', 'Saturday Night Fever lives on - share the disco tracks that still get everyone on the dancefloor', 'disco-classics', '🕺', true, '2025-06-12T15:14:15.336Z', false),
+(23, 'Favourite Album of All Time', 'The one album you would take to a desert island - share your most treasured complete musical experience', 'favourite-album-all-time', '💿', true, '2025-06-14T06:39:47.384Z', false),
+(24, 'Favourite Lyrics', 'The words that speak to your soul - share songs with lyrics that move, inspire, or perfectly capture how you feel', 'favourite-lyrics', '✍️', true, '2025-06-14T06:39:47.384Z', false),
+(25, 'Acid House Classics', 'The underground UK rave scene that changed everything - from warehouse parties to the Second Summer of Love', 'acid-house-classics', '🏠', true, '2025-06-30T14:58:47.869Z', false),
+(26, 'Berlin Electronic Revolution', 'The electronic sounds that emerged from post-wall Berlin - techno, minimal, and underground club culture', 'berlin-electronic-revolution', '🔊', true, '2025-06-30T14:58:47.869Z', false),
+(27, 'Detroit Techno Pioneers', 'The Belleville Three and the birth of techno - Juan Atkins, Derrick May, Kevin Saunderson and beyond', 'detroit-techno-pioneers', '🏭', true, '2025-06-30T14:58:47.869Z', false);
 
 -- Reset sequence
 SELECT setval('community_lists_id_seq', (SELECT MAX(id) FROM community_lists));
@@ -362,7 +349,7 @@ INSERT INTO game_rooms (id, code, game_type, theme, host_nickname, is_active, cr
 (59, '8BAJY9', 'jam-session', '90s Hip Hop', 'Host', true, '2025-07-05T16:53:53.556Z', NULL),
 (60, 'V151RL', 'soundtrack', '90s hip hop', 'Host', true, '2025-07-05T16:54:30.289Z', NULL),
 (61, 'Q1MAM9', 'jam-session', '90s hip hop', 'Host', true, '2025-07-05T16:54:56.150Z', NULL),
-(62, 'JCIKVL', 'jam-sessions', 'Sunday morning chillers', 'Host', true, '2025-07-06T11:10:01.650Z', NULL),
+(62, 'JCIKVL', 'jam-sessions', 'Sunday morning chillers', 'Host', true, '2025-07-06T11:10:01.650Z', '38691277'),
 (63, 'UT9O9N', 'jam-sessions', 'Road trip', 'Host', true, '2025-07-06T11:10:30.143Z', NULL),
 (64, 'NAM492', 'jam-sessions', 'Sunday morning chillers', 'Host', true, '2025-07-06T11:13:23.416Z', NULL),
 (65, '68KUI8', 'jam-sessions', 'Test Game for Dashboard', 'TestHost', true, '2025-07-06T11:16:55.426Z', NULL),

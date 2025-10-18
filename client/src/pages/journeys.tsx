@@ -176,10 +176,10 @@ export default function JourneysPage() {
                           <span>Immersive</span>
                         </div>
                       </div>
-                      
-                      <Link href={`/journeys/${journey.slug}`}>
-                        <Button 
-                          size="sm" 
+
+                      <Link href={`/discover/journeys/${journey.slug}`}>
+                        <Button
+                          size="sm"
                           className={`bg-gradient-to-r ${getMovementColor(journey.slug)} text-white border-0 hover:scale-105 transition-transform duration-200`}
                         >
                           <Play className="w-4 h-4 mr-2" />

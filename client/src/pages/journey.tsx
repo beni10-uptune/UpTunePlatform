@@ -69,10 +69,10 @@ export default function JourneyPage() {
   // Mutations for interactions
   const pollVoteMutation = useMutation({
     mutationFn: async (vote: { pollId: string; option: string; guestSessionId: string }) => {
-      const response = await fetch('/api/poll-votes', {
+      const response = await fetch(`/api/polls/${vote.pollId}/vote`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(vote),
+        body: JSON.stringify({ option: vote.option, guestSessionId: vote.guestSessionId }),
       });
       return response.json();
     },
@@ -159,7 +159,7 @@ export default function JourneyPage() {
             JOURNEY NOT FOUND
           </h1>
           <p className="text-black/80 font-bold mb-8 text-xl">The musical journey you're looking for doesn't exist. 😞</p>
-          <Link href="/journeys">
+          <Link href="/discover">
             <Button size="lg" className="bg-cyan-400 hover:bg-cyan-500 text-black font-black border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] px-8 py-4" style={{ fontFamily: "'Arial Black', sans-serif" }}>
               <ArrowLeft className="w-5 h-5 mr-2" />
               BACK TO JOURNEYS
@@ -182,7 +182,7 @@ export default function JourneyPage() {
             CONTENT ERROR
           </h1>
           <p className="text-black/80 font-bold mb-8 text-xl">There was an error loading this journey's content. 😞</p>
-          <Link href="/journeys">
+          <Link href="/discover">
             <Button size="lg" className="bg-cyan-400 hover:bg-cyan-500 text-black font-black border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] px-8 py-4" style={{ fontFamily: "'Arial Black', sans-serif" }}>
               <ArrowLeft className="w-5 h-5 mr-2" />
               BACK TO JOURNEYS
@@ -202,7 +202,7 @@ export default function JourneyPage() {
       >
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/journeys">
+            <Link href="/discover">
               <Button size="sm" className="bg-cyan-400 hover:bg-cyan-500 text-black font-bold border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back
@@ -314,15 +314,14 @@ export default function JourneyPage() {
             <TabsTrigger
               value="playlist"
               className={`font-black border-3 border-black transition-all ${
-                activeFilter === 'playlist'
+                activeTab === 'playlist'
                   ? 'bg-gradient-to-r from-green-400 to-cyan-400 text-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]'
                   : 'bg-cyan-200 text-black hover:bg-cyan-300'
               }`}
               style={{ fontFamily: "'Arial Black', sans-serif" }}
             >
               🎵 PLAYLIST
-            </TabsTrigger>
-            <TabsTrigger
+            </TabsTrigger>            <TabsTrigger
               value="gallery"
               className={`font-black border-3 border-black transition-all ${
                 activeTab === 'gallery'
@@ -564,7 +563,7 @@ export default function JourneyPage() {
                     </div>
                   </div>
                   {communityList && (
-                    <Link href={`/community-lists/${communityList.slug}`}>
+                    <Link href={`/discover/lists/${communityList.slug}`}>
                       <Button variant="outline" className="border-purple-400 text-purple-400 hover:bg-purple-400 hover:text-black">
                         View Full List
                         <ExternalLink className="w-4 h-4 ml-2" />
@@ -615,7 +614,7 @@ export default function JourneyPage() {
                   <div className="text-center py-8">
                     <p className="text-white/70 mb-4">No community submissions yet</p>
                     {communityList && (
-                      <Link href={`/community-lists/${communityList.slug}`}>
+                      <Link href={`/discover/lists/${communityList.slug}`}>
                         <Button className="bg-purple-600 hover:bg-purple-700">
                           Be the first to contribute!
                         </Button>
