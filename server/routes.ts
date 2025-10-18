@@ -17,13 +17,24 @@ import {
 } from "@shared/schema";
 import { sendTeamContactEmail } from "./email";
 import { analyzePlaylist, enhanceStory, generateSongRecommendations, suggestGameMode, generateAiHostQuestion, generateSongSuggestionsFromResponse } from "./ai";
+import {
+  spotifyLimiter,
+  aiLimiter,
+  authLimiter,
+  contactLimiter,
+  mutationLimiter,
+  generalLimiter
+} from "./middleware/rateLimiter";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
 
+  // Apply general rate limiting to all API routes
+  app.use('/api/', generalLimiter);
+
   // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+  app.get('/api/auth/user', authLimiter, isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
@@ -35,7 +46,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Game Rooms
-  app.post("/api/game-rooms", async (req: any, res) => {
+  app.post("/api/game-rooms", mutationLimiter, async (req: any, res) => {
     try {
       const gameRoomData = insertGameRoomSchema.parse(req.body);
       
@@ -89,7 +100,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Players
-  app.post("/api/players", async (req, res) => {
+  app.post("/api/players", mutationLimiter, async (req, res) => {
     try {
       const playerData = insertPlayerSchema.parse(req.body);
       const player = await storage.addPlayer(playerData);
@@ -110,7 +121,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Songs
-  app.post("/api/songs", async (req, res) => {
+  app.post("/api/songs", mutationLimiter, async (req, res) => {
     try {
       const songData = insertSongSchema.parse(req.body);
       const song = await storage.addSong(songData);
@@ -142,7 +153,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Spotify API endpoints
-  app.get("/api/spotify/search", async (req, res) => {
+  app.get("/api/spotify/search", spotifyLimiter, async (req, res) => {
     try {
       const query = req.query.q as string;
       if (!query) {
@@ -160,7 +171,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/spotify/search-albums", async (req, res) => {
+  app.get("/api/spotify/search-albums", spotifyLimiter, async (req, res) => {
     try {
       const query = req.query.q as string;
       if (!query) {
@@ -178,7 +189,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/spotify/track/:id", async (req, res) => {
+  app.get("/api/spotify/track/:id", spotifyLimiter, async (req, res) => {
     try {
       const { spotifyService } = await import("./spotify");
       const track = await spotifyService.getTrack(req.params.id);
@@ -195,7 +206,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Spotify OAuth endpoints
-  app.get("/api/spotify/auth", async (req, res) => {
+  app.get("/api/spotify/auth", authLimiter, async (req, res) => {
     try {
       const { spotifyService } = await import("./spotify");
       
@@ -224,7 +235,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/spotify/callback", async (req, res) => {
+  app.get("/api/spotify/callback", authLimiter, async (req, res) => {
     try {
       const { code, state } = req.query;
       
@@ -323,7 +334,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Teams contact form
-  app.post("/api/teams/contact", async (req, res) => {
+  app.post("/api/teams/contact", contactLimiter, async (req, res) => {
     try {
       const { companyName, contactName, email, phone, teamSize, message } = req.body;
       
@@ -352,7 +363,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // AI-powered features
-  app.post("/api/ai/analyze-playlist", async (req, res) => {
+  app.post("/api/ai/analyze-playlist", aiLimiter, async (req, res) => {
     try {
       const { gameRoomId } = req.body;
       const songs = await storage.getSongsByGameRoom(gameRoomId);
@@ -380,7 +391,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/ai/enhance-story", async (req, res) => {
+  app.post("/api/ai/enhance-story", aiLimiter, async (req, res) => {
     try {
       const { song, currentStory } = req.body;
       
@@ -397,7 +408,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // AI Host Game Mode Routes
-  app.post("/api/ai/host-question", async (req, res) => {
+  app.post("/api/ai/host-question", aiLimiter, async (req, res) => {
     try {
       const { gameRoomId, playerId } = req.body;
       
@@ -443,7 +454,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/ai/host-response", async (req, res) => {
+  app.post("/api/ai/host-response", aiLimiter, async (req, res) => {
     try {
       const { gameRoomId, playerId, response, conversationId } = req.body;
       
@@ -507,7 +518,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/ai/song-recommendations", async (req, res) => {
+  app.post("/api/ai/song-recommendations", aiLimiter, async (req, res) => {
     try {
       const { gameRoomId, gameType } = req.body;
       const songs = await storage.getSongsByGameRoom(gameRoomId);
@@ -527,7 +538,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/ai/suggest-game", async (req, res) => {
+  app.post("/api/ai/suggest-game", aiLimiter, async (req, res) => {
     try {
       const { playerCount, context } = req.body;
       const suggestion = await suggestGameMode(playerCount, context);
