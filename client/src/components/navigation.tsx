@@ -1,6 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Home, Users, Music, Trophy, Menu, X, BookOpen } from "lucide-react";
+import { Compass, BookOpen, Users, Gamepad2, User, Menu, X } from "lucide-react";
 import { useState } from "react";
 
 interface NavigationProps {
@@ -13,11 +13,9 @@ export function Navigation({ variant = "header", className = "" }: NavigationPro
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navItems = [
-    { href: "/", label: "Home", icon: Home },
-    { href: "/journeys", label: "Musical Journeys", icon: Music },
-    { href: "/community-lists", label: "Community Playlists", icon: Users },
-    { href: "/blog", label: "Blog", icon: BookOpen },
-    { href: "/teams", label: "Teams", icon: Trophy },
+    { href: "/discover", label: "Discover", icon: Compass },
+    { href: "/play", label: "Play Together", icon: Gamepad2 },
+    { href: "/you", label: "You", icon: User },
   ];
 
   const isActive = (href: string) => {
@@ -28,16 +26,16 @@ export function Navigation({ variant = "header", className = "" }: NavigationPro
   if (variant === "minimal") {
     return (
       <div className={`flex items-center gap-2 ${className}`}>
-        <Link href="/">
+        <Link href="/discover">
           <Button variant="ghost" size="sm" className="text-white hover:bg-white/20">
-            <Home className="w-4 h-4 mr-1" />
-            Home
+            <Compass className="w-4 h-4 mr-1" />
+            Discover
           </Button>
         </Link>
-        <Link href="/teams">
+        <Link href="/play">
           <Button variant="ghost" size="sm" className="text-white hover:bg-white/20">
-            <Users className="w-4 h-4 mr-1" />
-            Teams
+            <Gamepad2 className="w-4 h-4 mr-1" />
+            Play
           </Button>
         </Link>
       </div>

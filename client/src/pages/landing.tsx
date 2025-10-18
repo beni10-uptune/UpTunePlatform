@@ -167,6 +167,18 @@ export default function LandingPage() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center"
             >
+              <Link href="/discover">
+                <Button
+                  size="lg"
+                  className="bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 font-black text-xl px-10 py-8 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-4px] hover:translate-y-[-4px] transition-all -rotate-1 w-full sm:w-auto"
+                  style={{ fontFamily: "'Arial Black', sans-serif" }}
+                >
+                  <Compass className="w-6 h-6 mr-3" />
+                  <span className="truncate">DISCOVER MUSIC</span>
+                  <ArrowRight className="w-6 h-6 ml-3" />
+                </Button>
+              </Link>
+
               <Dialog open={showThemeDialog} onOpenChange={setShowThemeDialog}>
                 <DialogTrigger asChild>
                   <Button
@@ -181,7 +193,7 @@ export default function LandingPage() {
                     }}
                   >
                     <Play className="w-6 h-6 mr-3" />
-                    <span className="truncate">START PLAYING</span>
+                    <span className="truncate">PLAY TOGETHER</span>
                   </Button>
                 </DialogTrigger>
               </Dialog>
@@ -190,7 +202,7 @@ export default function LandingPage() {
                 <DialogTrigger asChild>
                   <Button
                     size="lg"
-                    className="bg-cyan-400 text-black hover:bg-cyan-500 font-black text-xl px-10 py-8 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-4px] hover:translate-y-[-4px] transition-all -rotate-1 w-full sm:w-auto"
+                    className="bg-cyan-400 text-black hover:bg-cyan-500 font-black text-xl px-10 py-8 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-4px] hover:translate-y-[-4px] transition-all rotate-2 w-full sm:w-auto"
                     style={{ fontFamily: "'Arial Black', sans-serif" }}
                   >
                     <Users className="w-6 h-6 mr-3" />

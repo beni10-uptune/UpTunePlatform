@@ -36,34 +36,40 @@ function Router() {
       <UniversalHeader />
       <Switch>
         <Route path="/" component={LandingPage} />
-        <Route path="/games" component={GameMenu} />
-        <Route path="/game/:gameType" component={GameRoom} />
-        <Route path="/room/:code" component={GameRoom} />
-        <Route path="/dashboard" component={Dashboard} />
-        <Route path="/have-your-say" component={TeamsWaitlist} />
-        <Route path="/teams" component={TeamsWaitlist} />
-        <Route path="/groups" component={GroupsPage} />
-        <Route path="/groups/:category" component={GroupsPage} />
 
-        {/* Design Preview */}
-        <Route path="/design-preview" component={DesignPreview} />
-
-        {/* Discover Hub - unified experience */}
+        {/* Main Navigation Routes */}
         <Route path="/discover" component={DiscoverPage} />
+        <Route path="/play" component={GameMenu} />
+        <Route path="/you" component={Dashboard} />
+
+        {/* Detail Pages */}
         <Route path="/discover/journeys/:slug" component={JourneyPage} />
         <Route path="/discover/lists/:slug" component={CommunityListDetail} />
 
-        {/* Dedicated Journeys Pillar Page */}
+        {/* Game Routes */}
+        <Route path="/game/:gameType" component={GameRoom} />
+        <Route path="/room/:code" component={GameRoom} />
+
+        {/* Dedicated Pillar Pages (accessible but not in main nav) */}
         <Route path="/journeys" component={JourneysPage} />
 
-        {/* Legacy routes - redirect to new Discover structure */}
+        {/* Other Pages */}
+        <Route path="/blog" component={Blog} />
+        <Route path="/blog/:slug" component={BlogPost} />
+        <Route path="/dashboard" component={Dashboard} />
+        <Route path="/groups" component={GroupsPage} />
+        <Route path="/groups/:category" component={GroupsPage} />
+        <Route path="/have-your-say" component={TeamsWaitlist} />
+        <Route path="/teams" component={TeamsWaitlist} />
+        <Route path="/design-preview" component={DesignPreview} />
+
+        {/* Legacy/Redirect Routes */}
+        <Route path="/games" component={() => <Redirect to="/play" />} />
         <Route path="/community-lists" component={() => <Redirect to="/discover" />} />
         <Route path="/community-lists/:slug" component={({ params }) => <Redirect to={`/discover/lists/${params.slug}`} />} />
         <Route path="/musicaljourneys" component={() => <Redirect to="/discover" />} />
         <Route path="/journeys/:slug" component={({ params }) => <Redirect to={`/discover/journeys/${params.slug}`} />} />
 
-        <Route path="/blog" component={Blog} />
-        <Route path="/blog/:slug" component={BlogPost} />
         <Route component={NotFound} />
       </Switch>
     </>
