@@ -42,13 +42,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // If user is authenticated, save the game room to their account
       if (req.user && req.user.claims && req.user.claims.sub) {
         gameRoomData.userId = req.user.claims.sub;
-        console.log(`🎮 Linking game room to user: ${req.user.claims.sub}`);
-      } else {
-        console.log(`🎮 Creating anonymous game room (no user session)`);
       }
-      
+
       const gameRoom = await storage.createGameRoom(gameRoomData);
-      console.log(`🎮 Game room created: ${gameRoom.code} (ID: ${gameRoom.id})`);
       res.json(gameRoom);
     } catch (error: any) {
       console.error("Game room creation error:", error);
@@ -84,9 +80,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/user/game-rooms", isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
-      console.log(`📊 Fetching game rooms for user: ${userId}`);
       const games = await storage.getUserGameRooms(userId);
-      console.log(`📊 Found ${games.length} game rooms for user ${userId}`);
       res.json(games);
     } catch (error) {
       console.error("Error fetching user game rooms:", error);
@@ -585,8 +579,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/community-lists/:listId/entries", async (req, res) => {
     try {
       const listId = parseInt(req.params.listId);
-      console.log("Submission data:", req.body);
-      
+
       const entryData = insertListEntrySchema.parse({
         ...req.body,
         listId,
