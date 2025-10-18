@@ -3,7 +3,11 @@ import express, { type Request, Response, NextFunction } from "express";
 import session from "express-session";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { initSentry, Sentry } from "./sentry";
 // import { challengeManager } from "./weekly-challenge-manager.js";
+
+// Initialize Sentry error monitoring
+initSentry();
 
 declare module 'express-session' {
   interface SessionData {
@@ -62,6 +66,9 @@ app.use((req, res, next) => {
   // await challengeManager.initialize();
   
   const server = await registerRoutes(app);
+
+  // Sentry error handling middleware (must be before other error handlers)
+  app.use(Sentry.Handlers.errorHandler());
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
