@@ -105,7 +105,7 @@ export function CommunityListsPreview() {
           <p className="text-black/80 font-bold mb-6 text-lg">
             Be the first to create viral music lists and get the community voting! 🎵
           </p>
-          <Link href="/community-lists">
+          <Link href="/discover/lists">
             <Button className="bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] px-6 py-3" style={{ fontFamily: "'Arial Black', sans-serif" }}>
               CREATE FIRST LIST
             </Button>
@@ -220,7 +220,7 @@ export function CommunityListsPreview() {
                         ))}
                       </div>
 
-                      <Link href={`/community-lists/${list.slug}`}>
+                      <Link href={`/discover/lists/${list.slug}`}>
                         <Button className="w-full mt-4 bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 transition-all duration-200 py-4 font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px]" style={{ fontFamily: "'Arial Black', sans-serif" }}>
                           <Vote className="w-5 h-5 mr-2" />
                           VOTE & SUBMIT SONGS
@@ -232,7 +232,7 @@ export function CommunityListsPreview() {
                     <div className="text-center py-8">
                       <div className="text-4xl mb-4 p-4 bg-yellow-300 border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] inline-block">🎵</div>
                       <p className="text-base text-black/80 font-bold mb-6">No songs yet - be the first! 🎸</p>
-                      <Link href={`/community-lists/${list.slug}`}>
+                      <Link href={`/discover/lists/${list.slug}`}>
                         <Button className="bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 px-6 py-3 font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] transition-all" style={{ fontFamily: "'Arial Black', sans-serif" }}>
                           SUBMIT FIRST SONG
                         </Button>
@@ -263,7 +263,7 @@ export function CommunityListsPreview() {
               </p>
               <p className="text-black/70 font-bold text-sm mt-2">Join thousands creating the ultimate playlists</p>
             </div>
-            <Link href="/community-lists">
+            <Link href="/discover/lists">
               <Button className="bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 px-8 py-4 text-lg font-black border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-4px] hover:translate-y-[-4px] transition-all" style={{ fontFamily: "'Arial Black', sans-serif" }}>
                 <TrendingUp className="w-5 h-5 mr-3" />
                 EXPLORE ALL PLAYLISTS

@@ -90,7 +90,7 @@ export function FeaturedMusicalJourney() {
                 <Sparkles className="w-4 h-4 mr-2" />
                 FEATURED JOURNEY
               </Badge>
-              <Link href="/journeys">
+              <Link href="/discover">
                 <Button size="sm" className="bg-cyan-400 hover:bg-cyan-500 text-black font-bold border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
                   View All Journeys
                   <ExternalLink className="w-4 h-4 ml-2" />
@@ -187,7 +187,7 @@ export function FeaturedMusicalJourney() {
 
             {/* Call to Action */}
             <div className="text-center">
-              <Link href={`/journeys/${featuredJourney.slug}`}>
+              <Link href={`/discover/journeys/${featuredJourney.slug}`}>
                 <Button
                   size="lg"
                   className="bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 font-black px-8 py-4 text-lg border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[10px_10px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-4px] hover:translate-y-[-4px] transition-all"

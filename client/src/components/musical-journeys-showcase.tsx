@@ -1,39 +1,48 @@
 import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
-import { 
-  Compass, 
-  Music2, 
+import { useQuery } from "@tanstack/react-query";
+import {
+  Compass,
+  Music2,
   ArrowRight
 } from "lucide-react";
-
-// Import background images
-import madchesterImage from '@assets/stock_images/warehouse_nightclub__fd5e9db1.jpg';
-import acidHouseImage from '@assets/stock_images/acid_house_rave_part_25aac533.jpg';
-import detroitTechnoImage from '@assets/stock_images/detroit_skyline_with_5e6d435b.jpg';
-
-const featuredJourneys = [
-  {
-    title: "Madchester",
-    subtitle: "When Factory Records ruled the world",
-    gradient: "from-purple-600 to-pink-600",
-    image: madchesterImage
-  },
-  {
-    title: "Acid House", 
-    subtitle: "The second summer of love",
-    gradient: "from-yellow-600 to-orange-600",
-    image: acidHouseImage
-  },
-  {
-    title: "Detroit Techno",
-    subtitle: "From the motor city to global dancefloors",
-    gradient: "from-blue-600 to-purple-600",
-    image: detroitTechnoImage
-  }
-];
+import type { Journey } from "@shared/schema";
 
 export function MusicalJourneysShowcase() {
+  const { data: journeys = [], isLoading } = useQuery<Journey[]>({
+    queryKey: ['/api/journeys'],
+    queryFn: async () => {
+      const response = await fetch('/api/journeys?published=true');
+      if (!response.ok) throw new Error('Failed to fetch journeys');
+      return response.json();
+    },
+  });
+
+  // Take first 3 journeys for showcase
+  const featuredJourneys = journeys.slice(0, 3);
+
+  const getGradient = (slug: string) => {
+    if (slug.includes('madchester')) return "from-purple-600 to-pink-600";
+    if (slug.includes('acid')) return "from-yellow-600 to-orange-600";
+    if (slug.includes('detroit')) return "from-blue-600 to-purple-600";
+    if (slug.includes('disco')) return "from-pink-600 to-purple-600";
+    if (slug.includes('berlin')) return "from-blue-600 to-cyan-600";
+    return "from-purple-600 to-indigo-600";
+  };
+
+  if (isLoading) {
+    return (
+      <div className="w-full text-center py-12">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+          className="w-16 h-16 border-4 border-black rounded-full mx-auto mb-4 bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"
+        />
+        <p className="text-black text-lg font-bold">Loading journeys...</p>
+      </div>
+    );
+  }
   return (
     <div className="w-full">
       {/* Main Hero Section */}
@@ -78,7 +87,7 @@ export function MusicalJourneysShowcase() {
 
         <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {featuredJourneys.map((journey, index) => (
-            <Link key={journey.title} href={`/journeys/${journey.title.toLowerCase().replace(/\s+/g, '-')}`}>
+            <Link key={journey.id} href={`/discover/journeys/${journey.slug}`}>
               <motion.div
                 whileHover={{ scale: 1.05, rotate: 0 }}
                 whileTap={{ scale: 0.98 }}
@@ -87,17 +96,17 @@ export function MusicalJourneysShowcase() {
                 {/* Background Image */}
                 <div
                   className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                  style={{ backgroundImage: `url(${journey.image})` }}
+                  style={{ backgroundImage: `url(${journey.headlineImageUrl})` }}
                 />
                 {/* Gradient Overlay */}
-                <div className={`absolute inset-0 bg-gradient-to-r ${journey.gradient} opacity-70 group-hover:opacity-80 transition-opacity`} />
+                <div className={`absolute inset-0 bg-gradient-to-r ${getGradient(journey.slug)} opacity-70 group-hover:opacity-80 transition-opacity`} />
                 {/* Content */}
                 <div className="relative bg-black/40 backdrop-blur-sm p-6 text-center h-full flex flex-col justify-center border-4 border-white/20">
                   <h4 className="font-black text-white text-2xl mb-2" style={{ fontFamily: "'Arial Black', sans-serif", textTransform: 'uppercase', textShadow: '3px 3px 0px rgba(0,0,0,0.5)' }}>
-                    {journey.title}
+                    {journey.title.split(' - ')[0]}
                   </h4>
                   <p className="text-white font-bold text-sm" style={{ textShadow: '2px 2px 0px rgba(0,0,0,0.5)' }}>
-                    {journey.subtitle}
+                    {journey.title.split(' - ')[1] || journey.introduction.substring(0, 50) + '...'}
                   </p>
                 </div>
               </motion.div>

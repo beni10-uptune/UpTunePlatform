@@ -206,7 +206,7 @@ export function InteractiveDemo() {
             className="mt-6 text-center"
           >
             <p className="text-black font-bold text-lg mb-4">Ready to create your own musical moments? 🎉</p>
-            <Link href="/games">
+            <Link href="/play">
               <Button
                 size="lg"
                 className="bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 font-black border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] px-8 py-4 text-lg transition-all"
