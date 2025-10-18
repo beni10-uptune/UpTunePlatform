@@ -504,8 +504,13 @@ export default function GameRoom() {
 
   if (roomLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
-        <div className="text-white text-xl">Loading room...</div>
+      <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-pink-200 to-cyan-200 flex items-center justify-center">
+        <motion.div
+          animate={{ rotate: 360 }}
+          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+          className="w-16 h-16 border-4 border-black rounded-full bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] mb-4"
+        />
+        <p className="text-black text-xl font-black">Loading room...</p>
       </div>
     );
   }
@@ -595,7 +600,7 @@ export default function GameRoom() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-pink-200 to-cyan-200">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex flex-col gap-4 mb-6 sm:mb-8">
@@ -604,28 +609,28 @@ export default function GameRoom() {
               variant="ghost"
               size="sm"
               onClick={() => setLocation('/')}
-              className="text-white hover:bg-white/10 flex-shrink-0"
+              className="text-black hover:bg-black/10 flex-shrink-0 font-black border-2 border-black"
             >
               <ArrowLeft className="w-4 h-4 mr-1 sm:mr-2" />
-              <span className="hidden xs:inline">Leave</span>
+              <span className="hidden xs:inline">LEAVE</span>
             </Button>
             <div className="flex items-center space-x-2 sm:space-x-3 min-w-0">
-              <Badge variant="secondary" className="text-sm px-2 sm:px-3 py-1 font-mono flex-shrink-0">
+              <Badge className="text-sm px-2 sm:px-3 py-1 font-black flex-shrink-0 bg-yellow-400 text-black border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]" style={{ fontFamily: "'Arial Black', sans-serif" }}>
                 {gameRoom.code}
               </Badge>
               <Button
                 onClick={handleShare}
-                className="bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm px-2 sm:px-3 py-1.5 sm:py-2 text-sm"
+                className="bg-cyan-400 hover:bg-cyan-500 text-black font-black border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] px-2 sm:px-3 py-1.5 sm:py-2 text-sm"
                 size="sm"
               >
                 <Share2 className="w-4 h-4 sm:mr-2" />
-                <span className="hidden sm:inline">Share Room</span>
+                <span className="hidden sm:inline">SHARE ROOM</span>
               </Button>
             </div>
           </div>
-          <div className="text-center sm:text-left">
-            <h1 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-1">{gameConfig.title}</h1>
-            <p className="text-white/70 text-sm sm:text-base">Theme: {gameRoom.theme}</p>
+          <div className="text-center sm:text-left bg-white border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] p-4 -rotate-1">
+            <h1 className="text-lg sm:text-xl lg:text-2xl font-black text-black mb-1" style={{ fontFamily: "'Arial Black', sans-serif" }}>{gameConfig.title.toUpperCase()}</h1>
+            <p className="text-black/70 text-sm sm:text-base font-bold">Theme: {gameRoom.theme}</p>
           </div>
         </div>
 
@@ -659,14 +664,14 @@ export default function GameRoom() {
           {/* Players & Achievements Panel */}
           <div className="lg:order-1 order-2 space-y-6">
             {/* Players */}
-            <Card className="bg-white/10 backdrop-blur-lg border-white/20">
-              <CardHeader>
-                <CardTitle className="flex items-center text-lg">
+            <Card className="bg-gradient-to-br from-cyan-300 to-purple-300 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rotate-1">
+              <CardHeader className="bg-white border-b-4 border-black">
+                <CardTitle className="flex items-center text-lg font-black text-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>
                   <Users className="w-5 h-5 mr-2" />
-                  Players ({(players as Player[]).length})
+                  PLAYERS ({(players as Player[]).length})
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="bg-white">
                 <div className="space-y-2">
                   {(players as Player[]).map((player, index) => {
                     const playerSongs = (songs as Song[]).filter(s => s.playerId === player.id);
@@ -676,10 +681,10 @@ export default function GameRoom() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.1 }}
-                        className={`flex items-center justify-between p-3 rounded-lg transition-all ${
-                          player.id === currentPlayer?.id 
-                            ? 'bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30' 
-                            : 'bg-white/5 hover:bg-white/10'
+                        className={`flex items-center justify-between p-3 border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all ${
+                          player.id === currentPlayer?.id
+                            ? 'bg-gradient-to-r from-purple-300 to-pink-300'
+                            : 'bg-yellow-100 hover:bg-yellow-200'
                         }`}
                       >
                         <div className="flex items-center space-x-3">
@@ -692,20 +697,20 @@ export default function GameRoom() {
                           </motion.span>
                           <div>
                             <div className="flex items-center space-x-2">
-                              <span className="font-medium">{player.nickname}</span>
+                              <span className="font-black text-black">{player.nickname}</span>
                               {player.isHost && (
-                                <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs">
+                                <Badge className="bg-gradient-to-r from-purple-400 to-pink-400 text-white text-xs border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                                   <Crown className="w-3 h-3 mr-1" />
-                                  Host
+                                  HOST
                                 </Badge>
                               )}
                               {player.id === currentPlayer?.id && (
-                                <Badge className="bg-blue-500 text-white text-xs">You</Badge>
+                                <Badge className="bg-cyan-400 text-black text-xs border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">YOU</Badge>
                               )}
                             </div>
                             <div className="flex items-center space-x-1 mt-1">
-                              <Music className="w-3 h-3 text-white/60" />
-                              <span className="text-xs text-white/70">
+                              <Music className="w-3 h-3 text-black/60" />
+                              <span className="text-xs text-black/70 font-bold">
                                 {playerSongs.length} song{playerSongs.length !== 1 ? 's' : ''}
                               </span>
                             </div>
@@ -715,7 +720,7 @@ export default function GameRoom() {
                           <motion.div
                             initial={{ scale: 0 }}
                             animate={{ scale: 1 }}
-                            className="w-8 h-8 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center"
+                            className="w-8 h-8 bg-gradient-to-br from-green-400 to-emerald-500 border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center"
                           >
                             <Trophy className="w-4 h-4 text-white" />
                           </motion.div>
@@ -729,14 +734,14 @@ export default function GameRoom() {
 
             {/* Achievements */}
             {achievements.length > 0 && (
-              <Card className="bg-gradient-to-br from-purple-600/10 to-pink-600/10 backdrop-blur-lg border border-purple-500/30">
-                <CardHeader>
-                  <CardTitle className="flex items-center text-lg text-white">
+              <Card className="bg-gradient-to-br from-pink-300 to-yellow-300 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] -rotate-1">
+                <CardHeader className="bg-white border-b-4 border-black">
+                  <CardTitle className="flex items-center text-lg text-black font-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>
                     <Trophy className="w-5 h-5 mr-2" />
-                    Your Achievements
+                    YOUR ACHIEVEMENTS
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="bg-white">
                   <div className="space-y-2">
                     <AnimatePresence>
                       {achievements.map((achievement, index) => (
@@ -745,20 +750,20 @@ export default function GameRoom() {
                           initial={{ opacity: 0, x: -20, scale: 0.9 }}
                           animate={{ opacity: 1, x: 0, scale: 1 }}
                           transition={{ delay: index * 0.2 }}
-                          className="flex items-center space-x-3 p-2 bg-white/10 rounded-lg"
+                          className="flex items-center space-x-3 p-2 bg-cyan-100 border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)]"
                         >
-                          <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center">
+                          <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 border-2 border-black flex items-center justify-center">
                             <Trophy className="w-4 h-4 text-white" />
                           </div>
                           <div>
-                            <p className="font-medium text-white">
+                            <p className="font-black text-black">
                               {achievement === 'first-song' && 'First Note'}
                               {achievement === 'storyteller' && 'Storyteller'}
                               {achievement === 'desert-master' && 'Desert Island Master'}
                               {achievement === 'pioneer' && 'Playlist Pioneer'}
                               {achievement === 'harmony' && 'Group Harmony'}
                             </p>
-                            <p className="text-xs text-white/70">
+                            <p className="text-xs text-black/70 font-bold">
                               {achievement === 'first-song' && 'Added your first song'}
                               {achievement === 'storyteller' && 'Shared meaningful stories'}
                               {achievement === 'desert-master' && 'Completed your 5 essential songs'}
@@ -775,37 +780,37 @@ export default function GameRoom() {
             )}
 
             {/* Playlist Stats */}
-            <Card className="bg-gradient-to-br from-purple-600/10 to-pink-600/10 backdrop-blur-lg border border-purple-500/30">
-              <CardHeader>
-                <CardTitle className="flex items-center text-lg text-white">
+            <Card className="bg-gradient-to-br from-purple-300 to-cyan-300 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rotate-1">
+              <CardHeader className="bg-white border-b-4 border-black">
+                <CardTitle className="flex items-center text-lg text-black font-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>
                   <Zap className="w-5 h-5 mr-2" />
-                  Playlist Magic
+                  PLAYLIST MAGIC
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="bg-white">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-white/70">Total Songs</span>
-                    <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0">{(songs as Song[]).length}</Badge>
+                    <span className="text-sm text-black/70 font-bold">Total Songs</span>
+                    <Badge className="bg-purple-400 text-white border-3 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">{(songs as Song[]).length}</Badge>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-white/70">Contributors</span>
-                    <Badge className="bg-gradient-to-r from-pink-600 to-purple-600 text-white border-0">
+                    <span className="text-sm text-black/70 font-bold">Contributors</span>
+                    <Badge className="bg-pink-400 text-white border-3 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
                       {new Set((songs as Song[]).map(s => s.playerId)).size}
                     </Badge>
                   </div>
                   <div className="flex items-center justify-between">
-                    <span className="text-sm text-white/70">Your Progress</span>
+                    <span className="text-sm text-black/70 font-bold">Your Progress</span>
                     <div className="flex items-center space-x-2">
-                      <Progress 
-                        value={gameRoom?.gameType === 'desert-island' 
+                      <Progress
+                        value={gameRoom?.gameType === 'desert-island'
                           ? ((songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length / 5) * 100
                           : Math.min(((songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length / 3) * 100, 100)
-                        } 
-                        className="w-16 h-2" 
+                        }
+                        className="w-16 h-2"
                       />
-                      <span className="text-xs text-white/60">
-                        {gameRoom?.gameType === 'desert-island' 
+                      <span className="text-xs text-black/60 font-bold">
+                        {gameRoom?.gameType === 'desert-island'
                           ? `${(songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length}/5`
                           : `${(songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length}`
                         }
@@ -815,23 +820,23 @@ export default function GameRoom() {
                   {(songs as Song[]).length > 0 && (
                     <Button
                       onClick={sharePlaylist}
-                      className="w-full mt-3 viral-button text-white"
+                      className="w-full mt-3 bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 font-black border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all"
                       size="sm"
                     >
                       <Share2 className="w-4 h-4 mr-2" />
-                      Share Your Creation
+                      SHARE YOUR CREATION
                     </Button>
                   )}
-                  
+
                   {(songs as Song[]).length >= 2 && (
                     <Button
                       onClick={() => analyzePlaylistMutation.mutate()}
                       disabled={analyzePlaylistMutation.isPending}
-                      className="w-full mt-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:opacity-90"
+                      className="w-full mt-2 bg-cyan-400 hover:bg-cyan-500 text-black font-black border-3 border-black shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-1px] hover:translate-y-[-1px] transition-all"
                       size="sm"
                     >
                       <Zap className="w-4 h-4 mr-2" />
-                      {analyzePlaylistMutation.isPending ? 'Analyzing...' : 'AI Playlist Insights'}
+                      {analyzePlaylistMutation.isPending ? 'ANALYZING...' : 'AI PLAYLIST INSIGHTS'}
                     </Button>
                   )}
                 </div>
@@ -859,13 +864,14 @@ export default function GameRoom() {
                         }}
                         size="lg"
                         disabled={(songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length >= 5}
-                        className="gradient-bg text-white w-full sm:flex-1 py-4 sm:py-3 text-base sm:text-sm font-semibold disabled:opacity-50 shadow-lg hover:shadow-xl transition-all animate-pulse"
+                        className="bg-gradient-to-r from-green-400 to-teal-400 text-white hover:from-green-500 hover:to-teal-500 w-full sm:flex-1 py-4 sm:py-3 text-base sm:text-sm font-black disabled:opacity-50 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
+                        style={{ fontFamily: "'Arial Black', sans-serif" }}
                       >
                         <Radio className="w-5 h-5 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
                         <span className="truncate">
-                          {(songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length >= 5 
-                            ? 'All 5 Songs Added' 
-                            : `Song ${Math.min((songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length + 1, 5)}/5`}
+                          {(songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length >= 5
+                            ? 'ALL 5 SONGS ADDED'
+                            : `SONG ${Math.min((songs as Song[]).filter(s => s.playerId === currentPlayer?.id).length + 1, 5)}/5`}
                         </span>
                       </Button>
                     ) : gameRoom?.gameType === 'guess-who' ? (
@@ -873,20 +879,21 @@ export default function GameRoom() {
                         <Button
                           onClick={() => setShowAddSong(true)}
                           size="lg"
-                          className="bg-gradient-to-r from-amber-500 to-orange-500 text-white w-full sm:flex-1 py-4 sm:py-3 text-base sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all animate-pulse min-w-0"
+                          className="bg-gradient-to-r from-amber-400 to-orange-400 text-white hover:from-amber-500 hover:to-orange-500 w-full sm:flex-1 py-4 sm:py-3 text-base sm:text-sm font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all min-w-0"
+                          style={{ fontFamily: "'Arial Black', sans-serif" }}
                         >
                           <Plus className="w-5 h-5 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
-                          <span className="truncate">Add Anonymous Song</span>
+                          <span className="truncate">ADD ANONYMOUS SONG</span>
                         </Button>
                         {isHost && (songs as Song[]).length > 0 && (
                           <Button
                             onClick={() => setRevealAllPlayers(true)}
                             size="lg"
-                            variant="outline"
-                            className="border-amber-200 text-amber-700 hover:bg-amber-50 py-4 sm:py-3 text-base sm:text-sm font-semibold min-w-0 px-3 sm:px-4"
+                            className="bg-white hover:bg-gray-100 text-black py-4 sm:py-3 text-base sm:text-sm font-black min-w-0 px-3 sm:px-4 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
+                            style={{ fontFamily: "'Arial Black', sans-serif" }}
                           >
                             <Heart className="w-5 h-5 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
-                            <span className="truncate">Reveal All</span>
+                            <span className="truncate">REVEAL ALL</span>
                           </Button>
                         )}
                       </div>
@@ -894,10 +901,11 @@ export default function GameRoom() {
                       <Button
                         onClick={() => setShowAddSong(true)}
                         size="lg"
-                        className="gradient-bg text-white w-full sm:flex-1 py-4 sm:py-3 text-base sm:text-sm font-semibold shadow-lg hover:shadow-xl transition-all animate-pulse min-w-0"
+                        className="bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 w-full sm:flex-1 py-4 sm:py-3 text-base sm:text-sm font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all min-w-0"
+                        style={{ fontFamily: "'Arial Black', sans-serif" }}
                       >
                         <Plus className="w-5 h-5 sm:w-4 sm:h-4 mr-2 flex-shrink-0" />
-                        <span className="truncate">Add Your Song</span>
+                        <span className="truncate">ADD YOUR SONG</span>
                       </Button>
                     )}
                     {(songs as Song[]).some(song => song.spotifyId) && (
@@ -905,13 +913,14 @@ export default function GameRoom() {
                         onClick={() => createPlaylistMutation.mutate()}
                         disabled={createPlaylistMutation.isPending}
                         size="sm"
-                        className="bg-green-600 hover:bg-green-700 text-white flex-1 sm:flex-none min-w-0 px-3 py-2"
+                        className="bg-green-400 hover:bg-green-500 text-black flex-1 sm:flex-none min-w-0 px-3 py-2 font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
+                        style={{ fontFamily: "'Arial Black', sans-serif" }}
                       >
                         <svg className="w-4 h-4 mr-2 flex-shrink-0" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.84-.179-.84-.66 0-.36.24-.66.54-.779 4.56-1.021 8.52-.6 11.64 1.32.36.18.479.66.241 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.32 11.28-1.08 15.721 1.621.539.3.719 1.02.42 1.56-.299.421-1.02.599-1.559.3z"/>
                         </svg>
                         <span className="truncate">
-                          {createPlaylistMutation.isPending ? 'Creating...' : 'Create in Spotify'}
+                          {createPlaylistMutation.isPending ? 'CREATING...' : 'CREATE IN SPOTIFY'}
                         </span>
                       </Button>
                     )}
@@ -940,10 +949,11 @@ export default function GameRoom() {
                         <Button
                           onClick={() => setShowAddSong(true)}
                           size="lg"
-                          className="gradient-bg text-white shadow-lg hover:shadow-xl transition-all animate-pulse"
+                          className="bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
+                          style={{ fontFamily: "'Arial Black', sans-serif" }}
                         >
                           <Plus className="w-5 h-5 mr-2" />
-                          Add First Song
+                          ADD FIRST SONG
                         </Button>
                       </>
                     )}
@@ -1215,16 +1225,18 @@ export default function GameRoom() {
                 <Button
                   variant="outline"
                   onClick={() => setShowAddSong(false)}
-                  className="w-full sm:flex-1 py-3 text-base sm:text-sm"
+                  className="w-full sm:flex-1 py-3 text-base sm:text-sm bg-white hover:bg-gray-100 text-black border-4 border-black font-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
+                  style={{ fontFamily: "'Arial Black', sans-serif" }}
                 >
-                  Cancel
+                  CANCEL
                 </Button>
                 <Button
                   onClick={handleAddSong}
                   disabled={!selectedSong || addSongMutation.isPending}
-                  className="w-full sm:flex-1 gradient-bg text-white py-3 text-base sm:text-sm font-semibold"
+                  className="w-full sm:flex-1 bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 py-3 text-base sm:text-sm font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
+                  style={{ fontFamily: "'Arial Black', sans-serif" }}
                 >
-                  {addSongMutation.isPending ? 'Adding...' : 'Add Song'}
+                  {addSongMutation.isPending ? 'ADDING...' : 'ADD SONG'}
                 </Button>
               </div>
               </div>
@@ -1317,17 +1329,18 @@ export default function GameRoom() {
                   <Button
                     onClick={() => getRecommendationsMutation.mutate()}
                     disabled={getRecommendationsMutation.isPending}
-                    variant="outline"
-                    className="flex-1"
+                    className="flex-1 bg-white hover:bg-gray-100 text-black border-4 border-black font-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
+                    style={{ fontFamily: "'Arial Black', sans-serif" }}
                   >
                     <Sparkles className="w-4 h-4 mr-2" />
-                    {getRecommendationsMutation.isPending ? 'Finding...' : 'Get More Suggestions'}
+                    {getRecommendationsMutation.isPending ? 'FINDING...' : 'GET MORE SUGGESTIONS'}
                   </Button>
                   <Button
                     onClick={() => setShowAiInsights(false)}
-                    className="flex-1 gradient-bg text-white"
+                    className="flex-1 bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 border-4 border-black font-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
+                    style={{ fontFamily: "'Arial Black', sans-serif" }}
                   >
-                    Close
+                    CLOSE
                   </Button>
                 </div>
               </div>

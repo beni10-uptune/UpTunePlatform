@@ -223,15 +223,15 @@ const GameMenu = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            <Card className="game-card p-8 text-center">
-              <CardHeader>
-                <CardTitle className="text-2xl">Quick Start</CardTitle>
-                <CardDescription className="text-base">
+            <Card className="bg-gradient-to-br from-yellow-300 to-cyan-300 border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] rotate-1 p-8 text-center">
+              <CardHeader className="bg-white border-4 border-black mb-6 pb-6">
+                <CardTitle className="text-3xl font-black text-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>QUICK START</CardTitle>
+                <CardDescription className="text-base text-black/80 font-bold mt-2">
                   Want to jump right in? Enter your nickname and we'll match you with the perfect game.
                 </CardDescription>
               </CardHeader>
-              
-              <CardContent>
+
+              <CardContent className="bg-white border-4 border-black p-6">
                 <div className="max-w-md mx-auto flex gap-3">
                   <Input
                     type="text"
@@ -239,14 +239,15 @@ const GameMenu = () => {
                     value={nickname}
                     onChange={(e) => setNickname(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleQuickStart()}
-                    className="flex-1"
+                    className="flex-1 bg-white border-4 border-black text-black placeholder:text-black/40 font-bold shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
                   />
-                  <Button 
+                  <Button
                     onClick={handleQuickStart}
                     disabled={!nickname.trim()}
-                    className="gradient-bg text-white hover:opacity-90 transition-opacity whitespace-nowrap"
+                    className="bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all whitespace-nowrap"
+                    style={{ fontFamily: "'Arial Black', sans-serif" }}
                   >
-                    Let's Go!
+                    LET'S GO!
                   </Button>
                 </div>
               </CardContent>

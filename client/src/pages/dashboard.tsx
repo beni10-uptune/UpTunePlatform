@@ -50,8 +50,8 @@ export default function Dashboard() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-16 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-400"></div>
+      <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-pink-200 to-cyan-200 pt-16 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-black bg-white shadow-[8px_8px_0px_0px_rgba(0,0,0,1)]"></div>
       </div>
     );
   }
@@ -61,7 +61,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 pt-16">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-200 via-pink-200 to-cyan-200 pt-16">
       <div className="max-w-6xl mx-auto px-4 py-8">
         {/* Welcome Header */}
         <motion.div
@@ -72,21 +72,21 @@ export default function Dashboard() {
         >
           <div className="flex items-center gap-4 mb-6">
             {user?.profileImageUrl ? (
-              <img 
-                src={user.profileImageUrl} 
-                alt="Profile" 
-                className="w-16 h-16 rounded-full object-cover border-2 border-purple-400"
+              <img
+                src={user.profileImageUrl}
+                alt="Profile"
+                className="w-16 h-16 rounded-full object-cover border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"
               />
             ) : (
-              <div className="w-16 h-16 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 flex items-center justify-center">
+              <div className="w-16 h-16 rounded-full bg-gradient-to-r from-purple-400 to-pink-400 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex items-center justify-center">
                 <Users className="w-8 h-8 text-white" />
               </div>
             )}
             <div>
-              <h1 className="text-3xl font-bold text-white">
+              <h1 className="text-3xl font-black text-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>
                 Welcome back, {user?.firstName || user?.email?.split('@')[0] || 'Music Lover'}!
               </h1>
-              <p className="text-white/70">Your musical journey continues here</p>
+              <p className="text-black/70 font-bold">Your musical journey continues here</p>
             </div>
           </div>
         </motion.div>
@@ -99,36 +99,37 @@ export default function Dashboard() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="lg:col-span-1"
           >
-            <Card className="bg-gradient-to-br from-slate-900/80 via-purple-900/80 to-slate-900/80 backdrop-blur-xl border border-white/20">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white">
-                  <Play className="w-5 h-5 text-purple-400" />
-                  Quick Actions
+            <Card className="bg-gradient-to-br from-cyan-300 to-purple-300 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rotate-1">
+              <CardHeader className="bg-white border-b-4 border-black">
+                <CardTitle className="flex items-center gap-2 text-black font-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+                  <Play className="w-5 h-5 text-black" />
+                  QUICK ACTIONS
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-3">
-                <Button 
-                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700"
+              <CardContent className="bg-white space-y-3 pt-6">
+                <Button
+                  className="w-full bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
                   onClick={() => setLocation('/')}
+                  style={{ fontFamily: "'Arial Black', sans-serif" }}
                 >
                   <Play className="w-4 h-4 mr-2" />
-                  Start New Game
+                  START NEW GAME
                 </Button>
-                <Button 
-                  variant="outline" 
-                  className="w-full border-white/20 text-white hover:bg-white/10"
-                  onClick={() => setLocation('/journeys')}
+                <Button
+                  className="w-full bg-cyan-300 hover:bg-cyan-400 text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
+                  onClick={() => setLocation('/discover')}
+                  style={{ fontFamily: "'Arial Black', sans-serif" }}
                 >
                   <Music className="w-4 h-4 mr-2" />
-                  Explore Journeys
+                  EXPLORE JOURNEYS
                 </Button>
-                <Button 
-                  variant="outline" 
-                  className="w-full border-white/20 text-white hover:bg-white/10"
-                  onClick={() => setLocation('/community-lists')}
+                <Button
+                  className="w-full bg-yellow-300 hover:bg-yellow-400 text-black font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
+                  onClick={() => setLocation('/discover/lists')}
+                  style={{ fontFamily: "'Arial Black', sans-serif" }}
                 >
                   <Trophy className="w-4 h-4 mr-2" />
-                  Have Your Say
+                  HAVE YOUR SAY
                 </Button>
               </CardContent>
             </Card>
@@ -141,18 +142,18 @@ export default function Dashboard() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="lg:col-span-2"
           >
-            <Card className="bg-gradient-to-br from-slate-900/80 via-purple-900/80 to-slate-900/80 backdrop-blur-xl border border-white/20">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-white">
-                  <Users className="w-5 h-5 text-purple-400" />
-                  Your Game Rooms
+            <Card className="bg-gradient-to-br from-pink-300 to-yellow-300 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] -rotate-1">
+              <CardHeader className="bg-white border-b-4 border-black">
+                <CardTitle className="flex items-center gap-2 text-black font-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+                  <Users className="w-5 h-5 text-black" />
+                  YOUR GAME ROOMS
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="bg-white pt-6">
                 {isLoadingRooms ? (
                   <div className="flex items-center justify-center py-8">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-purple-400"></div>
-                    <span className="ml-3 text-white/80">Loading your games...</span>
+                    <div className="animate-spin rounded-full h-6 w-6 border-4 border-black bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]"></div>
+                    <span className="ml-3 text-black/80 font-bold">Loading your games...</span>
                   </div>
                 ) : Array.isArray(gameRooms) && gameRooms.length > 0 ? (
                   <div className="space-y-4">
@@ -162,44 +163,43 @@ export default function Dashboard() {
                         initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.4, delay: index * 0.1 }}
-                        className="bg-white/5 backdrop-blur-lg rounded-xl p-4 border border-white/10 hover:border-purple-400/50 transition-all group cursor-pointer"
+                        className="bg-gradient-to-r from-cyan-200 to-pink-200 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all p-4 group cursor-pointer"
                         onClick={() => setLocation(`/room/${room.code}`)}
                       >
                         <div className="flex items-center justify-between">
                           <div className="flex-1">
                             <div className="flex items-center gap-3 mb-2">
-                              <Badge className="bg-gradient-to-r from-purple-600 to-pink-600 text-white border-0">
+                              <Badge className="bg-gradient-to-r from-purple-400 to-pink-400 text-white border-2 border-black shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] font-bold">
                                 {room.code}
                               </Badge>
-                              <Badge 
-                                variant="outline" 
-                                className={`border-white/20 text-white ${
-                                  room.isActive ? 'bg-green-600/20 border-green-400/40' : 'bg-white/5'
+                              <Badge
+                                className={`border-2 border-black font-bold shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] ${
+                                  room.isActive ? 'bg-green-300 text-black' : 'bg-gray-300 text-black'
                                 }`}
                               >
                                 {room.isActive ? 'Active' : 'Completed'}
                               </Badge>
                             </div>
-                            <h3 className="font-semibold text-white group-hover:text-purple-300 transition-colors">
+                            <h3 className="font-black text-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>
                               {room.theme}
                             </h3>
-                            <p className="text-white/60 text-sm capitalize">
+                            <p className="text-black/70 text-sm capitalize font-bold">
                               {room.gameType.replace('-', ' ')} • {room.hostNickname}
                             </p>
                           </div>
-                          <div className="text-right text-white/60">
-                            <div className="flex items-center gap-2 text-sm">
+                          <div className="text-right text-black/70">
+                            <div className="flex items-center gap-2 text-sm font-bold">
                               <Clock className="w-4 h-4" />
                               {new Date(room.createdAt).toLocaleDateString()}
                             </div>
                             {room.playerCount > 0 && (
-                              <div className="flex items-center gap-2 text-sm mt-1">
+                              <div className="flex items-center gap-2 text-sm mt-1 font-bold">
                                 <Users className="w-4 h-4" />
                                 {room.playerCount} players
                               </div>
                             )}
                             {room.songCount > 0 && (
-                              <div className="flex items-center gap-2 text-sm mt-1">
+                              <div className="flex items-center gap-2 text-sm mt-1 font-bold">
                                 <Music className="w-4 h-4" />
                                 {room.songCount} songs
                               </div>
@@ -211,27 +211,28 @@ export default function Dashboard() {
                     
                     {Array.isArray(gameRooms) && gameRooms.length > 5 && (
                       <div className="text-center pt-4">
-                        <p className="text-white/60 text-sm">
+                        <p className="text-black/70 text-sm font-bold">
                           Showing 5 of {gameRooms.length} games
                         </p>
                       </div>
                     )}
                   </div>
                 ) : (
-                  <div className="text-center py-12 bg-white/5 rounded-xl">
-                    <div className="w-16 h-16 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <div className="text-center py-12 bg-gradient-to-br from-yellow-200 to-pink-200 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                    <div className="w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-400 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] rounded-full flex items-center justify-center mx-auto mb-6">
                       <Users className="w-8 h-8 text-white" />
                     </div>
-                    <h3 className="text-xl font-semibold text-white mb-3">No games yet</h3>
-                    <p className="text-white/70 mb-6 max-w-md mx-auto">
+                    <h3 className="text-xl font-black text-black mb-3" style={{ fontFamily: "'Arial Black', sans-serif" }}>NO GAMES YET</h3>
+                    <p className="text-black/70 font-bold mb-6 max-w-md mx-auto">
                       Start your first musical journey! Create a game and invite friends to discover music together.
                     </p>
-                    <Button 
-                      className="bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 shadow-lg"
+                    <Button
+                      className="bg-gradient-to-r from-purple-400 to-pink-400 text-white hover:from-purple-500 hover:to-pink-500 font-black border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all"
                       onClick={() => setLocation('/')}
+                      style={{ fontFamily: "'Arial Black', sans-serif" }}
                     >
                       <Play className="w-4 h-4 mr-2" />
-                      Create Your First Game
+                      CREATE YOUR FIRST GAME
                     </Button>
                   </div>
                 )}
@@ -247,32 +248,32 @@ export default function Dashboard() {
           transition={{ duration: 0.6, delay: 0.3 }}
           className="mt-6"
         >
-          <Card className="bg-gradient-to-br from-slate-900/80 via-purple-900/80 to-slate-900/80 backdrop-blur-xl border border-white/20">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-white">
-                <TrendingUp className="w-5 h-5 text-purple-400" />
-                Your Musical Impact
+          <Card className="bg-gradient-to-br from-yellow-300 to-cyan-300 border-4 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rotate-1">
+            <CardHeader className="bg-white border-b-4 border-black">
+              <CardTitle className="flex items-center gap-2 text-black font-black" style={{ fontFamily: "'Arial Black', sans-serif" }}>
+                <TrendingUp className="w-5 h-5 text-black" />
+                YOUR MUSICAL IMPACT
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="bg-white pt-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="text-center bg-white/5 rounded-lg p-4">
-                  <div className="text-3xl font-bold text-white mb-2">
+                <div className="text-center bg-gradient-to-br from-purple-300 to-pink-300 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
+                  <div className="text-3xl font-black text-black mb-2" style={{ fontFamily: "'Arial Black', sans-serif" }}>
                     {Array.isArray(gameRooms) ? gameRooms.length : 0}
                   </div>
-                  <p className="text-white/80">Games Created</p>
+                  <p className="text-black/80 font-bold">Games Created</p>
                 </div>
-                <div className="text-center bg-white/5 rounded-lg p-4">
-                  <div className="text-3xl font-bold text-green-400 mb-2">
+                <div className="text-center bg-gradient-to-br from-green-300 to-cyan-300 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
+                  <div className="text-3xl font-black text-black mb-2" style={{ fontFamily: "'Arial Black', sans-serif" }}>
                     {Array.isArray(gameRooms) ? gameRooms.filter((room: GameRoom) => room.isActive).length : 0}
                   </div>
-                  <p className="text-white/80">Active Games</p>
+                  <p className="text-black/80 font-bold">Active Games</p>
                 </div>
-                <div className="text-center bg-white/5 rounded-lg p-4">
-                  <div className="text-3xl font-bold text-purple-400 mb-2">
+                <div className="text-center bg-gradient-to-br from-yellow-300 to-pink-300 border-4 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] p-4">
+                  <div className="text-3xl font-black text-black mb-2" style={{ fontFamily: "'Arial Black', sans-serif" }}>
                     {Array.isArray(gameRooms) ? gameRooms.reduce((total: number, room: GameRoom) => total + (room.songCount || 0), 0) : 0}
                   </div>
-                  <p className="text-white/80">Songs Shared</p>
+                  <p className="text-black/80 font-bold">Songs Shared</p>
                 </div>
               </div>
             </CardContent>
