@@ -53,10 +53,12 @@ function Router() {
         <Route path="/discover/journeys/:slug" component={JourneyPage} />
         <Route path="/discover/lists/:slug" component={CommunityListDetail} />
 
+        {/* Dedicated Journeys Pillar Page */}
+        <Route path="/journeys" component={JourneysPage} />
+
         {/* Legacy routes - redirect to new Discover structure */}
         <Route path="/community-lists" component={() => <Redirect to="/discover" />} />
         <Route path="/community-lists/:slug" component={({ params }) => <Redirect to={`/discover/lists/${params.slug}`} />} />
-        <Route path="/journeys" component={() => <Redirect to="/discover" />} />
         <Route path="/musicaljourneys" component={() => <Redirect to="/discover" />} />
         <Route path="/journeys/:slug" component={({ params }) => <Redirect to={`/discover/journeys/${params.slug}`} />} />
 
