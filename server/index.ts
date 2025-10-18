@@ -68,7 +68,10 @@ app.use((req, res, next) => {
   const server = await registerRoutes(app);
 
   // Sentry error handling middleware (must be before other error handlers)
-  app.use(Sentry.Handlers.errorHandler());
+  // Only add if Sentry is configured
+  if (process.env.SENTRY_DSN) {
+    app.use(Sentry.Handlers.errorHandler());
+  }
 
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
