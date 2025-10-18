@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { UniversalHeader } from "@/components/universal-header";
 import { Analytics } from "@vercel/analytics/react";
+import { AuthProvider } from "@/contexts/AuthContext";
 import LandingPage from "@/pages/landing";
 import GameMenu from "@/pages/game-menu";
 import GameRoom from "@/pages/game-room";
@@ -79,11 +80,13 @@ function Router() {
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Router />
-        <Analytics />
-      </TooltipProvider>
+      <AuthProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Router />
+          <Analytics />
+        </TooltipProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
