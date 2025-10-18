@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+import { isAuthenticated } from "./middleware/auth";
 import {
   insertGameRoomSchema,
   insertPlayerSchema,
@@ -27,16 +27,17 @@ import {
 } from "./middleware/rateLimiter";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Auth middleware
-  await setupAuth(app);
-
   // Apply general rate limiting to all API routes
   app.use('/api/', generalLimiter);
 
   // Auth routes
-  app.get('/api/auth/user', authLimiter, isAuthenticated, async (req: any, res) => {
+  app.get('/api/auth/user', authLimiter, isAuthenticated, async (req, res) => {
     try {
-      const userId = req.user.claims.sub;
+      if (!req.user) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const userId = req.user.id;
       const user = await storage.getUser(userId);
       res.json(user);
     } catch (error) {
@@ -46,13 +47,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Game Rooms
-  app.post("/api/game-rooms", mutationLimiter, async (req: any, res) => {
+  app.post("/api/game-rooms", mutationLimiter, async (req, res) => {
     try {
       const gameRoomData = insertGameRoomSchema.parse(req.body);
-      
+
       // If user is authenticated, save the game room to their account
-      if (req.user && req.user.claims && req.user.claims.sub) {
-        gameRoomData.userId = req.user.claims.sub;
+      if (req.user && req.user.id) {
+        gameRoomData.userId = req.user.id;
       }
 
       const gameRoom = await storage.createGameRoom(gameRoomData);
@@ -76,9 +77,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get user's saved games
-  app.get("/api/user/games", isAuthenticated, async (req: any, res) => {
+  app.get("/api/user/games", isAuthenticated, async (req, res) => {
     try {
-      const userId = req.user.claims.sub;
+      if (!req.user) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+
+      const userId = req.user.id;
       const games = await storage.getUserGameRooms(userId);
       res.json(games);
     } catch (error) {
@@ -88,9 +93,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Get user's game rooms (alternative endpoint)
-  app.get("/api/user/game-rooms", isAuthenticated, async (req: any, res) => {
+  app.get("/api/user/game-rooms", isAuthenticated, async (req, res) => {
     try {
-      const userId = req.user.claims.sub;
+      if (!req.user) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+
+      const userId = req.user.id;
       const games = await storage.getUserGameRooms(userId);
       res.json(games);
     } catch (error) {
